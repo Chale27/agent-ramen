@@ -260,6 +260,8 @@ const SITES = [
   { id: "ruflo", name: "Clone Brigade", group: "roblox", station: "Ruflo swarm",
     role: "Three cooks who move as one. A Ruflo agent swarm for big, many-step projects: it splits the job, works the pieces at once and remembers what worked.",
     model: "Ruflo swarm", file: "~/AgentRamen", when: "Big projects with many parts.", call: "Have the Ruflo swarm in ~/AgentRamen build it" },
+  { id: "neko", name: "Neko the Courier Cat", group: "auto", station: "Website courier",
+    role: "Carries every change in the shop to the public website on GitHub.", model: "Scheduled task", file: "~/.claude/scheduled-tasks/website-sync", when: "Hourly, 8 AM to 11 PM.", call: "Ask Claude to sync the website now." },
   { id: "old-faithful", name: "Old Faithful", group: "auto", station: "The stockpot that never sleeps",
     role: "A hook, not a cook. The stockpot boils over on its own: every time a note is written or edited, INDEX.md gets rebuilt.",
     model: "None (script)", file: "scripts/indexer-hook.py", when: "Automatic, after every note edit.", call: "Nothing to call. It just boils over." },
@@ -280,7 +282,7 @@ const STATUS = { queued: "Queued", working: "Cooking", done: "Done", needs_you: 
 
 function siteDb(j) {
   const rows = name => {
-    if (name === "pinbot") return Object.entries(j.pinbot || {}).map(([id, v]) => Object.assign({ id }, v));
+    if (name === "pinbot" || name === "sync") return Object.entries(j[name] || {}).map(([id, v]) => Object.assign({ id }, v));
     return (j[name] || []).slice();
   };
   const snapDoc = (id, d) => ({ id, exists: !!d, data: () => d });
@@ -471,7 +473,7 @@ const STATION_DEFAULTS = {
 const STATION_COOKS = ["grand-canyon", "denali", "death-valley", "yosemite", "sequoia", "ruflo"];
 const BOARDS = ["Kitchen Knife Care & Sharpening", "Tea Lover's Kitchen", "Gift Ideas for Home Cooks", "Etsy Shop Shipping Setup", "Small Business Packaging Ideas"];
 const hqEl = document.getElementById("hq"), hqBody = document.getElementById("hqBody"), hqTitle = document.getElementById("hqTitle");
-let stationDocs = {}, pbStatus = null, pbControl = null, pins = [], products = [], hqView = null, pinsFirst = true, ctlSaving = false;
+let syncStatus = null, syncFirst = true, stationDocs = {}, pbStatus = null, pbControl = null, pins = [], products = [], hqView = null, pinsFirst = true, ctlSaving = false;
 const stationOf = id => Object.assign({}, STATION_DEFAULTS[id] || {}, stationDocs[id] || {});
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 const when = s => { const d = new Date(s); return isNaN(d) ? "" : d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); };
@@ -485,6 +487,11 @@ const STATE_TXT = { on: "Running", ok: "Running", paused: "Paused", needs_you: "
 function listenAff() {
   db.collection("stations").onSnapshot(s => { stationDocs = {}; s.docs.forEach(d => { if (d.exists) stationDocs[d.id] = d.data(); }); rerender(); }, () => {});
   db.doc("pinbot/status").onSnapshot(s => { const was = pbStatus && pbStatus.state; pbStatus = s.exists ? s.data() : null; if (pbStatus && pbStatus.state === "needs_you" && was !== "needs_you") { say(PINBOT_COOK, "❗ Pin Bot needs you", 10, true); sfx("ding"); } rerender(); }, () => {});
+  db.doc("sync/status").onSnapshot(s => {
+    const was = syncStatus && syncStatus.lastPublishAt; syncStatus = s.exists ? s.data() : null;
+    if (!syncFirst && syncStatus && syncStatus.lastPublishAt && syncStatus.lastPublishAt !== was) nekoDeliver();
+    syncFirst = false; rerender();
+  }, () => {});
   db.doc("pinbot/control").onSnapshot(s => { if (!ctlSaving) { pbControl = s.exists ? s.data() : null; rerender(); } }, () => {});
   db.collection("pins").orderBy("releaseAt", "desc").limit(120).onSnapshot(s => {
     const next = s.docs.filter(d => d.exists).map(d => Object.assign({ id: d.id }, d.data()));
@@ -530,16 +537,38 @@ function renderHQ() {
     b.onclick = () => openStation(id); li.append(b); ul.append(li);
   });
   sec.append(ul); hqBody.append(sec);
+  const hs = el("section"); hs.append(el("h4", null, "Shop helpers"));
+  const hl = el("ul", "st-list"), hli = el("li"), hb = el("button", "on"); hb.type = "button";
+  hb.append(el("b", null, "Neko the Courier Cat · Website"), el("span", "pill " + nekoState(), STATE_TXT[nekoState()] || "Running"), el("small", null, "Copies the shop to the public website whenever something changes."));
+  hb.onclick = () => openStation("neko"); hli.append(hb); hl.append(hli); hs.append(hl); hqBody.append(hs);
   const row = el("div", "row"); row.style.cssText = "display:flex;flex-wrap:wrap;gap:8px";
   const pb = el("button", "btn", "Open Pin Bot"); pb.type = "button"; pb.onclick = () => openStation(PINBOT_COOK);
   const ord = el("button", "btn ghost", "New crew order"); ord.type = "button"; ord.onclick = () => { closeHQ(); openOrder(); };
   row.append(pb, ord); hqBody.append(row);
   if (!db) hqBody.append(el("p", "empty", "Loading the latest pin data…")); else if (db.readOnly && db.updatedAt) hqBody.append(el("p", "empty", "Data updated " + new Date(db.updatedAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + "."));
 }
+
+function nekoState() { return (syncStatus && syncStatus.state) || "on"; }
+const stamp = s => s ? new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not yet";
+function renderNeko(back) {
+  hqTitle.textContent = "Neko the Courier Cat · Website";
+  hqBody.append(back, el("p", "lead", "Neko checks the shop every hour from 8 AM to 11 PM. Whenever something changed (new pins, products or status), she carries the update to the public website."));
+  const st = el("div", "hq-stats"), web = db && db.readOnly;
+  st.append(stat("Status", STATE_TXT[nekoState()] || "Running"),
+    stat("Last check", web ? "Hourly" : stamp(syncStatus && syncStatus.lastCheckAt)),
+    stat("Last delivery", stamp(web ? db.updatedAt : syncStatus && syncStatus.lastPublishAt)),
+    stat("Checks", "Every hour"));
+  hqBody.append(st);
+  if (syncStatus && syncStatus.lastSummary) hqBody.append(el("p", "lead", syncStatus.lastSummary));
+  if (syncStatus && Array.isArray(syncStatus.issues) && syncStatus.issues.length) { const u = el("ul", "issues"); syncStatus.issues.slice(0, 6).forEach(i => u.append(el("li", null, String(i)))); hqBody.append(u); }
+  const p = el("p"); const a = el("a", "btn", "Open the website"); a.href = "https://chale27.github.io/agent-ramen/"; a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none"; p.append(a); hqBody.append(p);
+  hqBody.append(el("p", "empty", "The website is public and view-only. Controls stay in the Claude version."));
+}
 function renderStation(id) {
   const s = stationOf(id), name = byId[id].name;
   hqBody.innerHTML = "";
   const back = el("button", "btn ghost", "← All stations"); back.type = "button"; back.style.justifySelf = "start"; back.onclick = openHQ;
+  if (id === "neko") return renderNeko(back);
   if (id !== PINBOT_COOK) {
     hqTitle.textContent = `${name} · ${s.program || "Open station"}`;
     hqBody.append(back);
@@ -1055,11 +1084,49 @@ const SIGNS = [
   { text: "Pin board", x: 306, y: 50, id: "grand-canyon" },
 ];
 const signEls = SIGNS.map(s => { const b = document.createElement("button"); b.type = "button"; b.className = "sign" + (s.big ? " big" : ""); b.textContent = s.text; b.dataset.id = s.id; b.onclick = () => openStation(s.id); overlay.appendChild(b); return { s, b }; });
+
+/* ---- Neko the Courier Cat: carries shop updates to the website ---- */
+const neko = { id: "neko", x: 290, y: 272, dir: 2, moving: false, frame: 0, ft: 0, route: [], wait: 6, carry: false };
+const NEKO_HOME = [290, 272];
+function nekoRoute(points) { neko.route = points.map(p => Object.assign({}, p)); neko.wait = 0; }
+function nekoDeliver() {
+  sfx("ding");
+  nekoRoute([{ to: [292, 214], carry: true, say: "📦 New update for the website!" }, { to: [372, 206], carry: true, t: 2.4, say: "Delivering to GitHub…" }, { to: [372, 206], t: 1.6, say: "Website updated ✓" }, { to: [292, 214] }, { to: NEKO_HOME, t: 1 }]);
+}
+function nekoPatrol() { nekoRoute([{ to: [292, 214], say: "Checking for changes…" }, { to: [230, 212], t: 1.5 }, { to: [292, 214] }, { to: NEKO_HOME, t: 1, say: "Nothing new 😺" }]); }
+function stepNeko(dt) {
+  if (!neko.route.length) { neko.moving = false; neko.carry = false; neko.wait -= dt; if (neko.wait <= 0) { neko.wait = 40 + Math.random() * 20; nekoPatrol(); } return; }
+  const st = neko.route[0], dx = st.to[0] - neko.x, dy = st.to[1] - neko.y, d = Math.hypot(dx, dy);
+  neko.carry = !!st.carry;
+  if (d > .6) {
+    const sp = Math.min(d, 38 * dt * (reduce ? 3 : 1)); neko.x += dx / d * sp; neko.y += dy / d * sp; neko.moving = true;
+    if (Math.abs(dx) > .3) neko.dir = dx < 0 ? 2 : 3;
+    neko.ft += dt; if (neko.ft > .12) { neko.ft = 0; neko.frame++; }
+  } else {
+    neko.moving = false;
+    if (!st.arrived) { st.arrived = true; st.left = st.t || 0; if (st.say) say("neko", st.say, (st.t || 1) + 1.2, true); }
+    st.left -= dt; if (st.left <= 0) neko.route.shift();
+  }
+}
+function drawNeko(c, t) {
+  const x = Math.round(neko.x), y = Math.round(neko.y), flip = neko.dir === 2, b = reduce ? 0 : Math.round(Math.sin(t * 1.6));
+  const M = (dx, dy, w, h, col) => R(c, flip ? x - dx - w + 1 : x + dx, y + dy, w, h, col);
+  const s = neko.moving ? neko.frame % 2 : 0;
+  R(c, x - 6, y + 1, 13, 2, "rgba(60,30,10,.25)");
+  if (neko.moving) { M(-4, 1, 1, 2 - s, "#d9822b"); M(-1, 1, 1, 1 + s, "#d9822b"); M(2, 1, 1, 2 - s, "#d9822b"); M(4, 1, 1, 1 + s, "#d9822b"); }
+  M(-5, -3, 10, 4, "#f2a24a"); M(-5, -3, 10, 1, "#f7b866"); M(3, -5, 4, 4, "#f2a24a"); M(3, -6, 1, 1, "#f2a24a"); M(6, -6, 1, 1, "#f2a24a");
+  M(4, -4, 2, 1, "#2b1d12"); M(-7, -1 - s, 3, 1, "#f2a24a"); M(-3, -2, 2, 2, "#d9822b"); M(0, -2 - (neko.moving ? 0 : b), 1, 1, "#d9822b");
+  M(3, -2, 4, 1, "#2f6fb3"); // courier scarf
+  if (neko.carry) { M(-3, -7, 6, 4, "#fffaf0"); M(-3, -7, 6, 1, "#c8382c"); M(-1, -5, 2, 1, "#c9b48a"); }
+}
+
 const tagEls = people.filter(p => !p.guest && !p.clone).map(p => {
   const b = document.createElement("button"); b.type = "button"; b.className = "tag" + (p.id === "claude" ? " chef" : ""); b.dataset.id = p.id; b.textContent = byId[p.id].name; b.onclick = () => openStation(p.id); b.title = p.id === "claude" ? "Affiliate HQ" : "Open this station"; overlay.appendChild(b);
   const bub = document.createElement("div"); bub.className = "bubble"; bub.hidden = true; overlay.appendChild(bub);
   return { p, b, bub, until: 0 };
 });
+{ const b = document.createElement("button"); b.type = "button"; b.className = "tag"; b.dataset.id = "neko"; b.textContent = "Neko"; b.title = "Website courier"; b.onclick = () => openStation("neko"); overlay.appendChild(b);
+  const bub = document.createElement("div"); bub.className = "bubble"; bub.hidden = true; overlay.appendChild(bub); tagEls.push({ p: neko, b, bub, until: 0 }); }
 const ofTag = { bub: document.createElement("div"), until: 0 }; ofTag.bub.className = "bubble"; ofTag.bub.hidden = true; overlay.appendChild(ofTag.bub);
 let clock = 0;
 function say(id, text, secs, hold) {
@@ -1134,10 +1201,11 @@ function frame(now) {
   // noodle baskets in the boiler
   [91, 96, 101].forEach((x, i) => { R(ctx, x, 22 - (reduce ? 0 : (Math.floor(t * 2) + i) % 2), 1, 8, "#5e3820"); });
   // people and front furniture in depth order
-  const items = people.map(p => ({ y: p.y, draw: () => drawSprite(ctx, p, t) })).concat(FRONT.map(f => ({ y: f.y, draw: () => ctx.drawImage(fg.canvas, f.x, f.top, f.w, f.h, f.x, f.top, f.w, f.h) })));
+  stepNeko(dt);
+  const items = people.map(p => ({ y: p.y, draw: () => drawSprite(ctx, p, t) })).concat([{ y: neko.y, draw: () => drawNeko(ctx, t) }]).concat(FRONT.map(f => ({ y: f.y, draw: () => ctx.drawImage(fg.canvas, f.x, f.top, f.w, f.h, f.x, f.top, f.w, f.h) })));
   items.sort((a, b) => a.y - b.y).forEach(it => it.draw());
   if (!reduce) [248, 270, 292].forEach((x, i) => R(ctx, x - 2, 144, 4, 1, (Math.floor(t * 2) + i) % 2 ? "#ffb04a" : "#ff8a3a"));
-  { const cx = 262, cy = 270, b = reduce ? 0 : Math.round(Math.sin(t * 1.6));
+  if (false) { const cx = 262, cy = 270, b = 0;
     R(ctx, cx - 5, cy - 3, 10, 4 + b * 0, "#f2a24a"); R(ctx, cx - 5, cy - 3, 10, 1, "#f7b866"); R(ctx, cx + 3, cy - 5, 4, 4, "#f2a24a"); R(ctx, cx + 3, cy - 6, 1, 1, "#f2a24a"); R(ctx, cx + 6, cy - 6, 1, 1, "#f2a24a");
     R(ctx, cx + 4, cy - 4, 2, 1, "#2b1d12"); R(ctx, cx - 7, cy - 1, 3, 1, "#f2a24a"); R(ctx, cx - 3, cy - 2, 2, 2, "#d9822b"); R(ctx, cx, cy - 2 - b, 1, 1, "#d9822b"); }
   ZASHIKI.forEach(([x, y]) => { R(ctx, x + 16, y - 6, 4, 3, "#f4ecd8"); R(ctx, x + 16, y - 6, 4, 1, "#c8382c"); });
@@ -1163,7 +1231,7 @@ function frame(now) {
   const sx = cv.clientWidth / W, sy = cv.clientHeight / H;
   signEls.forEach(({ s, b }) => { b.style.left = s.x * sx + "px"; b.style.top = s.y * sy + "px"; });
   tagEls.forEach(e => {
-    const p = e.p, top = p.y - (p.id === "claude" ? 34 : 24) + (p.sit ? 2 : 0);
+    const p = e.p, top = p.y - (p.id === "claude" ? 34 : p.id === "neko" ? (neko.carry ? 13 : 9) : 24) + (p.sit ? 2 : 0);
     const half = e.b.offsetWidth / 2 + 4, bhalf = e.bub.offsetWidth / 2 + 4, px = p.x * sx, cw = cv.clientWidth;
     e.b.style.left = Math.max(half, Math.min(cw - half, px)) + "px"; e.bub.style.left = Math.max(bhalf, Math.min(cw - bhalf, px)) + "px";
     e.b.style.top = e.bub.style.top = top * sy + "px";

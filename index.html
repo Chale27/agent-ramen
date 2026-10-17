@@ -1,0 +1,1574 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Agent Ramen</title>
+<meta name="description" content="Agent Ramen: an affiliate kitchen where each cook runs one affiliate program.">
+<meta name="theme-color" content="#2b1d12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the whole pixel-art kitchen fits in one frame on top, a paper order card beside it, the crew menu below. One deliberate warm look: cream paper, wood, lantern red. */
+:root {
+  --bg: #f4e9d6;
+  --raise: #fbf4e7;
+  --line: #dcc8a6;
+  --fg: #3a2416;
+  --muted: #8a6a4e;
+  --red: #c8382c;
+  --wood: #5e3820;
+  --cream: #fff8ea;
+  --tag: #2b1d12;
+  --gold: #ffd45a;
+  --pixel: "Pixelify Sans", "Courier New", monospace;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--body); font-size: 15px; line-height: 1.5; padding-inline: 16px; padding-block: 16px 56px; }
+.wrap { max-width: 1280px; margin: 0 auto; display: grid; gap: 32px; }
+
+header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 8px 24px; }
+h1 { font-family: var(--pixel); font-weight: 700; font-size: clamp(30px, 4.6vw, 52px); line-height: 1; margin: 0; letter-spacing: .02em; }
+h1 span { color: var(--red); }
+.lede { margin: 6px 0 0; color: var(--muted); max-width: 62ch; }
+.btn { font: 700 15px var(--pixel); letter-spacing: .03em; color: var(--cream); background: var(--red); border: 3px solid var(--tag); border-radius: 4px; padding: 6px 14px; cursor: pointer; box-shadow: 0 3px 0 var(--tag); display: inline-flex; align-items: center; gap: 8px; }
+.btn:hover { background: #dc4a3d; }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--tag); }
+
+.stage { width: min(100%, calc((100vh - 40px) * 384 / 300)); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); border: 4px solid var(--tag); border-radius: 6px; overflow: hidden; background: #3a2416; box-shadow: 0 8px 0 rgba(58,36,22,.18); }
+#scene { position: relative; aspect-ratio: 384 / 300; width: 100%; background: #3a2416; overflow: hidden; }
+#scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; cursor: pointer; }
+.overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.sign { position: absolute; transform: translate(-50%, -50%); pointer-events: auto; cursor: pointer; font: 700 clamp(9px, 1.15vw, 14px) var(--pixel); letter-spacing: .06em; text-transform: uppercase; color: var(--wood); background: #fbecd0; border: 2px solid #a4553a; outline: 2px solid #fbecd0; padding: 1px 7px; white-space: nowrap; box-shadow: 0 2px 0 rgba(58,36,22,.4); }
+.sign:hover, .sign.on { background: var(--gold); outline-color: var(--gold); }
+.sign.big { font-size: clamp(12px, 1.9vw, 24px); color: var(--cream); background: var(--red); border-color: var(--tag); outline-color: var(--red); padding: 2px 12px; }
+.tag { position: absolute; transform: translate(-50%, -100%); pointer-events: auto; cursor: pointer; font: 700 clamp(9px, 1.05vw, 13px) var(--pixel); color: var(--gold); background: rgba(43,29,18,.88); border: 0; padding: 0 5px; white-space: nowrap; line-height: 1.45; }
+.tag.on { color: var(--tag); background: var(--gold); }
+.tag:disabled { opacity: 1; }
+.tag.chef { color: #fff; background: var(--red); }
+.bubble { position: absolute; transform: translate(-50%, calc(-100% - 22px)); pointer-events: none; font: 600 clamp(10px, 1.05vw, 13px) var(--body); color: var(--fg); background: #fffdf7; border: 2px solid var(--tag); border-radius: 4px; padding: 2px 8px; white-space: nowrap; box-shadow: 0 2px 0 rgba(58,36,22,.35); }
+.bubble::after { content: ""; position: absolute; left: 50%; bottom: -6px; margin-left: -5px; border: 5px solid transparent; border-top-color: var(--tag); border-bottom: 0; }
+.sign:focus-visible, .tag:focus-visible, .card:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+
+#outside { position: absolute; inset: 0; z-index: 5; background: #2b2a3c; }
+#outside canvas { display: block; width: 100%; height: 100%; cursor: grab; image-rendering: auto; }
+#outside[hidden] { display: none; }
+.out-title { position: absolute; left: 16px; top: 12px; font: 700 clamp(18px, 2.6vw, 30px) var(--pixel); color: #f3ede1; pointer-events: none; text-shadow: 0 2px 0 #1a1824; }
+.out-title small { display: block; font: 500 12px var(--mono); color: #a9a6c4; letter-spacing: .06em; }
+.door-hint { position: absolute; transform: translate(-50%, calc(-100% - 10px)); font: 700 clamp(11px, 1.3vw, 15px) var(--pixel); color: var(--tag); background: var(--gold); border: 3px solid var(--tag); padding: 3px 10px; cursor: pointer; white-space: nowrap; box-shadow: 0 3px 0 var(--tag); animation: bob 1.4s ease-in-out infinite; }
+.door-hint::after { content: ""; position: absolute; left: 50%; bottom: -10px; margin-left: -6px; border: 6px solid transparent; border-top-color: var(--tag); border-bottom: 0; }
+@keyframes bob { 50% { margin-top: -4px; } }
+@media (prefers-reduced-motion: reduce) { .door-hint { animation: none; } }
+.btn.sound { position: absolute; right: 8px; top: 8px; z-index: 6; font-size: 12px; padding: 3px 9px; background: var(--cream); color: var(--fg); }
+.btn.sound[aria-pressed="true"] { background: var(--gold); }
+.out-controls { position: absolute; left: 16px; bottom: 14px; display: flex; gap: 8px; }
+.out-controls .btn { font-size: 13px; padding: 4px 10px; background: rgba(251,236,208,.92); color: var(--fg); }
+.out-controls .btn[aria-pressed="true"] { background: var(--gold); }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; font: 700 18px var(--pixel); color: #f3ede1; background: #2b2a3c; pointer-events: none; transition: opacity .4s; }
+.studio { position: absolute; left: calc(72 / 384 * 100%); top: calc(222 / 300 * 100%); transform: translate(-50%, -50%); font: 700 clamp(9px, 1.05vw, 12px) var(--pixel); padding: 1px 7px 1px 16px; border: 2px solid var(--tag); background: #fbecd0; color: var(--fg); cursor: default; }
+.studio::before { content: ""; position: absolute; left: 5px; top: 50%; width: 6px; height: 6px; margin-top: -3px; background: #8d949b; box-shadow: 0 0 0 1px var(--tag); }
+.studio.on::before { background: #5fd35f; box-shadow: 0 0 0 1px var(--tag), 0 0 8px #5fd35f; }
+.studio.off::before { background: #d9442c; }
+.rail { position: absolute; left: calc(150 / 384 * 100%); width: calc(80 / 384 * 100%); top: calc(84 / 300 * 100%); display: flex; gap: 3%; justify-content: flex-start; pointer-events: none; }
+.slip { pointer-events: auto; position: relative; width: 14%; aspect-ratio: 3 / 4; border: 2px solid var(--tag); background: #fffaf0; padding: 0; cursor: pointer; font: 700 clamp(7px, .8vw, 10px) var(--pixel); color: var(--fg); display: grid; place-items: center; animation: swing 2.4s ease-in-out infinite; transform-origin: 50% 0; }
+.slip i { position: absolute; left: -2px; right: -2px; top: -2px; height: 22%; background: #8d949b; }
+.slip.working i { background: #f2a24a; } .slip.done i { background: #4f8a3a; } .slip.needs_you i { background: #d9442c; } .slip.needs_you { animation-duration: .6s; }
+.slip span { margin-top: 20%; }
+@keyframes swing { 50% { transform: rotate(4deg); } }
+@media (prefers-reduced-motion: reduce) { .slip { animation: none; } }
+#orderOut .req { margin: 0; font-size: 13px; color: var(--muted); }
+#orderOut li { display: grid; grid-template-columns: auto 1fr auto; gap: 2px 8px; align-items: baseline; }
+#orderOut li small { grid-column: 1 / -1; color: var(--muted); }
+#orderOut li .st { font: 700 11px var(--pixel); padding: 0 6px; border: 2px solid var(--tag); background: #e9e4da; white-space: nowrap; }
+#orderOut li.working { border-left-color: #f2a24a; } #orderOut li.working .st { background: #ffd9a8; }
+#orderOut li.done { border-left-color: #4f8a3a; } #orderOut li.done .st { background: #bfe3a8; }
+#orderOut li.needs_you { border-left-color: #d9442c; } #orderOut li.needs_you .st { background: #ffb8a8; }
+#fade { position: absolute; inset: 0; z-index: 9; background: #140c06; opacity: 0; pointer-events: none; transition: opacity .35s; }
+.btn.back { position: absolute; left: 8px; top: 8px; z-index: 3; font-size: 12px; padding: 3px 9px; }
+.order { z-index: 7; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(460px, calc(100% - 24px)); max-height: calc(100% - 24px); overflow: auto; background: #fbecd0; border: 4px solid var(--tag); box-shadow: inset 0 0 0 3px #e8cfa2, 0 6px 0 rgba(43,29,18,.45); padding: 0 16px 16px; }
+.order-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 -16px 12px; padding: 8px 12px 8px 16px; background: var(--red); color: var(--cream); font: 700 17px var(--pixel); }
+.order .x { font: 700 15px var(--pixel); background: transparent; color: var(--cream); border: 0; cursor: pointer; padding: 2px 6px; }
+.order form { display: grid; gap: 10px; }
+.order label { font: 700 15px var(--pixel); color: var(--fg); }
+.order textarea { font: 500 15px/1.4 var(--body); color: var(--fg); background: var(--cream); border: 3px solid var(--tag); padding: 8px 10px; resize: vertical; min-height: 72px; }
+.order .btn { justify-self: start; }
+.order .btn.ghost { background: var(--cream); color: var(--fg); }
+.order .btn:disabled { opacity: .7; cursor: wait; }
+#orderOut { display: grid; gap: 10px; }
+#orderOut .sum { margin: 0; font: 700 16px var(--pixel); }
+#orderOut ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+#orderOut li { font-size: 14px; background: var(--cream); border-left: 4px solid var(--red); padding: 4px 8px; }
+#orderOut li b { font-family: var(--pixel); }
+#orderOut code { display: block; font: 12.5px/1.45 var(--mono); background: #f1e1c4; padding: 8px 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+#orderOut .row { display: flex; flex-wrap: wrap; gap: 8px; }
+#orderOut .note { margin: 0; font-size: 12.5px; color: var(--muted); }
+.order.hq { width: min(660px, calc(100% - 24px)); }
+.hq-body { display: grid; gap: 14px; }
+.hq-body h4 { margin: 0 0 6px; font: 700 16px var(--pixel); }
+.hq-body .lead { margin: 0; font-size: 13.5px; color: var(--muted); }
+.hq-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.hq-stats div { background: var(--cream); border: 2px solid var(--tag); padding: 6px 10px; }
+.hq-stats small { display: block; font: 600 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.hq-stats b { font: 700 18px var(--pixel); }
+.pill { font: 700 11px var(--pixel); padding: 0 6px; border: 2px solid var(--tag); background: #e9e4da; white-space: nowrap; }
+.pill.on { background: #bfe3a8; } .pill.needs_you { background: #ffb8a8; } .pill.paused { background: #ffd9a8; }
+.st-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.st-list button { width: 100%; text-align: left; font: inherit; color: inherit; background: var(--cream); border: 2px solid #d9b98a; border-left: 5px solid #8d949b; padding: 6px 10px; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; }
+.st-list button.on { border-left-color: #4f8a3a; } .st-list button:hover { border-color: var(--red); }
+.st-list b { font: 700 15px var(--pixel); } .st-list small { grid-column: 1; color: var(--muted); font-size: 12.5px; }
+.pin-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.pin-list li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 0 10px; background: var(--cream); border-left: 4px solid var(--red); padding: 4px 8px; font-size: 13.5px; }
+.pin-list li.live { border-left-color: #4f8a3a; }
+.pin-list time { font: 600 11.5px var(--mono); color: var(--muted); padding-top: 2px; }
+.pin-list small { grid-column: 2; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.pin-list a { color: var(--fg); }
+.day-h { font: 700 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--red); margin: 6px 0 2px; }
+.ctl { display: grid; gap: 8px; background: var(--cream); border: 2px dashed var(--line); padding: 10px 12px; }
+.ctl .row2 { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 13.5px; }
+.ctl label { font: 500 13.5px var(--body); display: inline-flex; gap: 6px; align-items: center; }
+.ctl select, .ctl textarea { font: 500 14px var(--body); color: var(--fg); background: #fffdf7; border: 2px solid var(--tag); padding: 4px 6px; }
+.ctl textarea { width: 100%; min-height: 54px; resize: vertical; }
+.issues { margin: 0; padding: 8px 10px 8px 26px; background: #ffe2da; border: 2px solid #d9442c; font-size: 13.5px; }
+.empty { margin: 0; font-size: 13px; color: var(--muted); }
+details.prods summary { cursor: pointer; font: 700 14px var(--pixel); }
+details.prods ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
+.directory { z-index: 7; position: absolute; inset: 6% 12%; background: #fbecd0; border: 4px solid var(--tag); box-shadow: inset 0 0 0 3px #e8cfa2, 0 6px 0 rgba(43,29,18,.4); display: flex; flex-direction: column; min-height: 0; }
+.directory .top { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 3px solid #e0c391; }
+.directory h3 { margin: 0; font: 700 18px var(--pixel); white-space: nowrap; }
+.directory input { flex: 1; min-width: 0; font: 500 15px var(--body); color: var(--fg); background: var(--cream); border: 2px solid var(--tag); padding: 5px 8px; }
+.directory .x { font: 700 15px var(--pixel); background: var(--tag); color: var(--cream); border: 0; padding: 5px 10px; cursor: pointer; }
+.directory ul { list-style: none; margin: 0; padding: 8px; overflow: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.directory li button { width: 100%; text-align: left; font: inherit; color: inherit; background: var(--cream); border: 2px solid #d9b98a; padding: 7px 9px; cursor: pointer; display: grid; gap: 2px; }
+.directory li button:hover { border-color: var(--red); }
+.directory li b { font: 700 16px var(--pixel); }
+.directory li small { font: 500 11px var(--mono); color: var(--muted); }
+.directory li span { font-size: 12.5px; line-height: 1.35; }
+.directory .none { padding: 18px; color: var(--muted); }
+
+#info { position: absolute; inset: 0; overflow: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+aside { position: relative; background: var(--cream); color: var(--fg); min-width: 0; border-left: 4px solid var(--tag); background-image: repeating-linear-gradient(transparent 0 27px, rgba(200,56,44,.07) 27px 28px); }
+aside .kicker { display: flex; justify-content: space-between; gap: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+aside .kicker b { color: var(--red); font-weight: 600; }
+aside h2 { font-family: var(--pixel); font-weight: 700; font-size: 32px; margin: 0; line-height: 1; }
+aside .station { font-family: var(--mono); font-size: 12px; color: var(--red); margin-top: -4px; }
+aside .now { font-size: 13.5px; background: #f1e1c4; border-left: 4px solid var(--red); padding: 6px 10px; }
+aside p { margin: 0; }
+aside hr { border: 0; border-top: 2px dashed var(--line); margin: 2px 0; }
+dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px 12px; font-size: 13.5px; }
+dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+dd code { font-family: var(--mono); font-size: 12px; }
+.call { font-family: var(--mono); font-size: 12.5px; background: #f1e1c4; border-radius: 4px; padding: 10px 12px; display: grid; gap: 9px; }
+.call code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.call button { justify-self: start; font: 700 13px var(--pixel); background: var(--tag); color: var(--cream); border: 0; padding: 4px 12px; cursor: pointer; }
+
+.guide-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 8px 24px; }
+.guide-head h2 { font-family: var(--pixel); font-weight: 700; font-size: 30px; margin: 0; }
+.guide-head p { margin: 0; color: var(--muted); max-width: 58ch; }
+.guide { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+.card { text-align: left; font: inherit; color: inherit; background: var(--raise); border: 3px solid var(--line); border-radius: 4px; padding: 14px 16px; cursor: pointer; display: grid; gap: 5px; align-content: start; }
+.card:hover, .card.on { border-color: var(--red); }
+.card .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.card b { font-family: var(--pixel); font-weight: 700; font-size: 21px; line-height: 1.1; }
+.card .price { font-family: var(--pixel); font-size: 17px; color: var(--red); white-space: nowrap; }
+.card .station { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+.card span { font-size: 14px; }
+footer { color: var(--muted); font-size: 13px; max-width: 80ch; }
+footer code { font-family: var(--mono); font-size: 12px; color: var(--fg); }
+
+/* phones held upright: street view fills the screen; inside, the kitchen sits on top and Affiliate HQ fills the rest */
+@media (max-width: 700px) and (orientation: portrait) {
+  html, body { background: #2b1d12; }
+  body { padding: 0; }
+  .wrap { gap: 0; }
+  .stage { width: 100%; border: 0; border-radius: 0; box-shadow: none; }
+  #outside { position: fixed; inset: 0; z-index: 20; }
+  .out-title { top: calc(12px + env(safe-area-inset-top, 0px)); }
+  .out-controls { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+  .order, .order.hq { position: fixed; left: 0; right: 0; top: calc(100vw * 300 / 384 + env(safe-area-inset-top, 0px)); bottom: 0; transform: none; width: auto; max-height: none; border-width: 4px 0 0; box-shadow: none; padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+  .order-top { position: sticky; top: 0; z-index: 1; }
+  .btn.back, .btn.sound { font-size: 11px; padding: 2px 7px; top: 6px; }
+  .btn.back { left: 6px; } .btn.sound { right: 6px; }
+  .hq-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pin-list li { grid-template-columns: 62px minmax(0, 1fr); }
+}
+@media (max-width: 920px) {
+  aside { border-left: 0; border-top: 4px solid var(--tag); }
+  #info { position: static; }
+  .guide { grid-template-columns: minmax(0, 1fr); }
+  .directory { inset: 4%; }
+  .directory ul { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 921px) and (max-width: 1100px) { .guide { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+
+<div class="wrap">
+  <section class="stage">
+    <div id="scene" aria-label="Agent Ramen: a 3D ramen stand and the pixel-art kitchen inside, where Head Chef Claude runs the crew. Click Head Chef Claude to place an order.">
+      <canvas id="kitchen" width="384" height="300"></canvas>
+      <button class="btn back" id="backBtn" type="button">← Step outside</button>
+      <button class="btn sound" id="soundBtn" type="button" aria-pressed="false">🔈 Sound off</button>
+      <div class="overlay" id="overlay"></div>
+      <div id="outside">
+        <div class="out-title">Agent Ramen <small>drag to look around</small></div>
+        <button class="door-hint" id="doorHint" type="button">Click the door to go inside</button>
+        <div class="out-controls"><button class="btn ghost" id="dayBtn" type="button" aria-pressed="false">☀ Day</button><button class="btn ghost" id="rainBtn" type="button" aria-pressed="false">☂ Rain</button></div>
+        <div class="loading" id="loading">Building the shop…</div>
+      </div>
+      <div id="fade"></div>
+      <div class="order" id="order" hidden role="dialog" aria-label="New order for Head Chef Claude">
+        <div class="order-top"><b id="orderTitle">Order for Head Chef Claude</b><button class="x" id="orderClose" type="button" aria-label="Close">✕</button></div>
+        <form id="orderForm">
+          <label for="orderText">What should the crew get done?</label>
+          <textarea id="orderText" rows="3" placeholder="Add a sword shop GUI and make sure it works"></textarea>
+          <button class="btn" id="orderSend" type="submit">Send to the kitchen</button>
+        </form>
+        <div id="orderOut" hidden aria-live="polite"></div>
+      </div>
+      <div class="order hq" id="hq" hidden role="dialog" aria-label="Affiliate HQ">
+        <div class="order-top"><b id="hqTitle">Affiliate HQ</b><button class="x" id="hqClose" type="button" aria-label="Close">✕</button></div>
+        <div class="hq-body" id="hqBody" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ================= data ================= */
+const GROUP = { chef: { label: "Head chef", color: "#c8382c" }, roblox: { label: "Helpers", color: "#2f6fb3" }, vault: { label: "Notes vault", color: "#7a4fa8" }, auto: { label: "Automatic", color: "#b8741b" } };
+const PRICE = { Haiku: "¥", Sonnet: "¥¥", Opus: "¥¥¥", "None (script)": "free" };
+const SITES = [
+  { id: "claude", name: "Claude", group: "chef", station: "Head chef · affiliate HQ",
+    role: "Runs the kitchen as your chief of staff. Reads every order, cooks the small stuff itself, pins tickets for the right cooks, checks what comes back, then reports: Done, Needs you, Next.",
+    model: "Opus", file: "~/.claude/skills/chief-of-staff/SKILL.md", when: "Always. Every request starts here.", call: "Just ask. Name a cook to send the ticket to them." },
+  { id: "denali", name: "Taka the Taster", group: "roblox", station: "Tasting pass",
+    role: "Tastes every bowl before it goes out. Proofreads writing, reviews code and plans, fact-checks, and finds mistakes without changing anything.",
+    model: "Sonnet", file: "~/.claude/agents/denali.md", when: "After any script change, before playtesting.", call: "Use denali to review the combat scripts in ServerScriptService" },
+  { id: "death-valley", name: "Kaen Firetongue", group: "roblox", station: "Counter seat 2",
+    role: "Eats the spiciest bowl so you don't have to. Actually tries things: runs code, clicks through sites and apps, follows the steps, and reports PASS or FAIL.",
+    model: "Sonnet", file: "~/.claude/agents/death-valley.md", when: "To check a feature works without clicking through it yourself.", call: "Have death-valley buy the sword, die, respawn and check the sword is still there" },
+  { id: "yosemite", name: "Kaze the Runner", group: "roblox", station: "Pantry",
+    role: "Runs out and brings back the goods. Looks things up, compares options and prices, finds docs and how-tos, always with sources.",
+    model: "Haiku", file: "~/.claude/agents/yosemite.md", when: "Asset hunts and doc lookups that would clutter the main chat.", call: "Ask yosemite for 3 low-poly medieval tower models" },
+  { id: "sequoia", name: "Old Man Mori", group: "vault", station: "Recipe shelf",
+    role: "Knows every recipe on the shelf. Finds things in your notes through INDEX.md and answers with links, never copies.",
+    model: "Haiku", file: "Notes/.claude/agents/sequoia.md", when: "Long sessions where note lookups would fill the context.", call: "Use sequoia: what have I written about Dragonrest?" },
+  { id: "grand-canyon", name: "Sumi the Scribe", group: "vault", station: "Specials board",
+    role: "Writes things down so they last. Logs the day into your daily note and drafts notes and summaries.",
+    model: "Haiku", file: "Notes/.claude/agents/grand-canyon.md", when: "When you wrap up for the day.", call: "Have grand-canyon log today's session" },
+  { id: "ruflo", name: "Clone Brigade", group: "roblox", station: "Ruflo swarm",
+    role: "Three cooks who move as one. A Ruflo agent swarm for big, many-step projects: it splits the job, works the pieces at once and remembers what worked.",
+    model: "Ruflo swarm", file: "~/AgentRamen", when: "Big projects with many parts.", call: "Have the Ruflo swarm in ~/AgentRamen build it" },
+  { id: "old-faithful", name: "Old Faithful", group: "auto", station: "The stockpot that never sleeps",
+    role: "A hook, not a cook. The stockpot boils over on its own: every time a note is written or edited, INDEX.md gets rebuilt.",
+    model: "None (script)", file: "scripts/indexer-hook.py", when: "Automatic, after every note edit.", call: "Nothing to call. It just boils over." },
+];
+const byId = Object.fromEntries(SITES.map(s => [s.id, s]));
+const nowDoing = {};
+
+/* ================= orders: tell Head Chef Claude what to get done ================= */
+const ARTIFACT_URL = "https://claude.ai/artifact/QLXtBuNqgZgd1MhjUgQzG5";
+let current = "claude";
+const orderEl = document.getElementById("order"), orderText = document.getElementById("orderText"), orderForm = document.getElementById("orderForm"), orderOut = document.getElementById("orderOut"), orderTitle = document.getElementById("orderTitle");
+let sampleFn = null, db = null, orderCtl = null, orders = [], seen = {}, firstSnap = true, viewing = null;
+const CREW = {
+  claude: "Head Chef Claude", denali: "Taka the Taster", "death-valley": "Kaen Firetongue",
+  yosemite: "Kaze the Runner", sequoia: "Old Man Mori", "grand-canyon": "Sumi the Scribe", ruflo: "Clone Brigade (Ruflo)",
+};
+const STATUS = { queued: "Queued", working: "Cooking", done: "Done", needs_you: "Needs you" };
+
+function siteDb(j) {
+  const rows = name => {
+    if (name === "pinbot") return Object.entries(j.pinbot || {}).map(([id, v]) => Object.assign({ id }, v));
+    return (j[name] || []).slice();
+  };
+  const snapDoc = (id, d) => ({ id, exists: !!d, data: () => d });
+  const query = (name, field, dir, n) => ({
+    orderBy: (f, dr) => query(name, f, dr || "asc", n), limit: m => query(name, field, dir, m), where: () => query(name, field, dir, n),
+    onSnapshot(next) {
+      let r = rows(name);
+      if (field) r.sort((a, b) => String(a[field] || "").localeCompare(String(b[field] || "")) * (dir === "desc" ? -1 : 1));
+      if (n) r = r.slice(0, n);
+      setTimeout(() => next({ docs: r.map(x => { const { id, ...rest } = x; return snapDoc(id, rest); }), size: r.length, empty: !r.length, docChanges: () => [] }), 0);
+      return () => {};
+    },
+    doc: id => docRef(name + "/" + id),
+  });
+  const docRef = path => ({
+    onSnapshot(next) { const [c, id] = path.split("/"); const hit = rows(c).find(x => x.id === id); const body = hit ? Object.assign({}, hit) : null; if (body) delete body.id; setTimeout(() => next(snapDoc(id, body)), 0); return () => {}; },
+    get() { return new Promise(res => this.onSnapshot(res)); },
+    set: () => Promise.reject({ code: "read_only" }), update: () => Promise.reject({ code: "read_only" }), delete: () => Promise.reject({ code: "read_only" }),
+  });
+  return { readOnly: true, updatedAt: j.updatedAt, collection: name => query(name), doc: docRef };
+}
+fetch("data.json", { cache: "no-store" }).then(r => r.json()).then(j => { db = siteDb(j); listen(); listenAff(); }).catch(() => {});
+function select(id) { if (id === "claude") openOrder(); }
+function openOrder() {
+  viewing = null; orderTitle.textContent = "Order for Head Chef Claude";
+  orderEl.hidden = false; orderForm.hidden = false; orderOut.hidden = true; orderOut.innerHTML = "";
+  setTimeout(() => orderText.focus({ preventScroll: true }), 30);
+}
+function closeOrder() { if (orderCtl) orderCtl.abort(); orderEl.hidden = true; viewing = null; }
+document.getElementById("orderClose").onclick = closeOrder;
+orderText.addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) orderForm.requestSubmit(); });
+
+const PROMPT = req => `You are Head Chef Claude, chief of staff for one person. Their AI helpers are cooks in a ramen kitchen. Split the request into 1 to 5 tasks and give each to exactly one cook:
+- claude (Head Chef Claude): the main session. Plans, writes, builds, edits and decides. Anything not covered below.
+- denali (Taka the Taster): checks work before it ships: proofreads, reviews code or plans, fact-checks, finds mistakes. Read-only.
+- death-valley (Kaen Firetongue): tries things for real: runs and tests code, checks a website or app works, follows setup steps, reports PASS or FAIL.
+- yosemite (Kaze the Runner): looks things up, compares options and prices, finds docs or how-tos, with sources.
+- sequoia (Old Man Mori): finds things in the person's notes. Only when the request is about their notes.
+- grand-canyon (Sumi the Scribe): logs the day or drafts a note or summary into their notes. Only when they ask to log, wrap up or write it down.
+- ruflo (Clone Brigade): a Ruflo agent swarm for big, many-step projects, like building a whole app, site or tool. Only for large work; never for small tasks.
+Usual chains: to make something, claude makes it, denali checks it, death-valley tries it if it can be run. To decide something, yosemite scouts options and claude recommends one. To write something, claude drafts and denali proofreads.
+Do small requests with claude alone. Keep each task under 9 words, in plain words.
+Reply with only JSON in this shape:
+{"summary": "one line under 12 words", "tasks": [{"who": "yosemite", "task": "Compare three standing desks"}], "order": "2 to 5 sentences the person can paste into Claude Code, written as them, naming which helpers to use"}
+
+The request:
+"""${req}"""`;
+
+function localPlan(req) {
+  const r = req.toLowerCase(), tasks = [];
+  const has = (...w) => w.some(x => r.includes(x));
+  if (has("my notes", "vault", "obsidian", "i wrote", "remember")) tasks.push({ who: "sequoia", task: "Find what your notes say" });
+  if (has("find", "research", "compare", "best", "which", "look up", "price", "how do", "how to", "recommend")) tasks.push({ who: "yosemite", task: "Scout options with sources" });
+  if (has("build", "make", "create", "write", "draft", "plan", "fix", "set up", "code", "email", "post")) tasks.push({ who: "claude", task: "Make the first version" });
+  if (has("write", "draft", "email", "post", "essay", "review", "check", "proofread", "code", "plan")) tasks.push({ who: "denali", task: "Check it for mistakes" });
+  if (has("test", "run", "works", "working", "set up", "install", "fix", "bug", "code")) tasks.push({ who: "death-valley", task: "Try it and report PASS/FAIL" });
+  if (has("whole", "entire", "full app", "website", "big project", "swarm", "ruflo")) tasks.push({ who: "ruflo", task: "Swarm the big build" });
+  if (has("log", "wrap up", "done for", "daily", "summary", "write it down")) tasks.push({ who: "grand-canyon", task: "Write it into your notes" });
+  if (!tasks.length) tasks.push({ who: "claude", task: "Handle it directly" });
+  const names = [...new Set(tasks.map(t => t.who).filter(w => w !== "claude"))];
+  return { summary: req.length > 60 ? req.slice(0, 57) + "…" : req, tasks, order: `Chief of staff: ${req}${names.length ? ` Use ${names.join(", ")} where they fit.` : ""} Report back as Done / Needs you / Next.` };
+}
+const orderPrompt = (o) => `${o.order}\n\n(Kitchen order ${o.id}: as you work, update orders/${o.id} in the Agent Ramen artifact ${ARTIFACT_URL} so the kitchen shows progress.)`;
+
+/* ---- the kitchen acts out an order ---- */
+function animateNew(o) {
+  say("claude", o.summary || "Order in!", 4, true); sfx("bell");
+  o.tasks.forEach((t, i) => setTimeout(() => {
+    if (t.who !== "claude") sendTicket("claude", t.who);
+    setTimeout(() => say(t.who, "🎫 " + t.task, 6, true), t.who === "claude" ? 0 : 900);
+  }, 1200 + i * 900));
+}
+function animateChange(o, before) {
+  o.tasks.forEach((t, i) => {
+    const was = before && before.tasks && before.tasks[i] && before.tasks[i].status;
+    if (t.status === was) return;
+    if (t.status === "working") say(t.who, "🔥 " + t.task, 8, true);
+    if (t.status === "done") { if (t.who !== "claude") sendTicket(t.who, "claude"); say(t.who, "✓ " + (t.note || t.task), 6, true); sfx("ding"); }
+    if (t.status === "needs_you") { say(t.who, "❗ " + (t.note || "Needs you"), 10, true); sfx("ding"); }
+  });
+  if (o.status === "done" && before && before.status !== "done") setTimeout(() => { say("claude", "Order up! ✓ " + (o.summary || ""), 6, true); sfx("bell"); }, 900);
+}
+// keep cooks on live orders showing what they're cooking
+setInterval(() => {
+  orders.forEach(o => (o.tasks || []).forEach(t => {
+    if (t.status === "working") say(t.who, "🔥 " + t.task, 4, true);
+    if (t.status === "needs_you") say(t.who, "❗ " + (t.note || "Needs you"), 4, true);
+  }));
+}, 3500);
+
+/* ---- the order rail over the island: recent orders as tickets ---- */
+const railEl = document.createElement("div"); railEl.className = "rail"; document.getElementById("overlay").appendChild(railEl);
+function orderState(o) {
+  const ts = o.tasks || [];
+  if (o.status === "done" || (ts.length && ts.every(t => t.status === "done"))) return "done";
+  if (ts.some(t => t.status === "needs_you")) return "needs_you";
+  if (ts.some(t => t.status === "working" || t.status === "done")) return "working";
+  return "queued";
+}
+function renderRail() {
+  railEl.innerHTML = "";
+  orders.slice(0, 6).forEach((o, i) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "slip " + orderState(o);
+    b.title = (o.summary || "Order") + " · " + STATUS[orderState(o)];
+    b.innerHTML = `<span>#${orders.length - i}</span><i></i>`;
+    b.onclick = () => viewOrder(o.id);
+    railEl.appendChild(b);
+  });
+  if (viewing) { const o = orders.find(x => x.id === viewing); if (o) renderPlan(o); }
+}
+function viewOrder(id) {
+  const o = orders.find(x => x.id === id); if (!o) return;
+  viewing = id; orderTitle.textContent = "Order ticket"; orderEl.hidden = false; renderPlan(o);
+}
+
+function listen() {
+  db.collection("orders").orderBy("createdAt", "desc").limit(12).onSnapshot(snap => {
+    const next = snap.docs.filter(d => d.exists).map(d => Object.assign({ id: d.id }, d.data())).filter(o => !o.archived);
+    next.forEach(o => {
+      const before = seen[o.id];
+      if (!firstSnap && !before) animateNew(o);
+      else if (!firstSnap) animateChange(o, before);
+      seen[o.id] = JSON.parse(JSON.stringify(o));
+    });
+    firstSnap = false; orders = next; renderRail();
+  }, () => {});
+}
+
+function renderPlan(o, offline) {
+  orderOut.innerHTML = "";
+  const h = document.createElement("p"); h.className = "sum"; h.textContent = o.summary || "Order"; orderOut.append(h);
+  if (o.text) { const q = document.createElement("p"); q.className = "req"; q.textContent = "“" + o.text + "”"; orderOut.append(q); }
+  const ul = document.createElement("ul");
+  (o.tasks || []).forEach(t => {
+    const li = document.createElement("li"), b = document.createElement("b"), st = document.createElement("span");
+    li.className = t.status || "queued"; b.textContent = CREW[t.who] || t.who; st.className = "st"; st.textContent = STATUS[t.status] || "Queued";
+    li.append(b, document.createTextNode(" " + t.task), st);
+    if (t.note) { const n = document.createElement("small"); n.textContent = t.note; li.append(n); }
+    ul.append(li);
+  });
+  orderOut.append(ul);
+  const prompt = orderPrompt(o);
+  const pre = document.createElement("code"); pre.textContent = prompt; orderOut.append(pre);
+  const row = document.createElement("div"); row.className = "row";
+  const copy = document.createElement("button"); copy.type = "button"; copy.className = "btn"; copy.textContent = "Copy order for Claude Code";
+  copy.onclick = () => navigator.clipboard.writeText(prompt).then(() => copy.textContent = "Copied", () => { const rg = document.createRange(); rg.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(rg); copy.textContent = "Selected, press Copy"; });
+  const again = document.createElement("button"); again.type = "button"; again.className = "btn ghost"; again.textContent = "New order"; again.onclick = openOrder;
+  row.append(copy, again);
+  if (db && o.id) {
+    const rm = document.createElement("button"); rm.type = "button"; rm.className = "btn ghost"; rm.textContent = orderState(o) === "done" ? "Clear from rail" : "Cancel order";
+    rm.onclick = () => { rm.disabled = true; db.doc("orders/" + o.id).delete().then(openOrder, () => { rm.disabled = false; rm.textContent = "Couldn't remove it"; }); };
+    row.append(rm);
+  }
+  orderOut.append(row);
+  const note = document.createElement("p"); note.className = "note";
+  note.textContent = (offline ? "Split up on this page without asking Claude. " : "") + (db ? "Paste it into Claude Code: the cooks update this ticket live as they work." : "Paste it into Claude Code to run it for real.");
+  orderOut.append(note);
+  orderForm.hidden = true; orderOut.hidden = false;
+}
+orderForm.addEventListener("submit", async e => {
+  e.preventDefault();
+  const req = orderText.value.trim(); if (!req) { orderText.focus(); return; }
+  const send = document.getElementById("orderSend"); send.disabled = true; send.textContent = "Head Chef is reading…";
+  let plan = null, offline = false;
+  if (sampleFn) {
+    orderCtl = new AbortController();
+    try {
+      const j = await sampleFn.json(PROMPT(req.slice(0, 4000)), { modelTier: "quick", signal: orderCtl.signal, cache: false });
+      if (j && Array.isArray(j.tasks) && j.tasks.length) plan = { summary: String(j.summary || "Order in!").slice(0, 80), order: String(j.order || req).slice(0, 1200), tasks: j.tasks.slice(0, 5).map(t => ({ who: CREW[t.who] ? t.who : "claude", task: String(t.task || "").slice(0, 60) })) };
+    } catch (err) { if (err && err.code === "cancelled") { send.disabled = false; send.textContent = "Send to the kitchen"; return; } }
+  }
+  if (!plan) { plan = localPlan(req); offline = true; }
+  const o = Object.assign({ id: "o" + Date.now().toString(36), text: req.slice(0, 600), status: "open", source: "page", createdAt: new Date().toISOString() }, plan);
+  o.tasks = o.tasks.map(t => Object.assign({ status: "queued" }, t));
+  send.disabled = false; send.textContent = "Send to the kitchen"; orderText.value = "";
+  viewing = o.id; orderTitle.textContent = "Order ticket"; renderPlan(o, offline);
+  if (db) { seen[o.id] = JSON.parse(JSON.stringify(o)); orders = [o, ...orders.filter(x => x.id !== o.id)]; renderRail(); const body = Object.assign({}, o); delete body.id; db.doc("orders/" + o.id).set(body).catch(() => {}); }
+  else { orders = [o, ...orders]; renderRail(); }
+  animateNew(o);
+});
+
+
+/* ================= affiliate kitchen: every cook is a station for one affiliate program ================= */
+const PINBOT_COOK = "grand-canyon";
+const STATION_DEFAULTS = {
+  "grand-canyon": { program: "Amazon Associates × Pinterest", job: "Pin Bot", status: "on", desc: "Makes Pinterest pins with Amazon links every morning and keeps 3 days queued. Pinterest releases 5 a day at 10, 12, 2, 5 and 8." },
+};
+const STATION_COOKS = ["grand-canyon", "denali", "death-valley", "yosemite", "sequoia", "ruflo"];
+const BOARDS = ["Kitchen Knife Care & Sharpening", "Tea Lover's Kitchen", "Gift Ideas for Home Cooks", "Etsy Shop Shipping Setup", "Small Business Packaging Ideas"];
+const hqEl = document.getElementById("hq"), hqBody = document.getElementById("hqBody"), hqTitle = document.getElementById("hqTitle");
+let stationDocs = {}, pbStatus = null, pbControl = null, pins = [], products = [], hqView = null, pinsFirst = true, ctlSaving = false;
+const stationOf = id => Object.assign({}, STATION_DEFAULTS[id] || {}, stationDocs[id] || {});
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const when = s => { const d = new Date(s); return isNaN(d) ? "" : d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); };
+const dayLabel = s => { const d = new Date(s), n = new Date(); if (isNaN(d)) return "Unscheduled"; const k = x => x.toDateString(); const tm = new Date(n); tm.setDate(n.getDate() + 1); return k(d) === k(n) ? "Today" : k(d) === k(tm) ? "Tomorrow" : d.toLocaleDateString([], { weekday: "long", month: "short", day: "numeric" }); };
+const isLive = p => p.status !== "draft" && (p.status === "live" || (p.releaseAt && new Date(p.releaseAt) <= new Date()));
+function upcoming() { return pins.filter(p => !isLive(p) && p.status !== "draft").sort((a, b) => String(a.releaseAt).localeCompare(String(b.releaseAt))); }
+function released() { return pins.filter(isLive).sort((a, b) => String(b.releaseAt || "").localeCompare(String(a.releaseAt || ""))); }
+function pbState() { if (pbControl && pbControl.paused) return "paused"; return (pbStatus && pbStatus.state) || "on"; }
+const STATE_TXT = { on: "Running", ok: "Running", paused: "Paused", needs_you: "Needs you", idle: "Waiting" };
+
+function listenAff() {
+  db.collection("stations").onSnapshot(s => { stationDocs = {}; s.docs.forEach(d => { if (d.exists) stationDocs[d.id] = d.data(); }); rerender(); }, () => {});
+  db.doc("pinbot/status").onSnapshot(s => { const was = pbStatus && pbStatus.state; pbStatus = s.exists ? s.data() : null; if (pbStatus && pbStatus.state === "needs_you" && was !== "needs_you") { say(PINBOT_COOK, "❗ Pin Bot needs you", 10, true); sfx("ding"); } rerender(); }, () => {});
+  db.doc("pinbot/control").onSnapshot(s => { if (!ctlSaving) { pbControl = s.exists ? s.data() : null; rerender(); } }, () => {});
+  db.collection("pins").orderBy("releaseAt", "desc").limit(120).onSnapshot(s => {
+    const next = s.docs.filter(d => d.exists).map(d => Object.assign({ id: d.id }, d.data()));
+    if (!pinsFirst) { const added = next.filter(p => !pins.some(q => q.id === p.id)); if (added.length) { say(PINBOT_COOK, `📌 ${added.length} new pin${added.length > 1 ? "s" : ""} queued`, 6, true); sendTicket(PINBOT_COOK, "claude"); sfx("ding"); } }
+    pinsFirst = false; pins = next; updateChalk(); rerender();
+  }, () => {});
+  db.collection("products").limit(500).onSnapshot(s => { products = s.docs.filter(d => d.exists).map(d => Object.assign({ id: d.id }, d.data())); rerender(); }, () => {});
+}
+function updateChalk() {
+  const up = upcoming(), today = released().filter(p => dayLabel(p.releaseAt) === "Today");
+  chalkLines.splice(0, chalkLines.length, "Today's pins", `Live: ${today.length}`, `Queued: ${up.length}`, up[0] ? `Next ${when(up[0].releaseAt)}` : "Next: 9am run", pbState() === "paused" ? "PAUSED" : "Pin Bot on");
+}
+// Sumi keeps saying what's next on the pin board
+setInterval(() => {
+  if (!db) return;
+  if (pbState() === "needs_you") { say(PINBOT_COOK, "❗ " + ((pbStatus.issues && pbStatus.issues[0]) || "Pin Bot needs you"), 5, true); return; }
+  if (pbState() === "paused") { say(PINBOT_COOK, "⏸ Pin Bot paused", 4, true); return; }
+  const n = upcoming()[0]; if (n) say(PINBOT_COOK, `Next pin ${when(n.releaseAt)}: ${String(n.title || "").slice(0, 34)}`, 4);
+}, 9000);
+
+function rerender() { if (hqEl.hidden) return; if (hqView === "hq") renderHQ(); else if (hqView) renderStation(hqView); }
+function openHQ() { closeOrder(); hqView = "hq"; hqEl.hidden = false; renderHQ(); }
+function openStation(id) { if (id === "claude") return openHQ(); closeOrder(); hqView = id; hqEl.hidden = false; renderStation(id); }
+const PHONE = matchMedia("(max-width: 700px) and (orientation: portrait)");
+function closeHQ() { if (PHONE.matches && window.agentView === "inside" && hqView !== "hq") return openHQ(); hqEl.hidden = true; hqView = null; }
+setInterval(() => { if (PHONE.matches && window.agentView === "inside" && hqEl.hidden && orderEl.hidden) openHQ(); }, 400);
+document.getElementById("hqClose").onclick = closeHQ;
+
+function stat(label, value) { const d = el("div"); d.append(el("small", null, label), el("b", null, value)); return d; }
+function renderHQ() {
+  hqTitle.textContent = "Affiliate HQ · Head Chef Claude";
+  hqBody.innerHTML = "";
+  hqBody.append(el("p", "lead", "Every cook runs one affiliate program. Click a station to see its work. Open stations are waiting for a program: sign up, then tell Claude which cook should run it."));
+  const st = el("div", "hq-stats");
+  st.append(stat("Stations running", String(STATION_COOKS.filter(id => stationOf(id).program).length)), stat("Pins queued", db ? String(upcoming().length) : "—"), stat("Pins live", db ? String(released().length) : "—"), stat("Products", db ? String(products.length) : "—"));
+  hqBody.append(st);
+  const sec = el("section"); sec.append(el("h4", null, "Stations"));
+  const ul = el("ul", "st-list");
+  STATION_COOKS.forEach(id => {
+    const s = stationOf(id), li = el("li"), b = el("button", s.program ? "on" : ""); b.type = "button";
+    const state = id === PINBOT_COOK ? pbState() : (s.status || (s.program ? "on" : "open"));
+    b.append(el("b", null, `${byId[id].name} · ${s.program || "Open station"}`), el("span", "pill " + state, s.program ? (STATE_TXT[state] || state) : "Open"), el("small", null, s.desc || "No program yet."));
+    b.onclick = () => openStation(id); li.append(b); ul.append(li);
+  });
+  sec.append(ul); hqBody.append(sec);
+  const row = el("div", "row"); row.style.cssText = "display:flex;flex-wrap:wrap;gap:8px";
+  const pb = el("button", "btn", "Open Pin Bot"); pb.type = "button"; pb.onclick = () => openStation(PINBOT_COOK);
+  const ord = el("button", "btn ghost", "New crew order"); ord.type = "button"; ord.onclick = () => { closeHQ(); openOrder(); };
+  row.append(pb, ord); hqBody.append(row);
+  if (!db) hqBody.append(el("p", "empty", "Loading the latest pin data…")); else if (db.readOnly && db.updatedAt) hqBody.append(el("p", "empty", "Data updated " + new Date(db.updatedAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + "."));
+}
+function renderStation(id) {
+  const s = stationOf(id), name = byId[id].name;
+  hqBody.innerHTML = "";
+  const back = el("button", "btn ghost", "← All stations"); back.type = "button"; back.style.justifySelf = "start"; back.onclick = openHQ;
+  if (id !== PINBOT_COOK) {
+    hqTitle.textContent = `${name} · ${s.program || "Open station"}`;
+    hqBody.append(back);
+    if (s.program) { hqBody.append(el("p", null, s.desc || "")); if (s.note) hqBody.append(el("p", "lead", s.note)); }
+    else hqBody.append(el("p", null, `${name} doesn't have an affiliate program yet.`), el("p", "lead", `Sign up for a program (for example a brand's own program, or a network like Impact, CJ, ShareASale or Awin). Then tell Claude: "Assign <program> to ${name}." Claude sets up the job and this station lights up.`));
+    return;
+  }
+  hqTitle.textContent = `${name} · Pin Bot`;
+  hqBody.append(back, el("p", "lead", s.desc));
+  const state = pbState(), st = el("div", "hq-stats"), up = upcoming(), live = released();
+  st.append(stat("Status", STATE_TXT[state] || state), stat("Last run", pbStatus && pbStatus.lastRunAt ? new Date(pbStatus.lastRunAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not yet"), stat("Next run", (pbStatus && pbStatus.nextRun) || "Daily · 9 AM"), stat("Queued", String(up.length)));
+  hqBody.append(st);
+  if (pbStatus && pbStatus.lastSummary) hqBody.append(el("p", "lead", pbStatus.lastSummary));
+  if (pbStatus && Array.isArray(pbStatus.issues) && pbStatus.issues.length) { const u = el("ul", "issues"); pbStatus.issues.slice(0, 6).forEach(i => u.append(el("li", null, String(i)))); hqBody.append(u); }
+  // coming up, grouped by day
+  const cu = el("section"); cu.append(el("h4", null, "Coming up"));
+  if (!up.length) cu.append(el("p", "empty", db ? "Nothing queued. The next 9 AM run fills the next 3 days." : "Open on claude.ai to see the queue."));
+  let lastDay = "", list = null;
+  up.slice(0, 20).forEach(p => {
+    const d = dayLabel(p.releaseAt); if (d !== lastDay) { lastDay = d; cu.append(el("div", "day-h", d)); list = el("ul", "pin-list"); cu.append(list); }
+    const li = el("li"); li.append(el("time", null, when(p.releaseAt)), el("span", null, p.title || "Untitled pin"), el("small", null, [p.board, p.product, p.layout].filter(Boolean).join(" · "))); list.append(li);
+  });
+  hqBody.append(cu);
+  // live
+  const lv = el("section"); lv.append(el("h4", null, "Live on Pinterest"));
+  if (!live.length) lv.append(el("p", "empty", "No live pins yet."));
+  else { const ul = el("ul", "pin-list"); live.slice(0, 8).forEach(p => { const li = el("li", "live"), ttl = p.pinUrl && /^https:\/\/(www\.)?pinterest\.com\//.test(p.pinUrl) ? Object.assign(el("a", null, p.title || "Pin"), { href: p.pinUrl, target: "_blank", rel: "noopener" }) : el("span", null, p.title || "Pin"); li.append(el("time", null, p.releaseAt ? new Date(p.releaseAt).toLocaleDateString([], { month: "short", day: "numeric" }) : ""), ttl, el("small", null, [p.board, p.product].filter(Boolean).join(" · "))); ul.append(li); }); lv.append(ul); }
+  hqBody.append(lv);
+  const drafts = pins.filter(p => p.status === "draft").sort((a, b) => String(a.releaseAt).localeCompare(String(b.releaseAt)));
+  if (drafts.length) {
+    const ds = el("section"); ds.append(el("h4", null, "Simulation drafts (not posted)"), el("p", "lead", "Made by a dry run to show the bot working. These were never uploaded to Pinterest."));
+    const ul = el("ul", "pin-list"); drafts.slice(0, 10).forEach(p => { const li = el("li"); li.style.borderLeftColor = "#8d949b"; li.append(el("time", null, p.releaseAt ? new Date(p.releaseAt).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" }) : ""), el("span", null, p.title || "Draft pin"), el("small", null, [p.board, p.product, p.layout, p.file].filter(Boolean).join(" · "))); ul.append(li); });
+    ds.append(ul); hqBody.append(ds);
+  }
+  // controls the bot reads at the start of each run
+  if (db && db.readOnly) {
+    const n = el("p", "lead"); n.append(document.createTextNode("Pause, pins per day and boards are changed in the "));
+    const a = el("a", null, "Claude version of the shop"); a.href = "https://claude.ai/artifact/QLXtBuNqgZgd1MhjUgQzG5"; a.target = "_blank"; a.rel = "noopener"; n.append(a, document.createTextNode(". This website updates after each morning run."));
+    hqBody.append(n);
+  }
+  if (db && !db.readOnly) {
+    const c = Object.assign({ paused: false, perDay: 5, boards: BOARDS.slice(), note: "" }, pbControl || {});
+    const box = el("section", "ctl"); box.append(el("h4", null, "Your controls"), el("p", "lead", "The bot reads these at the start of every 9 AM run."));
+    const r1 = el("div", "row2");
+    const pause = el("input"); pause.type = "checkbox"; pause.checked = !!c.paused; const pl = el("label"); pl.append(pause, document.createTextNode("Pause the Pin Bot"));
+    const per = el("select"); [1, 2, 3, 4, 5].forEach(n => { const o = el("option", null, n + " a day"); o.value = n; if (n === Number(c.perDay)) o.selected = true; per.append(o); }); const prl = el("label"); prl.append(document.createTextNode("Pins per day"), per);
+    r1.append(pl, prl); box.append(r1);
+    const r2 = el("div", "row2"); const checks = BOARDS.map(bn => { const i = el("input"); i.type = "checkbox"; i.checked = (c.boards || BOARDS).includes(bn); const l = el("label"); l.append(i, document.createTextNode(bn)); r2.append(l); return [bn, i]; });
+    box.append(el("small", null, "Boards to pin to"), r2);
+    const note = el("textarea"); note.maxLength = 300; note.placeholder = "Optional: what to focus on, e.g. more tea pins this week"; note.value = c.note || ""; box.append(note);
+    const save = el("button", "btn", "Save controls"); save.type = "button"; save.style.justifySelf = "start";
+    save.onclick = async () => {
+      const body = { paused: pause.checked, perDay: Number(per.value), boards: checks.filter(([, i]) => i.checked).map(([bn]) => bn), note: note.value.trim().slice(0, 300), updatedAt: new Date().toISOString() };
+      if (!body.boards.length) { save.textContent = "Pick at least one board"; return; }
+      save.disabled = true; save.textContent = "Saving…"; ctlSaving = true;
+      try { await db.doc("pinbot/control").set(body); pbControl = body; save.textContent = "Saved ✓"; say(PINBOT_COOK, body.paused ? "⏸ Pausing the Pin Bot" : "Got your new controls ✓", 4, true); }
+      catch (e) { save.textContent = "Couldn't save"; }
+      ctlSaving = false; save.disabled = false; updateChalk();
+    };
+    box.append(save); hqBody.append(box);
+    const det = el("details", "prods"); det.append(el("summary", null, `Products in rotation (${products.length})`)); const pu = el("ul"); products.slice(0, 60).forEach(p => pu.append(el("li", null, [p.name, p.board].filter(Boolean).join(" · ")))); det.append(pu); hqBody.append(det);
+  }
+}
+
+/* ---- sound: broth, rain, bells (off until you turn it on) ---- */
+let actx = null, soundOn = false, rainGain = null, roomGain = null;
+const soundBtn = document.getElementById("soundBtn");
+function noiseBuf(c, secs) { const b = c.createBuffer(1, c.sampleRate * secs, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; }
+function startAudio() {
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+  const loop = (filterType, freq, q) => { const s = actx.createBufferSource(); s.buffer = noiseBuf(actx, 3); s.loop = true; const f = actx.createBiquadFilter(); f.type = filterType; f.frequency.value = freq; f.Q.value = q; const g = actx.createGain(); g.gain.value = 0; s.connect(f).connect(g).connect(actx.destination); s.start(); return g; };
+  rainGain = loop("bandpass", 2600, .5); roomGain = loop("lowpass", 420, .7);
+  setInterval(() => { // broth bubbles inside
+    if (!soundOn || window.agentView !== "inside") return;
+    for (let i = 0; i < 2; i++) if (Math.random() < .6) { const t = actx.currentTime + Math.random() * .5, o = actx.createOscillator(), g = actx.createGain(); o.type = "sine"; o.frequency.setValueAtTime(180 + Math.random() * 260, t); o.frequency.exponentialRampToValueAtTime(600 + Math.random() * 500, t + .06); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.05, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .09); o.connect(g).connect(actx.destination); o.start(t); o.stop(t + .1); }
+  }, 500);
+}
+function mixSound() {
+  if (!actx) return;
+  const t = actx.currentTime, inside = window.agentView === "inside";
+  rainGain.gain.setTargetAtTime(soundOn && window.agentRain ? (inside ? .025 : .09) : 0, t, .4);
+  roomGain.gain.setTargetAtTime(soundOn && inside ? .05 : 0, t, .4);
+}
+window.agentMix = mixSound;
+function sfx(kind) {
+  if (!soundOn || !actx) return;
+  const t = actx.currentTime;
+  const tones = kind === "bell" ? [[1320, .9], [1980, .5], [2640, .25]] : [[1760, .4], [2640, .2]];
+  tones.forEach(([f, a]) => { const o = actx.createOscillator(), g = actx.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.08 * a, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + (kind === "bell" ? 1.6 : .7)); o.connect(g).connect(actx.destination); o.start(t); o.stop(t + 1.7); });
+}
+function toggleSound() {
+  if (!actx) startAudio();
+  soundOn = !soundOn; if (actx.state === "suspended") actx.resume();
+  soundBtn.setAttribute("aria-pressed", soundOn); soundBtn.textContent = soundOn ? "🔊 Sound on" : "🔈 Sound off"; mixSound();
+}
+soundBtn.onclick = toggleSound;
+
+/* ---- keyboard shortcuts ---- */
+addEventListener("keydown", e => {
+  if (e.target && e.target.closest && e.target.closest("input, textarea")) { if (e.key === "Escape") closeOrder(); return; }
+  if (e.key === "Escape") { if (!hqEl.hidden) closeHQ(); else if (!orderEl.hidden) closeOrder(); else if (window.agentView === "inside") document.getElementById("backBtn").click(); return; }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === "m") toggleSound();
+  if (window.agentView === "inside" && k === "o") { e.preventDefault(); openHQ(); }
+  if (window.agentView !== "inside" && (k === "enter" || k === "e")) { e.preventDefault(); window.agentEnter && window.agentEnter(); }
+});
+
+
+
+/* ================= pixel kitchen ================= */
+const W = 384, H = 300, ZASHIKI = [[52, 255], [150, 255], [250, 255]], reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const scene = document.getElementById("scene"), cv = document.getElementById("kitchen"), ctx = cv.getContext("2d"), overlay = document.getElementById("overlay");
+ctx.imageSmoothingEnabled = false;
+function layer() { const c = document.createElement("canvas"); c.width = W; c.height = H; return c.getContext("2d"); }
+const R = (c, x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
+const disc = (c, cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const dx = Math.round(rx * Math.sqrt(Math.max(0, 1 - (dy / ry) ** 2))); R(c, cx - dx, cy + dy, dx * 2 + 1, 1, col); } };
+let seed = 7; const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+const bg = layer();
+(function drawRoom(c) {
+  // back wall: plaster between dark timbers
+  R(c, 0, 0, 336, 48, "#f3e3c3");
+  for (let y = 6; y < 44; y += 7) for (let x = (y % 14 ? 0 : 6); x < 336; x += 24) R(c, x, y, 1, 1, "#e6d0a8");
+  R(c, 0, 0, 336, 4, "#6e4428"); R(c, 0, 44, 336, 4, "#6e4428");
+  [0, 112, 224, 330].forEach(x => R(c, x, 0, 6, 48, "#7a4a2a"));
+  // kitchen floor: warm checker tiles
+  for (let y = 48; y < 172; y += 8) for (let x = 0; x < 336; x += 8) R(c, x, y, 8, 8, ((x + y) / 8) % 2 ? "#e8c08c" : "#d6a872");
+  for (let y = 48; y < 172; y += 8) R(c, 0, y, 336, 1, "rgba(120,80,40,.12)");
+  R(c, 0, 48, 336, 3, "rgba(80,50,20,.25)");
+  R(c, 0, 48, 4, 124, "#7a4a2a");
+  // wooden duckboard mats where the cooks stand
+  const sunoko = (x, y, w, h) => { R(c, x, y, w, h, "#7a4a2a"); for (let k = x + 1; k < x + w - 1; k += 4) R(c, k, y + 1, 3, h - 2, "#b5824f"); R(c, x, y + h - 1, w, 1, "#5e3820"); };
+  sunoko(40, 76, 72, 13); sunoko(124, 76, 72, 13); sunoko(152, 86, 74, 13); sunoko(242, 132, 58, 13);
+  // floor drain and a dropped scallion
+  R(c, 118, 140, 8, 6, "#8d949b"); for (let k = 0; k < 4; k++) R(c, 119 + k * 2, 141, 1, 4, "#5b6168");
+  R(c, 212, 152, 3, 1, "#6fae4a");
+  // wall clock
+  disc(c, 226, 15, 6, 6, "#5e3820"); disc(c, 226, 15, 5, 5, "#fbf6ea"); R(c, 226, 11, 1, 4, "#2b1d12"); R(c, 226, 15, 3, 1, "#2b1d12"); R(c, 226, 22, 1, 4, "#5e3820");
+  // garlic and chili strings in the pantry
+  for (let k = 0; k < 5; k++) { disc(c, 381, 13 + k * 4, 2, 2, k % 2 ? "#f4ecd8" : "#c8382c"); }
+  R(c, 381, 10, 1, 22, "#7a5a3a");
+  // sink counter: basin, faucet, towel, dish rack
+  R(c, 200, 44, 34, 18, "#a9b0b6"); R(c, 200, 44, 34, 1, "#d6dce0"); R(c, 200, 62, 34, 12, "#7d8389");
+  R(c, 203, 47, 20, 12, "#5b6168"); R(c, 204, 48, 18, 10, "#6d737a"); R(c, 205, 49, 7, 2, "#9fc8e0"); R(c, 212, 40, 2, 9, "#c4c9ce"); R(c, 212, 40, 6, 2, "#c4c9ce");
+  R(c, 204, 63, 12, 8, "#f4ecd8"); for (let k = 0; k < 4; k++) R(c, 205 + k * 3, 64, 1, 6, "#2f4f7a");
+  R(c, 225, 45, 7, 15, "#c4c9ce"); for (let k = 0; k < 4; k++) { R(c, 226, 46 + k * 3, 5, 2, "#f6efe2"); R(c, 226, 46 + k * 3, 5, 1, "#2f6fb3"); }
+  // side counter: rice cooker, kettle, bowl stacks, chashu
+  R(c, 234, 44, 50, 18, "#d9a873"); R(c, 234, 44, 50, 1, "#ecc596"); R(c, 234, 62, 50, 12, "#8a5530"); for (let x = 238; x < 282; x += 15) R(c, x, 64, 11, 7, "#7a4a2a");
+  disc(c, 245, 50, 6, 4, "#f4f0e6"); R(c, 239, 50, 13, 6, "#f4f0e6"); R(c, 239, 54, 13, 1, "#c8382c"); R(c, 244, 46, 3, 1, "#b9b3a6");
+  disc(c, 260, 51, 5, 4, "#3a3f45"); R(c, 264, 47, 4, 2, "#3a3f45"); R(c, 258, 46, 4, 1, "#5b6168");
+  for (let k = 0; k < 4; k++) { R(c, 270, 56 - k * 2, 10, 2, "#f6efe2"); R(c, 270, 56 - k * 2, 10, 1, "#2f6fb3"); }
+  // noodle bench with flour, dough, rolling pin and a drying rack
+  R(c, 40, 132, 62, 12, "#d9a873"); R(c, 40, 132, 62, 1, "#ecc596"); R(c, 40, 144, 62, 8, "#8a5530"); R(c, 42, 146, 4, 6, "#6e4428"); R(c, 96, 146, 4, 6, "#6e4428");
+  for (let i = 0; i < 50; i++) R(c, 42 + rand() * 58, 133 + rand() * 10, 1, 1, "#fbf6ea");
+  disc(c, 50, 138, 5, 3, "#f3e3b8"); R(c, 47, 137, 3, 1, "#fffaf0");
+  R(c, 60, 135, 16, 2, "#b5824f"); R(c, 58, 135, 2, 2, "#7a4a2a"); R(c, 76, 135, 2, 2, "#7a4a2a");
+  for (let i = 0; i < 7; i++) R(c, 82 + i * 2, 134, 1, 8, "#f3dc9a");
+  R(c, 104, 126, 2, 24, "#5e3820"); R(c, 132, 126, 2, 24, "#5e3820"); R(c, 104, 126, 30, 2, "#7a4a2a");
+  for (let i = 0; i < 13; i++) R(c, 107 + i * 2, 128, 1, 9 + (i % 3) * 2, "#f3dc9a");
+  // knife strip and a hanging ninja scroll on the hood
+  R(c, 120, 6, 28, 2, "#3a3f45"); [122, 128, 134, 140].forEach((x, i) => { R(c, x, 8, 2, 7 - i % 2, "#c4c9ce"); R(c, x, 4, 2, 3, "#5e3820"); });
+  R(c, 4, 26, 10, 18, "#f3e3b8"); R(c, 3, 25, 12, 2, "#7a4a2a"); R(c, 3, 43, 12, 2, "#7a4a2a"); R(c, 7, 29, 4, 1, "#2b1d12"); R(c, 8, 30, 2, 6, "#2b1d12"); R(c, 6, 33, 6, 1, "#2b1d12"); R(c, 7, 38, 4, 2, "#c8382c");
+  // pantry: rice sacks and a shuriken target
+  disc(c, 372, 84, 8, 8, "#e9d6b0"); disc(c, 372, 84, 6, 6, "#c8382c"); disc(c, 372, 84, 4, 4, "#e9d6b0"); disc(c, 372, 84, 2, 2, "#c8382c");
+  [[369, 81], [376, 87]].forEach(([x, y]) => { R(c, x - 2, y, 5, 1, "#5b6168"); R(c, x, y - 2, 1, 5, "#5b6168"); R(c, x, y, 1, 1, "#c4c9ce"); });
+  R(c, 361, 94, 1, 6, "#5b6168"); R(c, 360, 99, 3, 2, "#3a2416");
+  [[346, 72], [356, 74]].forEach(([x, y]) => { R(c, x, y, 9, 11, "#efe2c4"); R(c, x, y, 9, 1, "#d9c8a0"); R(c, x + 2, y + 4, 5, 3, "#c8382c"); R(c, x + 3, y - 1, 3, 1, "#b59a6e"); });
+  // worn spots on the kitchen tiles
+  for (let i = 0; i < 18; i++) R(c, 30 + rand() * 290, 80 + rand() * 88, 2 + rand() * 4, 1, "rgba(120,70,30,.18)");
+  // window with a little plant
+  R(c, 236, 8, 44, 28, "#7a4a2a"); R(c, 239, 11, 38, 22, "#9fd0f0"); R(c, 239, 11, 38, 6, "#bfe3f7"); R(c, 257, 11, 2, 22, "#7a4a2a"); R(c, 239, 21, 38, 2, "#7a4a2a");
+  R(c, 248, 2, 20, 4, "#c8382c");
+  R(c, 268, 30, 8, 6, "#b85c34"); disc(c, 272, 27, 5, 3, "#5f9a42"); R(c, 271, 22, 2, 3, "#4f8a3a");
+  // wall shelf with bowls over the prep counter
+  R(c, 120, 24, 100, 3, "#7a4a2a"); R(c, 122, 27, 2, 4, "#5e3820"); R(c, 216, 27, 2, 4, "#5e3820");
+  for (let i = 0; i < 8; i++) { const x = 124 + i * 11; R(c, x, 19, 9, 5, "#f6efe2"); R(c, x, 19, 9, 1, "#2f6fb3"); R(c, x + 1, 14, 7, 5, "#f6efe2"); R(c, x + 1, 14, 7, 1, "#c8382c"); }
+  [["#a24f24", 290], ["#e9c66a", 298], ["#6f8f4a", 306], ["#c8382c", 314]].forEach(([col, x]) => { R(c, x, 30, 6, 10, col); R(c, x + 1, 28, 4, 2, "#5e3820"); });
+  R(c, 286, 40, 36, 2, "#7a4a2a");
+  // wooden menu plaques hanging under the bowl shelf
+  for (let i = 0; i < 9; i++) { const x = 125 + i * 10; R(c, x, 30, 8, 13, "#5e3820"); R(c, x + 1, 31, 6, 11, "#efd9ad"); R(c, x + 3, 28, 2, 2, "#3a2416"); for (let k = 0; k < 3; k++) R(c, x + 2 + (k % 2), 33 + k * 2, 3 - (k % 2), 1, "#2b1d12"); R(c, x + 2, 40, 4, 1, "#c8382c"); }
+  // kamidana: a little shrine shelf up in the corner
+  R(c, 290, 18, 34, 3, "#5e3820"); R(c, 292, 21, 2, 4, "#3a2416"); R(c, 320, 21, 2, 4, "#3a2416");
+  R(c, 300, 10, 14, 8, "#d9b98a"); R(c, 298, 8, 18, 3, "#7a4a2a"); R(c, 305, 12, 4, 6, "#3a2416");
+  R(c, 293, 11, 4, 7, "#4f8a3a"); R(c, 317, 11, 4, 7, "#4f8a3a"); R(c, 292, 7, 30, 1, "#f4ecd8");
+  for (let k = 0; k < 4; k++) R(c, 296 + k * 7, 8, 2, 3, "#ffffff");
+  // daruma and sake bottles in the pantry
+  disc(c, 376, 24, 4, 4, "#c8382c"); R(c, 374, 22, 4, 3, "#f4ecd8"); R(c, 375, 23, 1, 1, "#1a1418"); R(c, 377, 23, 1, 1, "#1a1418");
+  for (let i = 0; i < 4; i++) { R(c, 343 + i * 5, 58, 4, 10, ["#2f5a3a", "#e9e0cc", "#2f4f7a", "#5e3820"][i]); R(c, 344 + i * 5, 55, 2, 3, "#3a2416"); R(c, 343 + i * 5, 61, 4, 3, "#f4ecd8"); }
+  // hanging ladles
+  for (let i = 0; i < 4; i++) { const x = 18 + i * 7; R(c, x, 6, 1, 14, "#9aa1a7"); R(c, x - 1, 20, 3, 3, "#9aa1a7"); }
+  // stove hood
+  R(c, 36, 4, 80, 4, "#8d949b"); for (let y = 8; y < 20; y++) R(c, 36 + (y - 8), y, 80 - (y - 8) * 2, 1, y % 3 ? "#a9b0b6" : "#9aa1a7");
+  // stove
+  R(c, 36, 44, 80, 30, "#6d737a"); R(c, 36, 40, 80, 8, "#a9b0b6"); R(c, 36, 47, 80, 1, "#5b6168");
+  [44, 58, 86, 100].forEach(x => { disc(c, x, 64, 3, 3, "#3b3f45"); R(c, x - 1, 63, 2, 2, "#c8c8c8"); });
+  R(c, 40, 52, 72, 6, "#5b6168");
+  // prep counter with cutting board, noodles, scallions, eggs
+  R(c, 124, 44, 72, 18, "#d9a873"); R(c, 124, 62, 72, 12, "#8a5530"); R(c, 124, 44, 72, 1, "#e9c08f");
+  for (let x = 128; x < 196; x += 17) R(c, x, 64, 12, 7, "#7a4a2a");
+  R(c, 134, 47, 26, 12, "#f0dcb4"); R(c, 134, 58, 26, 1, "#c9a873");
+  for (let i = 0; i < 6; i++) R(c, 137 + i * 3, 50, 2, 6, "#6fae4a");
+  R(c, 152, 49, 1, 8, "#c4c9ce"); R(c, 152, 47, 1, 2, "#5e3820");
+  for (let i = 0; i < 9; i++) R(c, 166 + (i % 3) * 3, 48 + Math.floor(i / 3) * 2, 2, 8, "#f3dc9a");
+  R(c, 165, 54, 10, 2, "#c8382c");
+  [180, 186, 183].forEach((x, i) => disc(c, x, 50 + (i === 2 ? 4 : 0), 2, 3, "#f8f1e2"));
+  // recipe shelf (left)
+  R(c, 6, 50, 26, 66, "#5e3820"); R(c, 8, 52, 22, 62, "#3a2416");
+  const books = ["#a8442f", "#2f5f8a", "#d9a441", "#4f7a3a", "#7a4fa8", "#c8382c", "#e3c38f", "#2b6f6a"];
+  for (let s = 0; s < 4; s++) { const y = 54 + s * 15; R(c, 8, y + 12, 22, 3, "#7a4a2a"); let x = 9; while (x < 28) { const w = 2 + ((rand() * 2) | 0), h = 8 + ((rand() * 4) | 0); R(c, x, y + 12 - h, w, h, books[(rand() * books.length) | 0]); R(c, x, y + 12 - h + 2, w, 1, "rgba(255,255,255,.35)"); x += w + 1; } }
+  // divider wall to the pantry, with a doorway
+  R(c, 330, 48, 8, 50, "#7a4a2a"); R(c, 330, 128, 8, 44, "#7a4a2a"); R(c, 328, 96, 12, 3, "#5e3820"); R(c, 328, 126, 12, 3, "#5e3820");
+  // specials board (Grand Canyon)
+  R(c, 286, 54, 40, 34, "#7a4a2a"); R(c, 289, 57, 34, 28, "#2c3a2f");
+  R(c, 300, 88, 12, 2, "#7a4a2a");
+  // pantry room
+  R(c, 338, 0, 46, 172, "#b98a58");
+  for (let y = 0; y < 172; y += 7) R(c, 338, y, 46, 1, "#a37446");
+  for (let y = 0; y < 172; y += 14) R(c, 360 + (y % 28 ? 0 : 10), y, 1, 7, "#a37446");
+  R(c, 338, 0, 46, 10, "#e9d6b0"); R(c, 338, 8, 46, 2, "#7a4a2a");
+  R(c, 342, 16, 38, 3, "#7a4a2a"); R(c, 342, 34, 38, 3, "#7a4a2a");
+  for (let i = 0; i < 6; i++) { R(c, 344 + i * 6, 10, 4, 6, ["#e9c66a", "#a24f24", "#6f8f4a"][i % 3]); R(c, 344 + i * 6, 28, 4, 6, ["#f3ece0", "#c8382c", "#2f6fb3"][i % 3]); }
+  const crate = (x, y) => { R(c, x, y, 16, 12, "#b5864f"); R(c, x, y, 16, 2, "#d0a06a"); R(c, x, y + 6, 16, 1, "#8a5a34"); R(c, x, y + 11, 16, 1, "#7a4a2a"); R(c, x + 1, y + 2, 1, 9, "#8a5a34"); R(c, x + 14, y + 2, 1, 9, "#8a5a34"); };
+  crate(344, 50); crate(362, 50); crate(353, 40); crate(344, 140); crate(362, 152);
+  for (let i = 0; i < 4; i++) disc(c, 347 + i * 4, 38, 2, 2, "#7fae4a");
+  for (let i = 0; i < 3; i++) disc(c, 365 + i * 4, 48, 2, 2, "#e07a3a");
+  disc(c, 371, 134, 7, 8, "#e3d2a8"); R(c, 368, 126, 6, 2, "#b59a6e"); disc(c, 356, 160, 6, 7, "#e3d2a8");
+  R(c, 344, 104, 13, 14, "#9a6a3a"); R(c, 344, 108, 13, 1, "#5e3820"); R(c, 344, 113, 13, 1, "#5e3820"); disc(c, 350, 104, 6, 3, "#b5864f");
+  // ---- dining room ----
+  R(c, 0, 190, 384, 110, "#94603a");
+  for (let y = 192; y < 300; y += 6) R(c, 0, y, 384, 1, "#7f5130");
+  for (let y = 192; y < 300; y += 12) for (let x = (y % 24 ? 0 : 20); x < 384; x += 40) R(c, x, y, 1, 6, "#7f5130");
+  for (let i = 0; i < 90; i++) R(c, rand() * 384, 192 + rand() * 106, 2 + rand() * 4, 1, "#a36c44");
+  R(c, 338, 172, 46, 18, "#94603a");
+  // counter stools: red vinyl on chrome
+  [40, 72, 120, 168, 216, 264, 312].forEach(x => { R(c, x - 1, 202, 3, 9, "#4a4f56"); disc(c, x, 211, 5, 1, "#6d737a"); disc(c, x, 200, 7, 3, "#8f2219"); disc(c, x, 199, 6, 2, "#c8382c"); R(c, x - 4, 198, 3, 1, "#ec6a5c"); });
+  // potted bamboo by the counter end
+  R(c, 284, 216, 10, 9, "#5e3820"); R(c, 284, 216, 10, 2, "#7a4a2a");
+  for (let i = 0; i < 4; i++) { R(c, 285 + i * 2, 192 + i * 3, 1, 24 - i * 3, "#5f9a42"); R(c, 284 + i * 2, 196 + i * 4, 3, 1, "#7fbe5a"); R(c, 287 + i * 2, 202 + i * 3, 3, 1, "#4f8a3a"); }
+  // zashiki: raised tatami platform with low tables and floor cushions
+  R(c, 4, 232, 294, 68, "#4a2c18"); R(c, 6, 234, 290, 64, "#6e4428");
+  const mats = [[8, 236, 72, 30], [80, 236, 72, 30], [152, 236, 72, 30], [224, 236, 70, 30], [8, 266, 96, 30], [104, 266, 96, 30], [200, 266, 94, 30]];
+  mats.forEach(([x, y, w, h]) => { R(c, x, y, w, h, "#d1bd82"); for (let yy = y + 2; yy < y + h - 1; yy += 2) R(c, x + 1, yy, w - 2, 1, "#c4ae72"); R(c, x, y, w, 2, "#2f3f2a"); R(c, x, y + h - 2, w, 2, "#2f3f2a"); R(c, x, y, 1, h, "#5e3820"); R(c, x + w - 1, y, 1, h, "#5e3820"); });
+  const cushion = (x, y, col) => { R(c, x - 6, y - 4, 13, 9, col); R(c, x - 6, y - 4, 13, 1, "rgba(255,255,255,.25)"); R(c, x - 6, y + 4, 13, 1, "rgba(0,0,0,.25)"); R(c, x, y, 1, 1, "#f2c14e"); };
+  ZASHIKI.forEach(([cx, cy], n) => {
+    const cols = n % 2 ? ["#2f4f7a", "#2f4f7a"] : ["#a8331f", "#a8331f"];
+    [[-12, -11], [12, -11], [-12, 14], [12, 14]].forEach(([dx, dy], k) => cushion(cx + dx, cy + dy, cols[k % 2]));
+    R(c, cx - 23, cy + 8, 46, 2, "rgba(40,20,5,.35)");
+    R(c, cx - 23, cy - 6, 46, 14, "#3a2416"); R(c, cx - 22, cy - 6, 44, 2, "#5e3820"); for (let x = cx - 20; x < cx + 22; x += 9) R(c, x, cy - 3, 5, 1, "#4a2e1a");
+    [[-12, -2, "#d9a35c"], [12, -2, "#c8361f"], [-12, 4, "#d9a35c"], [12, 4, "#d9a35c"]].forEach(([dx, dy, br]) => { R(c, cx + dx - 4, cy + dy, 9, 3, "#f3ece0"); R(c, cx + dx - 3, cy + dy, 7, 1, br); R(c, cx + dx - 4, cy + dy + 2, 9, 1, "#2f4f7a"); });
+    R(c, cx - 2, cy - 4, 5, 4, "#4f6a3a"); R(c, cx - 1, cy - 5, 3, 1, "#3a2416"); R(c, cx + 3, cy - 3, 2, 1, "#4f6a3a");
+    R(c, cx - 1, cy + 2, 2, 2, "#e9e0cc"); R(c, cx + 2, cy + 2, 2, 2, "#e9e0cc");
+  });
+  // shoji screen between the dining room and the entrance
+  R(c, 296, 228, 8, 72, "#5e3820"); R(c, 297, 229, 6, 70, "#f4ecd8");
+  for (let y = 232; y < 300; y += 6) R(c, 297, y, 6, 1, "#7a4a2a"); R(c, 299, 229, 1, 70, "#7a4a2a");
+  // genkan: stone entry with shoes, umbrellas and the ticket machine
+  R(c, 304, 228, 80, 72, "#8f8a82");
+  for (let y = 228; y < 300; y += 12) for (let x = 304 + (y % 24 ? 0 : 10); x < 384; x += 20) { R(c, x, y, 19, 11, "#9c968d"); R(c, x, y, 19, 1, "#aaa49a"); }
+  R(c, 304, 226, 80, 3, "#5e3820");
+  [[314, 262, "#3a2416"], [326, 266, "#c8382c"], [316, 278, "#5e3820"], [330, 280, "#2f4f7a"]].forEach(([x, y, col]) => { R(c, x, y, 3, 6, col); R(c, x + 4, y, 3, 6, col); R(c, x, y, 3, 1, "#e9d2a6"); R(c, x + 4, y, 3, 1, "#e9d2a6"); });
+  R(c, 308, 236, 10, 14, "#6d737a"); R(c, 308, 236, 10, 2, "#8d949b"); R(c, 310, 228, 2, 9, "#c8382c"); R(c, 313, 229, 2, 8, "#2f4f7a"); R(c, 315, 230, 1, 7, "#e9c66a");
+  R(c, 350, 234, 30, 30, "#d9d4c8"); R(c, 350, 234, 30, 2, "#efeae0"); R(c, 352, 238, 26, 6, "#2b2f36"); R(c, 353, 239, 16, 4, "#6fb7e0");
+  R(c, 352, 258, 26, 4, "#b9b3a6"); R(c, 372, 246, 4, 8, "#4a4f56"); R(c, 373, 247, 2, 1, "#c8c8c8");
+  // front doorway with indigo noren
+  R(c, 314, 284, 66, 4, "#3a2416"); R(c, 312, 284, 3, 16, "#3a2416"); R(c, 379, 284, 3, 16, "#3a2416");
+  for (let i = 0; i < 4; i++) { const x = 316 + i * 16; R(c, x, 288, 15, 12, "#26406a"); R(c, x, 288, 15, 1, "#3a5a8a"); disc(c, x + 7, 294, 3, 3, "#f4ecd8"); disc(c, x + 7, 294, 1, 1, "#26406a"); }
+  // big chochin lanterns
+  [[10, 214], [374, 206], [150, 226]].forEach(([x, y], i) => {
+    const s = i === 2 ? .8 : 1;
+    R(c, x - 1, y - 16, 2, 6, "#2b1d12"); disc(c, x, y, Math.round(7 * s), Math.round(9 * s), "#c8382c"); disc(c, x - 2, y - 2, Math.round(3 * s), Math.round(5 * s), "#e0574a");
+    for (let k = -6; k <= 6; k += 3) R(c, x - Math.round(7 * s) + 1, y + k, Math.round(14 * s) - 1, 1, "#a8331f");
+    R(c, x - 5, y - Math.round(10 * s), 11, 2, "#2b1d12"); R(c, x - 5, y + Math.round(9 * s), 11, 2, "#2b1d12");
+    R(c, x - 1, y - 4, 3, 1, "#1a1418"); R(c, x, y - 4, 1, 7, "#1a1418"); R(c, x - 2, y, 5, 1, "#1a1418"); R(c, x - 2, y + 3, 1, 2, "#1a1418"); R(c, x + 2, y + 3, 1, 2, "#1a1418");
+  });
+})(bg);
+
+// front pieces that cooks can stand behind (drawn in depth order)
+const fg = layer();
+(function drawFront(c) {
+  // center island (Claude)
+  R(c, 150, 104, 78, 14, "#d9a873"); R(c, 150, 104, 78, 1, "#ecc596"); R(c, 150, 118, 78, 10, "#8a5530");
+  for (let x = 154; x < 226; x += 18) R(c, x, 120, 13, 6, "#7a4a2a");
+  R(c, 152, 101, 74, 2, "#9aa1a7");
+  for (let i = 0; i < 4; i++) { const x = 196 + i * 8; R(c, x, 108, 6, 4, "#f6efe2"); R(c, x, 108, 6, 1, "#2f6fb3"); R(c, x + 1, 108, 4, 1, "#d9a35c"); }
+  R(c, 156, 106, 18, 9, "#f0dcb4"); for (let i = 0; i < 4; i++) R(c, 158 + i * 4, 108, 2, 5, "#f3dc9a");
+  // tasting pass (Denali) with heat lamps
+  R(c, 238, 148, 66, 10, "#b9c0c6"); R(c, 238, 148, 66, 1, "#d6dce0"); R(c, 238, 158, 66, 6, "#7d8389");
+  [248, 270, 292].forEach(x => { R(c, x - 6, 150, 12, 5, "#f6efe2"); R(c, x - 5, 150, 10, 1, "#d9a35c"); R(c, x - 6, 154, 12, 1, "#c8382c"); });
+  // customer counter across the front
+  R(c, 6, 172, 326, 10, "#d9a873"); R(c, 6, 172, 326, 1, "#ecc596"); R(c, 6, 182, 326, 10, "#8a5530");
+  for (let x = 10; x < 330; x += 20) R(c, x, 184, 1, 7, "#6e4428");
+  [72, 168, 264].forEach(x => { R(c, x - 5, 174, 11, 5, "#f6efe2"); R(c, x - 4, 174, 9, 1, x === 72 ? "#c8361f" : "#d9a35c"); R(c, x - 5, 178, 11, 1, "#c8382c"); R(c, x + 7, 174, 1, 6, "#e3c38f"); R(c, x + 9, 174, 1, 6, "#e3c38f"); });
+  [[120, "#2b1a10"], [123, "#c8382c"], [126, "#e9c66a"]].forEach(([x, col]) => R(c, x, 173, 2, 5, col));
+  [100, 236, 300].forEach(x => { R(c, x, 170, 3, 8, "#6a3a1a"); R(c, x + 1, 168, 1, 2, "#6a3a1a"); R(c, x, 173, 3, 2, "#e9c66a"); R(c, x + 5, 174, 3, 4, "#f2c14e"); R(c, x + 5, 173, 3, 1, "#ffffff"); });
+  [40, 312].forEach(x => { R(c, x - 3, 174, 7, 4, "#efe6d2"); R(c, x - 2, 175, 5, 2, "#c9a873"); });
+  [40, 72, 120, 168, 216, 264, 312].forEach(x => { R(c, x + 10, 173, 3, 5, "#7a4a2a"); R(c, x + 10, 172, 1, 1, "#e3c38f"); R(c, x + 12, 172, 1, 1, "#e3c38f"); });
+  R(c, 190, 171, 5, 7, "#d9e4ea"); R(c, 190, 171, 5, 1, "#ffffff"); R(c, 195, 173, 1, 3, "#d9e4ea");
+})(fg);
+const FRONT = [{ y: 128, x: 150, w: 78, top: 100, h: 28 }, { y: 164, x: 238, w: 66, top: 146, h: 18 }, { y: 192, x: 6, w: 326, top: 170, h: 22 }];
+
+/* ---- people ---- */
+const LOOK = {
+  claude: { shirt: "#f6f3ee", coat: true, pants: "#3a3f4a", skin: "#f3d6b0", hair: "#3a2a20", apron: "#d97757", chef: true, scarf: "#c8382c" },
+  denali: { shirt: "#f6f3ee", coat: true, pants: "#2f3f5a", skin: "#e9c39a", hair: "#1e1a2a", style: "short", apron: "#2f6fb3", hb: "#2f4f7a", wraps: true },
+  "death-valley": { shirt: "#c8442f", pants: "#2c2f3a", skin: "#d9a77a", hair: "#5a1a12", style: "spiky", apron: "#2b1d12", hb: "#1e1612", wraps: true },
+  yosemite: { shirt: "#3f4f46", vest: "#6a7f4a", pants: "#34443a", skin: "#f0c99a", hair: "#9a5a2a", style: "spiky", mask: "#2b3a4a", hb: "#2b3a4a", wraps: true },
+  sequoia: { shirt: "#6a3f2a", pants: "#3a2f28", skin: "#efcfa8", hair: "#e3ded6", style: "long", beard: "#e3ded6", glasses: true, apron: "#efe0c4", hb: "#4a3a5a" },
+  "grand-canyon": { shirt: "#f6f3ee", coat: true, pants: "#3a2f28", skin: "#c99a6e", hair: "#2a1d14", style: "pony", apron: "#2c3a2f", hb: "#7a4fa8" },
+  guestA: { shirt: "#4f7aa8", pants: "#3a3a46", skin: "#f0c99a", hair: "#e0b04a", style: "spiky" },
+  guestB: { shirt: "#8a5aa8", pants: "#3a3a46", skin: "#c99a6e", hair: "#2a1d14", style: "long" },
+  guestC: { shirt: "#3a6a8a", pants: "#2c2f3a", skin: "#f0c99a", hair: "#1e1612", hb: "#2b3a4a", vest: "#6a7f4a" },
+  guestD: { shirt: "#d9a441", pants: "#3a3a46", skin: "#e9c39a", hair: "#7a4a24", style: "pony" },
+  guestE: { shirt: "#c46a8a", pants: "#3a3a46", skin: "#f3d6b0", hair: "#d97aa8", style: "long", hb: "#5a3a6a" },
+  guestF: { shirt: "#2f5a3a", pants: "#2c2f3a", skin: "#c99a6e", hair: "#3a2a20", style: "spiky", vest: "#6a7f4a", hb: "#2b3a4a" },
+  guestG: { shirt: "#e07a3a", pants: "#3a3a46", skin: "#f0c99a", hair: "#f2c14e", style: "spiky", hb: "#2b3a4a" },
+  guestH: { shirt: "#5a4a8a", pants: "#2c2f3a", skin: "#d9a77a", hair: "#1e1612", mask: "#2b2f3a" },
+  ruflo: { shirt: "#f6f3ee", coat: true, pants: "#2a2a33", skin: "#efcfa8", hair: "#2a2a33", style: "spiky", apron: "#4a4a5e", hb: "#3a3a46", wraps: true },
+  guestI: { shirt: "#7a8a9a", pants: "#3a3a46", skin: "#efcfa8", hair: "#c9c2ba", style: "pony" },
+};
+const shadeCache = {};
+function shade(hex, k) {
+  const key = hex + k; if (shadeCache[key]) return shadeCache[key];
+  const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v * k)));
+  return shadeCache[key] = `rgb(${f(n >> 16)},${f(n >> 8 & 255)},${f(n & 255)})`;
+}
+// one ninja-chef or guest, feet at (p.x, p.y); drawSprite adds the outline
+function drawPerson(c, p, t) {
+  const L = LOOK[p.look], x = Math.round(p.x), y = Math.round(p.y), d = p.dir, sit = p.sit, by = sit ? 2 : 0;
+  const P = (dx, dy, w, h, col) => R(c, x + dx, y + dy, w, h, col);
+  const shirtD = shade(L.shirt, .76), shirtL = shade(L.shirt, 1.12), skinD = shade(L.skin, .86), hairL = shade(L.hair, 1.4), pantsD = shade(L.pants, .75);
+  if (!sit) {
+    const a = p.moving ? [0, -1, 0, 1][p.frame % 4] : 0;
+    P(-3, -5 + (a < 0 ? 1 : 0), 3, 4 - (a < 0 ? 1 : 0), L.pants); P(1, -5 + (a > 0 ? 1 : 0), 3, 4 - (a > 0 ? 1 : 0), L.pants);
+    P(-1, -5, 1, 3, pantsD); P(3, -5 + (a > 0 ? 1 : 0), 1, 3, pantsD);
+    if (L.wraps) { P(-3, -3 + (a < 0 ? 1 : 0), 3, 1, "#e9e4da"); P(1, -3 + (a > 0 ? 1 : 0), 3, 1, "#e9e4da"); P(1, -4, 1, 1, "#7a5a3a"); }
+    P(-4, -1, 4, 1, "#2b2f3a"); P(1, -1, 4, 1, "#2b2f3a"); P(-3, -1, 1, 1, L.skin); P(2, -1, 1, 1, L.skin);
+  }
+  // torso
+  P(-4, -11 + by, 9, 6, L.shirt); P(4, -11 + by, 1, 6, shirtD); P(-4, -11 + by, 1, 3, shirtL);
+  P(-4, -6 + by, 9, 1, shirtD);
+  if (L.vest) { P(-4, -11 + by, 3, 6, L.vest); P(2, -11 + by, 3, 6, shade(L.vest, .85)); P(-4, -9 + by, 2, 1, shade(L.vest, .65)); P(3, -9 + by, 2, 1, shade(L.vest, .6)); P(-3, -12 + by, 7, 1, L.vest); }
+  if (L.coat && d === 0) { P(-2, -11 + by, 5, 1, "#e6e0d4"); [-10, -8].forEach(r => { P(-3, r + by, 1, 1, "#b9b2a2"); P(3, r + by, 1, 1, "#b9b2a2"); }); }
+  if (L.apron && d !== 1) { P(-2, -9 + by, 5, 6, L.apron); P(2, -9 + by, 1, 6, shade(L.apron, .82)); P(-4, -7 + by, 9, 1, shade(L.apron, .9)); P(-1, -6 + by, 2, 1, shade(L.apron, .7)); }
+  if (L.apron && d === 1) { P(-4, -7 + by, 9, 1, L.apron); P(-1, -7 + by, 3, 1, shade(L.apron, .8)); P(0, -6 + by, 1, 2, L.apron); }
+  if (L.scarf && d !== 1) { P(-2, -11 + by, 5, 2, L.scarf); P(0, -9 + by, 1, 2, L.scarf); }
+  if (!sit && !L.apron) { P(4, -6, 2, 2, "#4a3a2a"); P(4, -6, 2, 1, "#6a5a4a"); } // kunai pouch
+  // arms
+  const sw = p.work && !reduce ? (Math.sin(t * 14 + x) > 0 ? 1 : 0) : 0, sw2 = p.work ? 1 - sw : 0;
+  const sleeve = L.vest ? L.shirt : L.shirt;
+  P(-6, -11 + by + sw, 2, 4, sleeve); P(-6, -11 + by + sw, 1, 4, shirtL); P(5, -11 + by + sw2, 2, 4, shirtD);
+  if (L.coat) { P(-6, -8 + by + sw, 2, 1, "#e6e0d4"); P(5, -8 + by + sw2, 2, 1, "#d9d2c4"); }
+  P(-6, -7 + by + sw, 2, 1, L.skin); P(5, -7 + by + sw2, 2, 1, skinD);
+  // head
+  P(-1, -12 + by, 3, 1, skinD);
+  P(-4, -19 + by, 9, 7, L.skin); P(4, -19 + by, 1, 7, skinD);
+  if (d === 0 || d === 1) { P(-5, -16 + by, 1, 2, L.skin); P(5, -16 + by, 1, 2, skinD); }
+  // hair
+  P(-4, -20 + by, 9, 3, L.hair); P(-3, -20 + by, 2, 1, hairL);
+  if (L.style === "spiky") { [[-4, -22], [-2, -23], [0, -22], [2, -23], [4, -22]].forEach(([hx, hy]) => P(hx, hy + by, 1, 2, L.hair)); P(-2, -23 + by, 1, 1, hairL); }
+  if (L.style === "long") { P(-5, -18 + by, 1, 8, L.hair); P(5, -18 + by, 1, 8, shade(L.hair, .85)); if (d === 1) P(-4, -13 + by, 9, 4, L.hair); }
+  if (L.style === "pony") { if (d === 1) { P(-1, -13 + by, 3, 4, L.hair); P(0, -9 + by, 1, 2, L.hair); } else if (d === 2) P(4, -17 + by, 3, 3, L.hair); else if (d === 3) P(-6, -17 + by, 3, 3, L.hair); else P(-5, -17 + by, 1, 3, L.hair); }
+  if (d === 1) { P(-4, -19 + by, 9, 6, L.hair); P(-2, -18 + by, 2, 1, hairL); }
+  else if (d === 2) { P(1, -19 + by, 4, 4, L.hair); P(-4, -18 + by, 2, 1, L.hair); }
+  else if (d === 3) { P(-4, -19 + by, 4, 4, L.hair); P(3, -18 + by, 2, 1, L.hair); }
+  else { P(-4, -18 + by, 1, 3, L.hair); P(4, -18 + by, 1, 3, L.hair); P(-2, -18 + by, 3, 1, L.hair); }
+  // face
+  if (d === 0) {
+    P(-2, -16 + by, 1, 2, "#1a1418"); P(2, -16 + by, 1, 2, "#1a1418"); P(-2, -17 + by, 1, 1, shade(L.hair, .8)); P(2, -17 + by, 1, 1, shade(L.hair, .8));
+    P(-3, -14 + by, 1, 1, "#eaa08e"); P(3, -14 + by, 1, 1, "#eaa08e"); P(0, -13 + by, 2, 1, "#a8574a");
+    if (L.glasses) { P(-3, -16 + by, 3, 1, "#2b1d12"); P(1, -16 + by, 3, 1, "#2b1d12"); P(0, -16 + by, 1, 1, "#2b1d12"); }
+    if (L.beard) { P(-3, -14 + by, 7, 2, L.beard); P(-2, -12 + by, 5, 2, L.beard); P(-1, -10 + by, 3, 1, L.beard); P(-1, -14 + by, 3, 1, "#a8574a"); }
+    if (L.mask) { P(-4, -15 + by, 9, 3, L.mask); P(-4, -15 + by, 9, 1, shade(L.mask, 1.25)); }
+  }
+  if (d === 2) { P(-3, -16 + by, 1, 2, "#1a1418"); if (L.mask) P(-4, -15 + by, 4, 3, L.mask); else P(-4, -14 + by, 1, 1, "#eaa08e"); }
+  if (d === 3) { P(3, -16 + by, 1, 2, "#1a1418"); if (L.mask) P(1, -15 + by, 4, 3, L.mask); else P(4, -14 + by, 1, 1, "#eaa08e"); }
+  // forehead protector: cloth band with a metal plate stamped with a little ramen bowl
+  if (L.hb) {
+    P(-4, -19 + by, 9, 2, L.hb);
+    if (d === 0) { P(-3, -19 + by, 7, 2, "#aeb6bd"); P(-3, -19 + by, 7, 1, "#dfe4e8"); P(-1, -18 + by, 3, 1, "#5b6168"); P(0, -19 + by, 1, 1, "#5b6168"); P(-4, -19 + by, 1, 2, "#7d858c"); P(4, -19 + by, 1, 2, "#7d858c"); }
+    if (d === 2) { P(-4, -19 + by, 4, 2, "#aeb6bd"); P(-4, -19 + by, 4, 1, "#dfe4e8"); }
+    if (d === 3) { P(1, -19 + by, 4, 2, "#aeb6bd"); P(1, -19 + by, 4, 1, "#dfe4e8"); }
+    if (d === 1) { const fl = reduce ? 0 : Math.round(Math.sin(t * 5 + x) * .6); P(-1, -17 + by, 1, 4, L.hb); P(1 + fl, -16 + by, 1, 4, L.hb); }
+    else if (d === 0) { const fl = reduce ? 0 : Math.round(Math.sin(t * 5 + x)); P(5, -18 + by + fl, 1, 3, L.hb); }
+  }
+  if (L.chef) {
+    P(-4, -22 + by, 9, 3, "#ffffff"); P(-4, -20 + by, 9, 1, "#e6e0d4");
+    P(-3, -28 + by, 7, 6, "#ffffff"); P(-4, -27 + by, 1, 4, "#ffffff"); P(4, -27 + by, 1, 4, "#f0ebe2");
+    P(-1, -27 + by, 1, 4, "#ebe5da"); P(2, -27 + by, 1, 4, "#ebe5da"); P(3, -28 + by, 1, 6, "#e6e0d4");
+  }
+  const k = p.carry;
+  if (k === "crate") { P(-6, -12, 13, 8, "#b5864f"); P(-6, -12, 13, 1, "#d0a06a"); P(-6, -8, 13, 1, "#8a5a34"); P(6, -12, 1, 8, "#8a5a34"); P(-4, -14, 3, 2, "#7fae4a"); P(1, -14, 3, 2, "#e07a3a"); }
+  if (k === "book") { P(-4, -11 + by, 8, 5, "#2f5f8a"); P(-3, -11 + by, 6, 1, "#f6ecd6"); P(-4, -11 + by, 1, 5, "#1f3f5a"); }
+  if (k === "scroll") { P(-5, -10 + by, 11, 3, "#f3e3b8"); P(-6, -10 + by, 1, 3, "#7a4a2a"); P(6, -10 + by, 1, 3, "#7a4a2a"); P(-3, -9 + by, 6, 1, "#5a4030"); }
+  if (k === "bowl") { P(-5, -11 + by, 11, 4, "#f6efe2"); P(-4, -11 + by, 9, 1, "#d9a35c"); P(-2, -11 + by, 2, 1, "#f4e8c8"); P(1, -11 + by, 2, 1, "#f2d16b"); P(-5, -8 + by, 11, 1, "#c8382c"); }
+  if (k === "clip") { P(3, -11, 5, 6, "#c49a62"); P(4, -10, 3, 4, "#fbf6ea"); P(4, -12, 3, 1, "#7d8389"); P(4, -9, 3, 1, "#c8382c"); }
+  if (k === "chalk") { P(6, -9, 2, 1, "#f5f0e0"); }
+  if (p.look === "claude") {
+    const s = reduce ? 0 : Math.floor(t * 4) % 2;
+    P(0, -33, 1, 3, "#ff8a4c"); P(-1, -32, 3, 1, "#ff8a4c");
+    if (s) { P(-2, -34, 1, 1, "#ffb37a"); P(2, -30, 1, 1, "#ffb37a"); } else { P(2, -34, 1, 1, "#ffb37a"); P(-2, -30, 1, 1, "#ffb37a"); }
+  }
+}
+// render a person into a scratch canvas, add a dark 1px outline, then stamp it onto the scene
+const spr = document.createElement("canvas"); spr.width = 40; spr.height = 56;
+const sctx = spr.getContext("2d", { willReadFrequently: true });
+function drawSprite(c, p, t) {
+  const x = Math.round(p.x), y = Math.round(p.y);
+  if (!p.sit) { R(c, x - 5, y - 1, 11, 2, "rgba(60,30,10,.28)"); R(c, x - 4, y, 9, 1, "rgba(60,30,10,.18)"); }
+  sctx.clearRect(0, 0, 40, 56);
+  drawPerson(sctx, Object.assign({}, p, { x: 20, y: 48 }), t);
+  const img = sctx.getImageData(0, 0, 40, 56), a = img.data, out = new Uint8ClampedArray(a);
+  for (let j = 1; j < 55; j++) for (let i = 1; i < 39; i++) {
+    const k = (j * 40 + i) * 4; if (a[k + 3] > 120) continue;
+    if (a[k - 1] > 120 || a[k + 7] > 120 || a[k - 160 + 3] > 120 || a[k + 160 + 3] > 120) { out[k] = 43; out[k + 1] = 29; out[k + 2] = 18; out[k + 3] = 255; }
+  }
+  img.data.set(out); sctx.putImageData(img, 0, 0);
+  c.drawImage(spr, x - 20, y - 48);
+}
+
+/* ---- routines: Claude pins tickets, cooks bring work back ---- */
+const HUB = [189, 98];
+const STEPS = {
+  claude: [
+    { to: [189, 98], dir: 0, act: "work", t: 3, say: "Checking every station" },
+    { to: [62, 84], dir: 1, act: "work", t: 2.4, say: "Tasting the broth" },
+    { to: [189, 98], dir: 0, act: "work", t: 2.2, say: "Ticket → Sumi: today's pins", ticket: "grand-canyon" },
+    { to: [70, 130], dir: 0, act: "work", t: 2.6, say: "Hand-pulling noodles" },
+    { to: [189, 98], dir: 0, act: "work", t: 2.2, say: "5 stations open for programs" },
+    { to: [189, 98], dir: 0, act: "work", t: 2.2, say: "Links all tagged ✓" },
+    { to: [236, 138], dir: 0, act: "idle", t: 2.2, carry: "bowl", say: "Done · Needs you · Next" },
+    { to: [189, 98], dir: 0, act: "work", t: 2.2, say: "Tap me for Affiliate HQ" },
+  ],
+  denali: [
+    { to: [270, 144], dir: 0, act: "work", t: 4.5, carry: "clip", say: "Open station · no program yet" },
+    { to: [236, 104], dir: 2, act: "idle", t: 2.4, carry: "clip", say: "Ready for a program" },
+    { to: [270, 144], dir: 0, act: "work", t: 3, carry: "clip", say: "Sharpening my knives" },
+  ],
+  yosemite: [
+    { to: [362, 70], dir: 1, act: "work", t: 2.8, say: "Open station · no program yet" },
+    { to: [352, 112], carry: "crate" }, { to: [300, 112], carry: "crate" },
+    { to: [236, 114], dir: 2, act: "idle", t: 2.4, carry: "crate", say: "Stocking up for a program" },
+    { to: [300, 112] }, { to: [352, 112] },
+  ],
+  sequoia: [
+    { to: [20, 124], dir: 1, act: "work", t: 3.2, say: "Open station · no program yet" },
+    { to: [142, 112], dir: 3, act: "idle", t: 2.6, carry: "scroll", say: "Ready when you sign up" },
+    { to: [60, 128] },
+  ],
+  "grand-canyon": [
+    { to: [306, 98], dir: 1, act: "work", t: 4.2, carry: "chalk", say: "Pinning today's Pinterest posts", board: true },
+    { to: [258, 128] },
+    { to: [232, 124], dir: 2, act: "idle", t: 2.2, say: "5 pins queued for Pinterest", ticket: "claude" },
+    { to: [280, 108] },
+  ],
+  ruflo: [
+    { to: [112, 162], dir: 0, act: "work", t: 4, say: "Open station · 3 cooks waiting" },
+    { to: [150, 160], dir: 3, act: "work", t: 3 },
+    { to: [112, 162], dir: 0, act: "idle", t: 2.2, say: "Ready for a big program" },
+  ],
+  "ruflo-2": [
+    { to: [124, 162], dir: 0, act: "work", t: 3.5 },
+    { to: [160, 152], dir: 1, act: "work", t: 3 },
+    { to: [124, 162], dir: 0, act: "work", t: 2 },
+  ],
+  "ruflo-3": [
+    { to: [136, 162], dir: 0, act: "work", t: 3 },
+    { to: [140, 148], dir: 2, act: "work", t: 3.5 },
+    { to: [136, 162], dir: 0, act: "work", t: 2.5 },
+  ],
+  "death-valley": [
+    { to: [72, 206], dir: 1, sit: true, act: "work", t: 5, say: "Open station · no program yet" },
+    { to: [72, 206], dir: 1, sit: true, act: "idle", t: 2.2, say: "Ready for a program" },
+    { to: [72, 206], dir: 1, sit: true, act: "work", t: 4.5, say: "Taste-testing the broth" },
+    { to: [72, 206], dir: 1, sit: true, act: "idle", t: 2.2, say: "Still waiting for a program" },
+  ],
+};
+const people = Object.entries(STEPS).map(([id, steps], n) => ({ id, look: id, steps, i: 0, t: 0, x: steps[0].to[0], y: steps[0].to[1], dir: 0, frame: 0, ft: 0, moving: false, arrived: false, delay: n * .6 }));
+people.push({ id: "guestA", look: "guestA", x: 168, y: 206, dir: 1, sit: true, work: true, guest: true }, { id: "guestB", look: "guestB", x: 264, y: 206, dir: 1, sit: true, work: false, guest: true },
+  { id: "guestI", look: "guestI", x: 120, y: 206, dir: 1, sit: true, work: false, guest: true });
+[["guestC", 0, -12, 0], ["guestD", 0, 12, 1], ["guestE", 1, 12, 0], ["guestF", 1, -12, 1], ["guestG", 1, 12, 1], ["guestH", 2, -12, 0]].forEach(([look, t, dx, back], n) => {
+  const [cx, cy] = ZASHIKI[t]; people.push({ id: look, look, x: cx + dx, y: back ? cy + 16 : cy - 8, dir: back ? 1 : 0, sit: true, work: n % 2 === 0, guest: true });
+});
+people.forEach(p => { if (/^ruflo-/.test(p.id)) { p.look = "ruflo"; p.clone = true; } });
+const peopleBy = Object.fromEntries(people.map(p => [p.id, p]));
+
+/* ---- tickets, steam, stockpot ---- */
+const tickets = [], puffs = [], drops = [];
+function sendTicket(from, to) {
+  const a = from === "old-faithful" ? { x: 62, y: 30 } : peopleBy[from], b = to === "claude" ? { x: HUB[0], y: HUB[1] } : peopleBy[to];
+  if (!a || !b) return;
+  tickets.push({ ax: a.x, ay: a.y - 22, bx: b.x, by: b.y - 22, k: 0, toClaude: to === "claude" });
+}
+let boilT = 5, boost = 0;
+function stepFx(dt) {
+  const spawn = (x, y, n, vy, life) => { for (let i = 0; i < n; i++) puffs.push({ x: x + (Math.random() - .5) * 10, y, vx: (Math.random() - .5) * 6, vy: -vy * (.7 + Math.random() * .6), life, max: life, s: 2 + (Math.random() * 3 | 0) }); };
+  if (Math.random() < dt * (boost > 0 ? 40 : 5)) spawn(62, 18, boost > 0 ? 3 : 1, boost > 0 ? 60 : 14, boost > 0 ? 1.4 : 2.2);
+  if (Math.random() < dt * 3) spawn(96, 28, 1, 12, 1.8);
+  if (Math.random() < dt * 2) spawn(72, 170, 1, 8, 1.4);
+  ZASHIKI.forEach(([x, y]) => { if (Math.random() < dt * 1.2) spawn(x + (Math.random() < .5 ? -12 : 12), y - 1, 1, 7, 1.3); });
+  for (let i = puffs.length - 1; i >= 0; i--) { const q = puffs[i]; q.life -= dt; q.x += q.vx * dt; q.y += q.vy * dt; q.vy *= 1 - dt * .8; if (q.life <= 0) puffs.splice(i, 1); }
+  if (boost > 0) for (let i = 0; i < 3; i++) drops.push({ x: 62 + (Math.random() - .5) * 8, y: 20, vx: (Math.random() - .5) * 40, vy: -40 - Math.random() * 30, life: 1 });
+  for (let i = drops.length - 1; i >= 0; i--) { const q = drops[i]; q.life -= dt; q.vy += 160 * dt; q.x += q.vx * dt; q.y += q.vy * dt; if (q.life <= 0 || q.y > 44) drops.splice(i, 1); }
+}
+
+const chalkLines = ["Today's pins", "Pin Bot on", "5 a day", "10·12·2·5·8", "> open Sumi"];
+let chalkShown = 1;
+
+/* ---- overlay: signs, name tags, bubbles ---- */
+const SIGNS = [
+  { text: "Agent Ramen", x: 168, y: 13, id: "claude", big: true },
+  { text: "Affiliate HQ · tap to open", x: 189, y: 136, id: "claude" },
+  { text: "Pin board", x: 306, y: 50, id: "grand-canyon" },
+];
+const signEls = SIGNS.map(s => { const b = document.createElement("button"); b.type = "button"; b.className = "sign" + (s.big ? " big" : ""); b.textContent = s.text; b.dataset.id = s.id; b.onclick = () => openStation(s.id); overlay.appendChild(b); return { s, b }; });
+const tagEls = people.filter(p => !p.guest && !p.clone).map(p => {
+  const b = document.createElement("button"); b.type = "button"; b.className = "tag" + (p.id === "claude" ? " chef" : ""); b.dataset.id = p.id; b.textContent = byId[p.id].name; b.onclick = () => openStation(p.id); b.title = p.id === "claude" ? "Affiliate HQ" : "Open this station"; overlay.appendChild(b);
+  const bub = document.createElement("div"); bub.className = "bubble"; bub.hidden = true; overlay.appendChild(bub);
+  return { p, b, bub, until: 0 };
+});
+const ofTag = { bub: document.createElement("div"), until: 0 }; ofTag.bub.className = "bubble"; ofTag.bub.hidden = true; overlay.appendChild(ofTag.bub);
+let clock = 0;
+function say(id, text, secs, hold) {
+  const t = id === "old-faithful" ? ofTag : tagEls.find(e => e.p.id === id); if (!t) return;
+  if (!hold && clock < (t.hold || 0)) return;
+  t.bub.textContent = text; t.until = clock + secs; if (hold) t.hold = clock + secs;
+}
+
+cv.addEventListener("click", e => {
+  const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H;
+  const c = peopleBy.claude;
+  if ((Math.abs(x - c.x) < 8 && y < c.y + 3 && y > c.y - 34) || (x >= 148 && x <= 230 && y >= 96 && y <= 130)) return openHQ();
+  if (x >= 286 && x <= 326 && y >= 54 && y <= 90) return openStation(PINBOT_COOK);
+  const hit = tagEls.map(e => e.p).find(p => Math.abs(x - p.x) < 7 && y < p.y + 3 && y > p.y - 24); if (hit) openStation(hit.id);
+});
+cv.addEventListener("mousemove", e => {
+  const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H, c = peopleBy.claude;
+  cv.style.cursor = (Math.abs(x - c.x) < 8 && y < c.y + 3 && y > c.y - 34) || (x >= 148 && x <= 230 && y >= 96 && y <= 130) ? "pointer" : "default";
+});
+
+const LIGHTS = [[10, 214, 46, .26], [374, 206, 46, .26], [150, 226, 40, .2], [62, 44, 34, .22], [96, 44, 22, .14], [270, 146, 34, .2], [258, 22, 34, .12], [365, 250, 22, .14], [100, 176, 60, .08], [230, 176, 60, .08], [52, 255, 42, .1], [150, 255, 42, .1], [250, 255, 42, .1], [189, 112, 44, .1]];
+/* ---- main loop ---- */
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(.05, (now - last) / 1000); last = now; clock += dt; const t = reduce ? 0 : clock;
+  people.forEach(p => {
+    if (p.guest) return;
+    if (p.delay > 0) { p.delay -= dt; return; }
+    const st = p.steps[p.i], dx = st.to[0] - p.x, dy = st.to[1] - p.y, d = Math.hypot(dx, dy);
+    p.carry = st.carry || null; p.sit = !!st.sit && d < .5;
+    if (d > .5) {
+      const sp = Math.min(d, 34 * dt * (reduce ? 3 : 1)); p.x += dx / d * sp; p.y += dy / d * sp; p.moving = true; p.arrived = false; p.work = false;
+      p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 2 : 3) : (dy < 0 ? 1 : 0);
+      p.ft += dt; if (p.ft > .14) { p.ft = 0; p.frame++; }
+    } else {
+      p.moving = false;
+      if (!p.arrived) {
+        p.arrived = true; p.t = 0; p.work = st.act === "work"; if (st.dir !== undefined) p.dir = st.dir;
+        if (st.say) say(p.id, st.say, (st.t || 1) + .3);
+        if (st.ticket) sendTicket(p.id, st.ticket);
+        if (st.board) chalkShown = chalkShown % chalkLines.length + 1;
+      }
+      p.t += dt; if (p.t >= (st.t || 0)) p.i = (p.i + 1) % p.steps.length;
+    }
+  });
+  boilT -= dt; if (boilT <= 0) { boilT = 13; boost = 2; say("old-faithful", "INDEX.md rebuilt ✓", 2.6); sendTicket("old-faithful", "claude"); }
+  boost = Math.max(0, boost - dt);
+  if (!reduce) stepFx(dt);
+  for (let i = tickets.length - 1; i >= 0; i--) { tickets[i].k += dt / 1.1; if (tickets[i].k >= 1) tickets.splice(i, 1); }
+
+  ctx.drawImage(bg.canvas, 0, 0);
+  // stockpot (Old Faithful) + small pot, flames
+  const flick = reduce ? 0 : Math.floor(t * 10) % 3;
+  [[62, 44], [96, 44]].forEach(([x, y], i) => { const w = i ? 9 : 14; R(ctx, x - w, y - 2, w * 2, 2, flick === i ? "#ffb04a" : "#ff7a2a"); R(ctx, x - w + 2 + flick, y - 3, 3, 1, "#ffd45a"); });
+  R(ctx, 48, 20, 28, 22, "#b9c0c6"); R(ctx, 50, 20, 3, 22, "#dfe4e8"); R(ctx, 72, 20, 3, 22, "#8d949b"); R(ctx, 44, 26, 4, 4, "#8d949b"); R(ctx, 76, 26, 4, 4, "#8d949b");
+  disc(ctx, 62, 20, 14, 4, "#8d949b"); disc(ctx, 62, 20, 12, 3, boost > 0 ? "#e0a35a" : "#c98b4a");
+  if (!reduce) for (let i = 0; i < 3; i++) { const bx = 56 + ((i * 7 + Math.floor(t * 3)) % 12); if ((Math.floor(t * 5) + i) % 3 === 0) R(ctx, bx, 19, 2, 1, "#f2c98a"); }
+  R(ctx, 84, 30, 24, 12, "#b9c0c6"); R(ctx, 86, 30, 2, 12, "#dfe4e8"); disc(ctx, 96, 30, 12, 3, "#8d949b"); disc(ctx, 96, 30, 10, 2, "#e8dcc0");
+  R(ctx, 70, 8, 2, 14, "#5e3820"); R(ctx, 68, 6, 6, 3, "#7d8389");
+  // chalkboard text
+  ctx.font = "6px 'Pixelify Sans', monospace"; ctx.textBaseline = "top";
+  chalkLines.slice(0, chalkShown).forEach((l, i) => { ctx.fillStyle = i === 0 ? "#ffd45a" : "#f5f0e0"; ctx.fillText(l, 291, 58 + i * 5.4, 31); });
+  // pantry doorway curtain
+  for (let i = 0; i < 3; i++) { const sw = reduce ? 0 : Math.round(Math.sin(t * 1.5 + i) * .8); R(ctx, 331 + i * 3 + sw, 99, 2, 14, i % 2 ? "#3f6390" : "#2f4f7a"); }
+  // lucky cat on the ticket machine, waving; ticket machine buttons glow
+  { const x = 366, y = 234, up = reduce ? 0 : Math.floor(t * 3) % 2;
+    R(ctx, x - 4, y - 7, 9, 7, "#fbf6ea"); R(ctx, x - 4, y - 13, 9, 7, "#fbf6ea"); R(ctx, x - 4, y - 15, 2, 2, "#fbf6ea"); R(ctx, x + 3, y - 15, 2, 2, "#fbf6ea");
+    R(ctx, x - 3, y - 14, 1, 1, "#e88a7a"); R(ctx, x + 3, y - 14, 1, 1, "#e88a7a"); R(ctx, x - 2, y - 11, 1, 1, "#1a1418"); R(ctx, x + 2, y - 11, 1, 1, "#1a1418");
+    R(ctx, x - 4, y - 7, 9, 1, "#c8382c"); R(ctx, x, y - 6, 1, 1, "#ffd45a"); R(ctx, x - 3, y - 4, 2, 2, "#e07a3a"); R(ctx, x + 2, y - 3, 2, 2, "#2b1d12");
+    R(ctx, x + 5, y - 12 - up * 2, 2, 4, "#fbf6ea"); }
+  for (let i = 0; i < 8; i++) { const on = reduce || (Math.floor(t * 2) + i) % 5; R(ctx, 353 + (i % 4) * 6, 246 + Math.floor(i / 4) * 5, 4, 3, on ? ["#e04a3a", "#f2c14e", "#4f8a3a", "#f4ecd8"][i % 4] : "#fff6cc"); }
+  // noodle baskets in the boiler
+  [91, 96, 101].forEach((x, i) => { R(ctx, x, 22 - (reduce ? 0 : (Math.floor(t * 2) + i) % 2), 1, 8, "#5e3820"); });
+  // people and front furniture in depth order
+  const items = people.map(p => ({ y: p.y, draw: () => drawSprite(ctx, p, t) })).concat(FRONT.map(f => ({ y: f.y, draw: () => ctx.drawImage(fg.canvas, f.x, f.top, f.w, f.h, f.x, f.top, f.w, f.h) })));
+  items.sort((a, b) => a.y - b.y).forEach(it => it.draw());
+  if (!reduce) [248, 270, 292].forEach((x, i) => R(ctx, x - 2, 144, 4, 1, (Math.floor(t * 2) + i) % 2 ? "#ffb04a" : "#ff8a3a"));
+  { const cx = 262, cy = 270, b = reduce ? 0 : Math.round(Math.sin(t * 1.6));
+    R(ctx, cx - 5, cy - 3, 10, 4 + b * 0, "#f2a24a"); R(ctx, cx - 5, cy - 3, 10, 1, "#f7b866"); R(ctx, cx + 3, cy - 5, 4, 4, "#f2a24a"); R(ctx, cx + 3, cy - 6, 1, 1, "#f2a24a"); R(ctx, cx + 6, cy - 6, 1, 1, "#f2a24a");
+    R(ctx, cx + 4, cy - 4, 2, 1, "#2b1d12"); R(ctx, cx - 7, cy - 1, 3, 1, "#f2a24a"); R(ctx, cx - 3, cy - 2, 2, 2, "#d9822b"); R(ctx, cx, cy - 2 - b, 1, 1, "#d9822b"); }
+  ZASHIKI.forEach(([x, y]) => { R(ctx, x + 16, y - 6, 4, 3, "#f4ecd8"); R(ctx, x + 16, y - 6, 4, 1, "#c8382c"); });
+  // round paper lamps hanging over the tables
+  ZASHIKI.forEach(([x]) => { const y = 238, sway = reduce ? 0 : Math.round(Math.sin(t * 1.2 + x) * .6); R(ctx, x + sway, y - 12, 1, 7, "#2b1d12"); disc(ctx, x + sway, y - 1, 7, 5, "#fbeed2"); for (let k = -3; k <= 3; k += 3) R(ctx, x + sway - 6, y - 1 + k, 13, 1, "#e6cfa2"); R(ctx, x + sway - 3, y - 6, 7, 1, "#5e3820"); R(ctx, x + sway - 3, y + 4, 7, 1, "#5e3820"); R(ctx, x + sway - 4, y - 3, 2, 3, "#fffaf0"); });
+  puffs.forEach(q => { ctx.globalAlpha = Math.max(0, q.life / q.max) * .7; R(ctx, q.x, q.y, q.s, q.s, "#ffffff"); });
+  ctx.globalAlpha = 1;
+  drops.forEach(q => R(ctx, q.x, q.y, 1, 2, "#e0a35a"));
+  // warm lantern light over everything
+  ctx.save();
+  ctx.globalCompositeOperation = "multiply"; ctx.fillStyle = "#ffdcb0"; ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = "lighter";
+  const fl = reduce ? 1 : .9 + Math.sin(t * 7) * .05 + Math.sin(t * 13) * .04;
+  LIGHTS.forEach(([x, y, r, a]) => { const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(255,160,80,${a * fl})`); g.addColorStop(1, "rgba(255,160,80,0)"); ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2); });
+  ctx.globalCompositeOperation = "source-over";
+  const vg = ctx.createRadialGradient(W / 2, H / 2, H * .38, W / 2, H / 2, H * .95); vg.addColorStop(0, "rgba(50,20,0,0)"); vg.addColorStop(1, "rgba(50,20,0,.38)"); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+  ctx.restore();
+  tickets.forEach(k => {
+    const e = k.k, x = k.ax + (k.bx - k.ax) * e, y = k.ay + (k.by - k.ay) * e - Math.sin(e * Math.PI) * 18;
+    R(ctx, x - 3, y - 4, 7, 8, "#fffaf0"); R(ctx, x - 3, y - 4, 7, 1, k.toClaude ? "#4f8a3a" : "#c8382c"); R(ctx, x - 2, y - 1, 5, 1, "#c9b48a"); R(ctx, x - 2, y + 1, 4, 1, "#c9b48a"); R(ctx, x - 3, y + 4, 7, 1, "rgba(60,30,10,.25)");
+  });
+
+  const sx = cv.clientWidth / W, sy = cv.clientHeight / H;
+  signEls.forEach(({ s, b }) => { b.style.left = s.x * sx + "px"; b.style.top = s.y * sy + "px"; });
+  tagEls.forEach(e => {
+    const p = e.p, top = p.y - (p.id === "claude" ? 34 : 24) + (p.sit ? 2 : 0);
+    const half = e.b.offsetWidth / 2 + 4, bhalf = e.bub.offsetWidth / 2 + 4, px = p.x * sx, cw = cv.clientWidth;
+    e.b.style.left = Math.max(half, Math.min(cw - half, px)) + "px"; e.bub.style.left = Math.max(bhalf, Math.min(cw - bhalf, px)) + "px";
+    e.b.style.top = e.bub.style.top = top * sy + "px";
+    e.bub.hidden = clock > e.until;
+  });
+  ofTag.bub.style.left = 62 * sx + "px"; ofTag.bub.style.top = 6 * sy + "px"; ofTag.bub.hidden = clock > ofTag.until;
+  requestAnimationFrame(frame);
+}
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => requestAnimationFrame(frame));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+/* ================= outside: the 3D ramen stand ================= */
+(function outsideView() {
+  const outside = document.getElementById("outside"), fade = document.getElementById("fade"), hint = document.getElementById("doorHint");
+  const reduce3 = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!window.THREE) { outside.hidden = true; return; }
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  outside.prepend(renderer.domElement);
+  const scene = new THREE.Scene(); scene.background = new THREE.Color("#2b2a3c");
+  const camera = new THREE.PerspectiveCamera(27, 1, .1, 300);
+  const HOME = { p: new THREE.Vector3(21, 14.5, 25), t: new THREE.Vector3(.6, 4, .4) };
+  camera.position.copy(HOME.p);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.copy(HOME.t); controls.enableDamping = true; controls.dampingFactor = .08; controls.enablePan = false;
+  controls.minDistance = 16; controls.maxDistance = 55; controls.minPolarAngle = .55; controls.maxPolarAngle = 1.38;
+
+  const rnd = (() => { let s = 99; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+  function tex(w, h, draw, rx = 1, ry = 1) { const c = document.createElement("canvas"); c.width = w; c.height = h; draw(c.getContext("2d"), w, h); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry); t.anisotropy = 8; return t; }
+  const speckle = (c, w, h, n, col, s = 3) => { for (let i = 0; i < n; i++) { c.fillStyle = col; c.globalAlpha = .15 + rnd() * .35; c.fillRect(rnd() * w, rnd() * h, 1 + rnd() * s, 1 + rnd() * s); } c.globalAlpha = 1; };
+  const roofTex = tex(256, 256, (c, w, h) => {
+    for (let x = 0; x < w; x += 32) { const v = 128 + rnd() * 34 | 0; c.fillStyle = `rgb(${v},${v - 1},${v - 5})`; c.fillRect(x, 0, 32, h); c.fillStyle = "rgba(30,28,26,.55)"; c.fillRect(x + 30, 0, 2, h);
+      for (let k = 0; k < 7; k++) { c.fillStyle = "rgba(70,64,58,.28)"; c.fillRect(x + rnd() * 28, rnd() * h, 1, 12 + rnd() * 50); }
+      for (let k = 0; k < 2; k++) { c.fillStyle = "rgba(40,36,32,.7)"; c.beginPath(); c.arc(x + 6 + rnd() * 20, rnd() * h, 1.6, 0, 7); c.fill(); }
+      c.fillStyle = "rgba(20,18,16,.45)"; c.fillRect(x, (rnd() * h) | 0, 30, 2); }
+    speckle(c, w, h, 300, "#3a3632");
+  }, 2, 1);
+  const trimPath = (c, w, h, col) => { c.strokeStyle = col; c.lineWidth = w / 60; c.beginPath(); const y0 = h * .32, y1 = h * .62; c.moveTo(w * .08, y0); c.lineTo(w * .24, y0); c.lineTo(w * .24, y1); c.lineTo(w * .4, y1); c.lineTo(w * .4, h * .45); c.lineTo(w * .52, h * .45); c.lineTo(w * .52, y1); c.lineTo(w * .62, y1); c.moveTo(w * .7, y0); c.lineTo(w * .7, h * .5); c.lineTo(w * .86, h * .5); c.lineTo(w * .86, h * .8); c.stroke(); };
+  const plaster = (base, trim) => tex(512, 256, (c, w, h) => {
+    c.fillStyle = base; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 26; i++) { const g = c.createRadialGradient(rnd() * w, rnd() * h, 0, 0, 0, 0); c.fillStyle = `rgba(120,110,90,${.05 + rnd() * .1})`; c.beginPath(); c.ellipse(rnd() * w, rnd() * h, 10 + rnd() * 40, 6 + rnd() * 24, rnd() * 3, 0, 7); c.fill(); }
+    speckle(c, w, h, 500, "#8a8574", 2);
+    c.strokeStyle = "rgba(90,80,70,.35)"; c.lineWidth = 1; for (let i = 0; i < 6; i++) { c.beginPath(); let x = rnd() * w, y = rnd() * h; c.moveTo(x, y); for (let k = 0; k < 5; k++) { x += (rnd() - .5) * 30; y += rnd() * 16; c.lineTo(x, y); } c.stroke(); }
+    if (trim) trimPath(c, w, h, trim);
+    c.fillStyle = "rgba(40,30,20,.25)"; c.fillRect(0, h - 10, w, 10);
+  });
+  const boards = (base) => tex(256, 256, (c, w, h) => {
+    for (let x = 0; x < w; x += 21) { c.fillStyle = shade3(base, .85 + rnd() * .3); c.fillRect(x, 0, 21, h); c.fillStyle = "rgba(20,25,22,.6)"; c.fillRect(x + 19, 0, 2, h); c.fillStyle = "rgba(255,255,255,.08)"; c.fillRect(x + 1, 0, 2, h); }
+    speckle(c, w, h, 700, "#c8d2c4", 2); speckle(c, w, h, 300, "#1c2420", 3);
+  });
+  function shade3(hex, k) { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, v * k | 0)); return `rgb(${f(n >> 16)},${f(n >> 8 & 255)},${f(n & 255)})`; }
+  const woodDark = tex(256, 256, (c, w, h) => { c.fillStyle = "#5e3020"; c.fillRect(0, 0, w, h); for (let x = 0; x < w; x += 4) { c.fillStyle = `rgba(30,12,6,${.15 + rnd() * .3})`; c.fillRect(x, 0, 1 + rnd() * 2, h); } speckle(c, w, h, 200, "#8a4a30", 2); }, 2, 1);
+  const rust = tex(256, 256, (c, w, h) => { c.fillStyle = "#e8e3d8"; c.fillRect(0, 0, w, h); for (let i = 0; i < 22; i++) { c.fillStyle = rnd() < .5 ? "#7a2e18" : "#a8442a"; c.beginPath(); c.ellipse(rnd() * w, rnd() * h, 4 + rnd() * 16, 3 + rnd() * 10, rnd() * 3, 0, 7); c.fill(); } speckle(c, w, h, 300, "#9a8a78", 2); c.fillStyle = "rgba(120,100,80,.25)"; for (let x = 0; x < w; x += 9) c.fillRect(x, 0, 1, h); });
+  const jugTex = tex(256, 256, (c, w, h) => { c.fillStyle = "#b8352a"; c.fillRect(0, 0, w, h); for (let i = 0; i < 70; i++) { c.strokeStyle = `rgba(240,200,160,${.2 + rnd() * .4})`; c.lineWidth = 1 + rnd(); c.beginPath(); const x = rnd() * w, y = rnd() * h; c.moveTo(x, y); c.lineTo(x + (rnd() - .5) * 26, y + (rnd() - .5) * 12); c.stroke(); } });
+  const norenTex = ch => tex(256, 320, (c, w, h) => {
+    c.fillStyle = "#f3ede1"; c.fillRect(0, 0, w, h); speckle(c, w, h, 260, "#c9bfae", 3);
+    c.fillStyle = "rgba(160,150,130,.18)"; for (let i = 0; i < 4; i++) c.fillRect(30 + i * 60 + rnd() * 10, 0, 3, h);
+    c.fillStyle = "#c33a2c"; c.font = "500 190px 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(ch, w / 2, h * .44);
+  });
+  const lanternTex = tex(256, 256, (c, w, h) => {
+    const g = c.createLinearGradient(0, 0, w, 0); g.addColorStop(0, "#e9dcc0"); g.addColorStop(.5, "#fff6e2"); g.addColorStop(1, "#e9dcc0"); c.fillStyle = g; c.fillRect(0, 0, w, h);
+    c.fillStyle = "rgba(170,140,100,.35)"; for (let y = 8; y < h; y += 14) c.fillRect(0, y, w, 2);
+    c.fillStyle = "#c33a2c"; c.font = "700 120px 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("麺", w * .25, h / 2); c.fillText("麺", w * .75, h / 2);
+  });
+  const paperTex = tex(64, 80, (c, w, h) => { c.fillStyle = "#f2efe6"; c.fillRect(0, 0, w, h); c.fillStyle = "#9a9284"; for (let y = 12; y < h - 8; y += 8) c.fillRect(8, y, w - 16 - rnd() * 18, 2); c.fillStyle = "#c33a2c"; c.fillRect(8, 4, 20, 4); });
+  const groundTex = tex(512, 512, (c, w, h) => { c.fillStyle = "#6f665a"; c.fillRect(0, 0, w, h);
+    for (let y = 0; y < h; y += 26) for (let x = (y / 26) % 2 ? -14 : 0; x < w; x += 30) { const v = 150 + rnd() * 40 | 0; c.fillStyle = `rgb(${v},${v - 8},${v - 22})`; c.beginPath(); c.ellipse(x + 15, y + 13, 13, 11, rnd() * .4, 0, 7); c.fill(); c.fillStyle = "rgba(255,240,210,.12)"; c.beginPath(); c.ellipse(x + 12, y + 9, 7, 4, 0, 0, 7); c.fill(); }
+    speckle(c, w, h, 400, "#3a342c", 2);
+  }, 3, 3);
+
+  const M = (o) => new THREE.MeshStandardMaterial(Object.assign({ roughness: .85 }, o));
+  const trimMat = M({ color: "#3d574f" }), postMat = M({ color: "#4a5a52" });
+  function box(w, h, d, mat, x, y, z, parent = scene) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; parent.add(m); return m; }
+  function hipRoof(w, d, h, tw, td, mat) {
+    const g = new THREE.Group(), hw = w / 2, hd = d / 2, a2 = tw / 2, b2 = td / 2;
+    const B = [[-hw, 0, hd], [hw, 0, hd], [hw, 0, -hd], [-hw, 0, -hd]], T = [[-a2, h, b2], [a2, h, b2], [a2, h, -b2], [-a2, h, -b2]];
+    const pos = [], uv = [];
+    for (let i = 0; i < 4; i++) {
+      const j = (i + 1) % 4, a = B[i], b = B[j], L = Math.hypot(b[0] - a[0], b[2] - a[2]), dx = (b[0] - a[0]) / L, dz = (b[2] - a[2]) / L;
+      const slope = Math.hypot(h, i % 2 ? hw - a2 : hd - b2);
+      const U = p => ((p[0] - a[0]) * dx + (p[2] - a[2]) * dz) / 2.2;
+      [a, b, T[j], a, T[j], T[i]].forEach(p => { pos.push(...p); uv.push(U(p), p[1] > 0 ? slope / 4 : 0); });
+    }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); geo.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2)); geo.computeVertexNormals();
+    const m = new THREE.Mesh(geo, mat); m.castShadow = m.receiveShadow = true; g.add(m);
+    if (tw > 0) box(tw, .08, td, mat, 0, h, 0, g);
+    [[w + .1, .16, .16, 0, hd], [w + .1, .16, .16, 0, -hd], [.16, .16, d + .1, hw, 0], [.16, .16, d + .1, -hw, 0]].forEach(([bw, bh, bd, x, z]) => box(bw, bh, bd, trimMat, x, 0, z, g));
+    return g;
+  }
+  const roofMat = M({ map: roofTex, side: THREE.DoubleSide, roughness: .9 });
+  const plasterTrim = M({ map: plaster("#cbd2c4", "#3d574f") }), plasterPlain = M({ map: plaster("#d8d3c2") }), boardMat = M({ map: boards("#5c6e63") });
+
+  // ground slab
+  const slab = box(18, .3, 15, M({ map: groundTex, color: "#a8977f", roughness: .95 }), .9, -.15, 1.8); slab.castShadow = false;
+  // ground floor shell
+  box(10, 5, .3, plasterPlain, 0, 2.5, -4);
+  box(.3, 5, 8, plasterPlain, -5, 2.5, 0);
+  box(9.7, .12, 7.7, M({ color: "#6e4a30" }), 0, .06, 0);
+  // right wall: plaster on top, weathered boards below, a window and the side door
+  box(.32, 2.5, 8.3, plasterTrim, 5, 3.75, 0);
+  box(.34, 2.6, 8.3, boardMat, 5, 1.3, 0);
+  [[-4.1], [4.1]].forEach(([z]) => box(.42, 5.1, .3, postMat, 5, 2.55, z));
+  box(.45, .2, 8.5, trimMat, 5, 2.6, 0);
+  const winGlow = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({ color: "#3a3550" })); winGlow.position.set(5.19, 3.7, -1.7); winGlow.rotation.y = Math.PI / 2; scene.add(winGlow);
+  [[3.7, -1.7, .12, 2.7], [2.95, -1.7, .12, 2.7]].forEach(([y, z, h, w]) => box(.2, h, w, postMat, 5.22, y + .75, z)); box(.2, .12, 2.7, postMat, 5.22, 2.95, -1.7);
+  box(.2, 1.6, .12, postMat, 5.22, 3.7, -3.0); box(.2, 1.6, .12, postMat, 5.22, 3.7, -.4);
+  const awnMat = M({ color: "#4f468e", roughness: .6 });
+  const awn = box(1, .06, 2.9, awnMat, 5.55, 4.7, -1.7); awn.rotation.z = -.5;
+  // posted papers
+  [[3.9, 2.3, .3], [4.3, 3.2, -.2], [3.4, -3.5, .15]].forEach(([y, z, r]) => { const p = new THREE.Mesh(new THREE.PlaneGeometry(.55, .7), M({ map: paperTex, roughness: 1 })); p.position.set(5.18, y, z); p.rotation.set(0, Math.PI / 2, r); scene.add(p); });
+  // the door you click to go inside
+  const doorGroup = new THREE.Group(); doorGroup.position.set(5.2, 0, .9); scene.add(doorGroup);
+  box(.16, 3, 1.75, M({ color: "#2e2018" }), 0, 1.5, 0, doorGroup);
+  const doorMat = M({ map: woodDark, color: "#c08a60", emissive: "#ff9a4a", emissiveIntensity: 0 });
+  const door = box(.12, 2.75, 1.5, doorMat, .06, 1.42, 0, doorGroup);
+  for (let k = 0; k < 4; k++) box(.14, .05, 1.42, M({ color: "#2e2018" }), .08, .6 + k * .6, 0, doorGroup);
+  box(.14, 2.6, .05, M({ color: "#2e2018" }), .08, 1.42, 0, doorGroup);
+  const doorNoren = new THREE.Mesh(new THREE.PlaneGeometry(1.5, .7), M({ color: "#26406a", side: THREE.DoubleSide })); doorNoren.position.set(.18, 2.55, 0); doorNoren.rotation.y = Math.PI / 2; doorGroup.add(doorNoren);
+  // front: posts, beam, counter, noren, stools
+  [[-4.9], [4.9]].forEach(([x]) => box(.3, 5, .3, postMat, x, 2.5, 4));
+  box(10.2, .35, .35, trimMat, 0, 4.95, 4);
+  box(9.5, .2, 1.1, M({ color: "#e6c88e", roughness: .55 }), 0, 2.3, 3.25);
+  box(9.5, 2.2, .16, M({ map: woodDark }), 0, 1.15, 3.8);
+  box(9.4, .9, .6, M({ color: "#8a6a4a" }), 0, 2.75, 2.2);
+  const noren = [];
+  "ラーメン麺".split("").forEach((ch, i) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(1.86, 1.45, 1, 6), M({ map: norenTex(ch), side: THREE.DoubleSide, roughness: 1, transparent: true, opacity: .97 }));
+    m.position.set(-3.8 + i * 1.9, 4.08, 4.05); m.castShadow = true; scene.add(m); noren.push(m);
+  });
+  box(10, .06, .06, M({ color: "#2e2018" }), 0, 4.8, 4.06);
+  for (let i = 0; i < 5; i++) {
+    const x = -3.6 + i * 1.8, sm = M({ color: "#77806f", roughness: .5, metalness: .3 });
+    const seat = new THREE.Mesh(new THREE.CylinderGeometry(.48, .48, .14, 20), sm); seat.position.set(x, 1.55, 5.1); seat.castShadow = true; scene.add(seat);
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(.07, .07, 1.5, 8), sm); pole.position.set(x, .78, 5.1); pole.castShadow = true; scene.add(pole);
+    const foot = new THREE.Mesh(new THREE.CylinderGeometry(.36, .4, .08, 16), sm); foot.position.set(x, .04, 5.1); scene.add(foot);
+  }
+  // hanging paper lantern on a bracket
+  const arm = new THREE.Mesh(new THREE.CylinderGeometry(.08, .08, 2.6, 8), M({ color: "#3a2a20" })); arm.rotation.z = Math.PI / 2 - .1; arm.position.set(-6.2, 5.05, 4); scene.add(arm);
+  box(.04, .9, .04, M({ color: "#2b1d12" }), -7.3, 4.55, 4);
+  const lantern = new THREE.Mesh(new THREE.CylinderGeometry(.68, .68, 1.6, 24, 1, true), new THREE.MeshStandardMaterial({ map: lanternTex, emissive: "#ffc98a", emissiveMap: lanternTex, emissiveIntensity: .75, side: THREE.DoubleSide }));
+  lantern.position.set(-7.3, 3.3, 4); scene.add(lantern);
+  [4.15, 2.45].forEach(y => { const cap = new THREE.Mesh(new THREE.CylinderGeometry(.6, .6, .14, 20), M({ color: "#3a2a20" })); cap.position.set(-7.3, y, 4); scene.add(cap); });
+  // sake jugs
+  const prof = [[0, 0], [.55, 0], [.72, .25], [.78, 1.1], [.66, 1.65], [.3, 1.95], [.24, 2.2], [.32, 2.3], [.3, 2.42], [0, 2.42]].map(([x, y]) => new THREE.Vector2(x, y));
+  [[5.95, 3.55, 1.05], [6.75, 4.4, 1.12]].forEach(([x, z, s]) => { const j = new THREE.Mesh(new THREE.LatheGeometry(prof, 28), M({ map: jugTex, roughness: .35, metalness: .08 })); j.scale.setScalar(s); j.position.set(x, 0, z); j.castShadow = true; scene.add(j); });
+  // upper floor, balcony, water tank, upper roof
+  { const r1 = hipRoof(11.4, 9.4, 1.6, 7.2, 5.2, roofMat); r1.position.set(0, 5.1, 0); scene.add(r1); }
+  const upper = new THREE.Group(); upper.position.set(-.8, 6.7, -1.1); scene.add(upper);
+  box(5.4, 3.3, 4.4, plasterTrim, 0, 1.65, 0, upper);
+  [[-2.7, -2.2], [2.7, -2.2], [-2.7, 2.2], [2.7, 2.2]].forEach(([x, z]) => box(.22, 3.4, .22, trimMat, x, 1.7, z, upper));
+  const uw = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.1), new THREE.MeshBasicMaterial({ color: "#ffcf8a" })); uw.position.set(2.72, 1.9, .6); uw.rotation.y = Math.PI / 2; upper.add(uw);
+  const awn2 = box(.8, .05, 1.9, awnMat, 3.05, 2.65, .6, upper); awn2.rotation.z = -.5;
+  const awn3 = box(1.8, .05, .8, awnMat, 1.4, 2.9, 2.6, upper); awn3.rotation.x = .5;
+  { const r2 = hipRoof(6.4, 5.4, 1.1, 3.2, 2, roofMat); r2.position.set(0, 3.35, 0); upper.add(r2); }
+  box(6.6, .14, 1.7, M({ color: "#9a958a" }), -.2, 6.78, 2.25);
+  const railMat = M({ color: "#33473f", roughness: .5 });
+  for (let x = -3.4; x <= 3; x += .42) box(.06, .9, .06, railMat, x, 7.3, 3.05);
+  box(6.5, .08, .08, railMat, -.2, 7.75, 3.05); box(6.5, .06, .06, railMat, -.2, 6.95, 3.05);
+  for (let z = 1.5; z <= 3; z += .42) box(.06, .9, .06, railMat, -3.45, 7.3, z);
+  box(.08, .08, 1.6, railMat, -3.45, 7.75, 2.25);
+  const tank = new THREE.Mesh(new THREE.CylinderGeometry(.95, .95, 3.4, 26), M({ map: rust, roughness: .7 })); tank.position.set(2.55, 8.45, .2); tank.castShadow = true; scene.add(tank);
+  [7.3, 9.6].forEach(y => { const r = new THREE.Mesh(new THREE.CylinderGeometry(.99, .99, .14, 26), M({ color: "#c9c2b4" })); r.position.set(2.55, y, .2); scene.add(r); });
+  const tankTop = new THREE.Mesh(new THREE.CylinderGeometry(.5, .95, .35, 26), M({ map: rust })); tankTop.position.set(2.55, 10.32, .2); scene.add(tankTop);
+
+  /* ---- cozy details: the crew inside, lanterns, glow, steam, a blossom tree, a sleepy street ---- */
+  const cozy = (() => {
+    const ticks = [], nightOnly = [];
+    const glowTex = tex(64, 64, (c, w, h) => { const g = c.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, "rgba(255,220,170,1)"); g.addColorStop(.35, "rgba(255,170,90,.45)"); g.addColorStop(1, "rgba(255,140,60,0)"); c.fillStyle = g; c.fillRect(0, 0, w, h); });
+    const puffTex = tex(64, 64, (c, w, h) => { const g = c.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, "rgba(255,255,255,.9)"); g.addColorStop(1, "rgba(255,255,255,0)"); c.fillStyle = g; c.fillRect(0, 0, w, h); });
+    function glow(x, y, z, size, color = "#ffb070", strength = .8) {
+      const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color, transparent: true, opacity: strength, blending: THREE.AdditiveBlending, depthWrite: false }));
+      s.position.set(x, y, z); s.scale.setScalar(size); s.userData.base = strength; scene.add(s); nightOnly.push(s); return s;
+    }
+    const mat = c => M({ color: c, roughness: .8 });
+    // blocky ninja-chef people, the same crew as inside
+    function person(o) {
+      const g = new THREE.Group();
+      const part = (w, h, d, c, x, y, z, p = g) => box(w, h, d, mat(c), x, y, z, p);
+      const legs = new THREE.Group(); g.add(legs);
+      part(.26, .7, .3, o.pants, -.16, .35, 0, legs); part(.26, .7, .3, o.pants, .16, .35, 0, legs);
+      part(.68, .8, .4, o.top, 0, 1.1, 0);
+      if (o.apron) part(.56, .7, .05, o.apron, 0, 1.0, .22);
+      const armL = part(.22, .66, .26, o.top, -.46, 1.15, 0), armR = part(.22, .66, .26, o.top, .46, 1.15, 0);
+      part(.5, .5, .5, o.skin, 0, 1.78, 0);
+      part(.52, .14, .52, o.hair, 0, 2.06, 0);
+      if (o.chef) { part(.54, .1, .54, "#ffffff", 0, 2.1, 0); const top = new THREE.Mesh(new THREE.CylinderGeometry(.32, .27, .5, 12), mat("#ffffff")); top.position.y = 2.38; top.castShadow = true; g.add(top); }
+      if (o.band) { part(.54, .1, .54, o.band, 0, 1.92, 0); part(.22, .1, .04, "#b9c0c6", 0, 1.92, .27); }
+      part(.06, .08, .02, "#1a1418", -.1, 1.82, .26); part(.06, .08, .02, "#1a1418", .1, 1.82, .26);
+      g.userData = { legs, armL, armR };
+      g.traverse(m => { if (m.isMesh) m.castShadow = true; });
+      scene.add(g); return g;
+    }
+    const sit = (p) => { p.userData.legs.rotation.x = -1.4; p.userData.legs.position.set(0, .62, .05); };
+    // inside: Head Chef Claude stirring behind the counter, two cooks and three customers
+    const chef = person({ top: "#f6f3ee", apron: "#d97757", pants: "#3a3f4a", skin: "#f3d6b0", hair: "#3a2a20", chef: true });
+    chef.position.set(-.8, .95, .9); chef.rotation.y = 0;
+    const taka = person({ top: "#f6f3ee", apron: "#2f6fb3", pants: "#2f3f5a", skin: "#e9c39a", hair: "#1e1a2a", band: "#2f4f7a" });
+    taka.position.set(2.6, .95, .7); taka.rotation.y = -.3;
+    const guests = [
+      [-3.6, { top: "#c8442f", pants: "#2c2f3a", skin: "#d9a77a", hair: "#5a1a12", band: "#1e1612" }],
+      [0, { top: "#4f7aa8", pants: "#3a3a46", skin: "#f0c99a", hair: "#e0b04a" }],
+      [3.6, { top: "#8a5aa8", pants: "#3a3a46", skin: "#c99a6e", hair: "#2a1d14" }],
+    ].map(([x, o]) => { const p = person(o); p.position.set(x, .96, 5.25); p.rotation.y = Math.PI; sit(p); p.userData.armL.rotation.x = -1.1; p.userData.armR.rotation.x = -1.1; return p; });
+    // bowls on the counter with steam, a lucky cat at the end
+    const bowlMat = M({ color: "#f3ece0", roughness: .4 }), brothMat = M({ color: "#d9a35c", emissive: "#5a3010", emissiveIntensity: .4 });
+    const steamPuffs = [];
+    [-3.6, 0, 3.6, -1.8, 1.8].forEach((x, i) => {
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(.34, .22, .24, 16), bowlMat); b.position.set(x, 2.52, 3.3); b.castShadow = true; scene.add(b);
+      const br = new THREE.Mesh(new THREE.CircleGeometry(.3, 16), brothMat); br.rotation.x = -Math.PI / 2; br.position.set(x, 2.645, 3.3); scene.add(br);
+      if (i < 3) for (let k = 0; k < 3; k++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: puffTex, transparent: true, opacity: 0, depthWrite: false })); s.userData = { x, y0: 2.75, z: 3.3, ph: k / 3 + i * .17 }; scene.add(s); steamPuffs.push(s); }
+    });
+    const cat = new THREE.Group(); cat.position.set(4.35, 2.4, 3.2); cat.rotation.y = Math.PI * .15; scene.add(cat);
+    box(.4, .4, .32, mat("#fbf6ea"), 0, .2, 0, cat); box(.38, .32, .3, mat("#fbf6ea"), 0, .56, 0, cat);
+    box(.42, .05, .33, mat("#c8382c"), 0, .41, 0, cat); box(.06, .06, .02, mat("#1a1418"), -.08, .6, .16, cat); box(.06, .06, .02, mat("#1a1418"), .08, .6, .16, cat);
+    const paw = box(.1, .2, .1, mat("#fbf6ea"), .22, .62, .05, cat);
+    // back of the kitchen: shelves of bowls, a big stockpot, warm menu plaques
+    box(8, .1, .5, mat("#5e3820"), 0, 3.4, -3.6); box(8, .1, .5, mat("#5e3820"), 0, 4.2, -3.6);
+    for (let i = 0; i < 12; i++) { const x = -3.6 + i * .66; const b = new THREE.Mesh(new THREE.CylinderGeometry(.22, .14, .18, 12), bowlMat); b.position.set(x, 3.55, -3.55); scene.add(b); const b2 = b.clone(); b2.position.y = 4.35; scene.add(b2); }
+    box(1.8, 2.1, 1.3, M({ color: "#6d737a", metalness: .3 }), -2.8, 1.05, -.6);
+    const pot = new THREE.Mesh(new THREE.CylinderGeometry(.7, .65, 1.1, 20), M({ color: "#b9c0c6", metalness: .5, roughness: .35 })); pot.position.set(-2.8, 2.65, -.6); pot.castShadow = true; scene.add(pot);
+    const potTop = new THREE.Mesh(new THREE.CircleGeometry(.66, 20), brothMat); potTop.rotation.x = -Math.PI / 2; potTop.position.set(-2.8, 3.21, -.6); scene.add(potTop);
+    const plaqueTex = tex(512, 128, (c, w, h) => { c.fillStyle = "#3a2416"; c.fillRect(0, 0, w, h); for (let i = 0; i < 8; i++) { const x = 8 + i * 63; c.fillStyle = "#efd9ad"; c.fillRect(x, 8, 54, 112); c.fillStyle = "#2b1d12"; for (let k = 0; k < 4; k++) c.fillRect(x + 20, 22 + k * 18, 14 - (k % 2) * 6, 6); c.fillStyle = "#c8382c"; c.fillRect(x + 16, 100, 22, 6); } });
+    const plaques = new THREE.Mesh(new THREE.PlaneGeometry(6, 1.5), M({ map: plaqueTex, emissive: "#ffcf9a", emissiveMap: plaqueTex, emissiveIntensity: .25 })); plaques.position.set(0, 4.95, -3.82); scene.add(plaques);
+    glow(0, 3.2, 1.6, 9, "#ffb070", .35); glow(-2.8, 3.4, -.6, 3, "#ffd28a", .4);
+    // strings of little red lanterns along the front and right eaves
+    const lanternMat = M({ color: "#d9442c", emissive: "#ff6a3a", emissiveIntensity: .9, roughness: .6 });
+    function stringOf(a, b, n, sag) {
+      const pts = [];
+      for (let i = 0; i <= 24; i++) { const t = i / 24; pts.push(new THREE.Vector3(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t - Math.sin(t * Math.PI) * sag, a.z + (b.z - a.z) * t)); }
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: "#2b1d12" })));
+      for (let i = 1; i < n; i++) {
+        const t = i / n, p = new THREE.Vector3(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t - Math.sin(t * Math.PI) * sag - .32, a.z + (b.z - a.z) * t);
+        const l = new THREE.Mesh(new THREE.SphereGeometry(.2, 12, 10), lanternMat); l.scale.y = 1.3; l.position.copy(p); scene.add(l);
+        const cap = box(.2, .05, .2, mat("#2b1d12"), p.x, p.y + .27, p.z); cap.castShadow = false;
+        glow(p.x, p.y, p.z, 1.6, "#ff9a5a", .55);
+        ticks.push((tt) => { l.rotation.z = Math.sin(tt * 1.4 + i) * .08; });
+      }
+    }
+    stringOf(new THREE.Vector3(-5.6, 5.0, 4.75), new THREE.Vector3(5.6, 5.0, 4.75), 10, .45);
+    stringOf(new THREE.Vector3(5.75, 5.0, 4.6), new THREE.Vector3(5.75, 5.0, -4.4), 8, .4);
+    glow(-7.3, 3.3, 4, 4.5, "#ffc98a", .6); glow(0, 1.2, 5.6, 8, "#ffb070", .22);
+    // cherry blossom tree with drifting petals
+    const tree = new THREE.Group(); tree.position.set(-7.4, 0, -.6); scene.add(tree);
+    const bark = M({ color: "#5a3a2a", roughness: .9 });
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(.28, .45, 4.2, 8), bark); trunk.position.y = 2.1; trunk.rotation.z = .08; trunk.castShadow = true; tree.add(trunk);
+    [[.9, 4, .3, -.7], [-1, 3.8, -.2, .8]].forEach(([x, y, z, r]) => { const br = new THREE.Mesh(new THREE.CylinderGeometry(.1, .18, 2, 6), bark); br.position.set(x * .6, y, z); br.rotation.z = r; tree.add(br); });
+    const pinks = ["#f6b3c8", "#f9c8d6", "#ee9fb8", "#fbd9e3"].map(c => M({ color: c, roughness: .9, emissive: "#a04a68", emissiveIntensity: .12 }));
+    [[0, 5.2, 0, 1.7], [1.4, 4.7, .5, 1.3], [-1.4, 4.6, -.3, 1.3], [.4, 4.4, 1.2, 1.1], [-.5, 5.6, -.9, 1.1], [1.1, 5.5, -.8, 1], [-1.2, 5.3, .9, 1]].forEach(([x, y, z, r], i) => {
+      const b = new THREE.Mesh(new THREE.IcosahedronGeometry(r, 1), pinks[i % 4]); b.position.set(x, y, z); b.castShadow = true; tree.add(b);
+    });
+    const PN = 160, petalGeo = new THREE.BufferGeometry(), pp = new Float32Array(PN * 3), pv = [];
+    for (let i = 0; i < PN; i++) { pp.set([-7.4 + (rnd() - .5) * 6, rnd() * 6, -.6 + (rnd() - .5) * 6], i * 3); pv.push(rnd() * Math.PI * 2); }
+    petalGeo.setAttribute("position", new THREE.BufferAttribute(pp, 3));
+    const petals = new THREE.Points(petalGeo, new THREE.PointsMaterial({ color: "#f7b8cc", size: .14, transparent: true, opacity: .9, depthWrite: false })); petals.frustumCulled = false; scene.add(petals);
+    ticks.push((tt, dt) => {
+      if (reduce3) return; const a = petalGeo.attributes.position.array;
+      for (let i = 0; i < PN; i++) { const k = i * 3; pv[i] += dt; a[k] += (Math.sin(pv[i]) * .3 + .45) * dt; a[k + 1] -= .55 * dt; a[k + 2] += Math.cos(pv[i] * .7) * .2 * dt; if (a[k + 1] < 0) { a[k] = -7.4 + (rnd() - .5) * 5; a[k + 1] = 4 + rnd() * 2.5; a[k + 2] = -.6 + (rnd() - .5) * 5; } }
+      petalGeo.attributes.position.needsUpdate = true;
+    });
+    // bench with a sleeping orange cat, bamboo planters, a chalkboard menu, a glowing ticket machine
+    const wood = M({ color: "#8a5a34", roughness: .85 });
+    box(2.6, .14, .7, wood, -6.6, .82, 6.4); [-1.1, 1.1].forEach(x => box(.14, .82, .6, wood, -6.6 + x, .41, 6.4));
+    const sleepy = new THREE.Group(); sleepy.position.set(-6.2, .9, 6.4); scene.add(sleepy);
+    box(.7, .3, .4, mat("#e08a3a"), 0, .15, 0, sleepy); box(.32, .28, .32, mat("#e08a3a"), .42, .2, 0, sleepy); box(.5, .1, .1, mat("#e08a3a"), -.5, .08, .15, sleepy);
+    ticks.push((tt) => { sleepy.scale.y = 1 + (reduce3 ? 0 : Math.sin(tt * 1.6) * .05); });
+    [[-5.6, 5.6], [5.4, 5.4]].forEach(([x, z]) => {
+      box(.9, .7, .9, mat("#5e3820"), x, .35, z);
+      for (let k = 0; k < 6; k++) { const st = new THREE.Mesh(new THREE.CylinderGeometry(.05, .06, 2 + k * .25, 6), M({ color: k % 2 ? "#6f9a42" : "#5f8a3a" })); st.position.set(x + (k % 3 - 1) * .2, 1.3 + k * .12, z + (k > 2 ? .15 : -.15)); st.castShadow = true; scene.add(st); }
+      for (let k = 0; k < 10; k++) { const lf = box(.42, .04, .12, M({ color: "#7fbe5a" }), x + (rnd() - .5) * .8, 1.6 + rnd() * 1.6, z + (rnd() - .5) * .6); lf.rotation.set(rnd(), rnd() * 3, rnd() * .6); lf.castShadow = false; }
+    });
+    const chalkTex = tex(256, 320, (c, w, h) => {
+      c.fillStyle = "#2c3a2f"; c.fillRect(0, 0, w, h); c.fillStyle = "#f5f0e0"; c.font = "700 40px 'Pixelify Sans', monospace"; c.textAlign = "center"; c.fillText("TODAY", w / 2, 56);
+      c.font = "28px 'Pixelify Sans', monospace"; ["Shoyu ramen", "Spicy miso", "Gyoza x6", "Matcha"].forEach((l, i) => { c.fillStyle = i === 1 ? "#ff9a7a" : "#f5f0e0"; c.fillText(l, w / 2, 112 + i * 46); });
+      c.fillStyle = "#f2c14e"; c.fillText("~ open late ~", w / 2, 296);
+    });
+    const easel = new THREE.Group(); easel.position.set(3.4, 0, 7.4); easel.rotation.y = -.35; scene.add(easel);
+    box(1.5, 1.9, .08, M({ color: "#5e3820" }), 0, 1.35, 0, easel);
+    const board = new THREE.Mesh(new THREE.PlaneGeometry(1.32, 1.7), M({ map: chalkTex, emissive: "#ffffff", emissiveMap: chalkTex, emissiveIntensity: .12 })); board.position.set(0, 1.35, .05); easel.add(board);
+    [-.6, .6].forEach(x => { const lg = box(.08, 2.4, .08, M({ color: "#5e3820" }), x, 1.1, -.25, easel); lg.rotation.x = .15; });
+    const vend = new THREE.Group(); vend.position.set(7.2, 0, -2.6); vend.rotation.y = Math.PI / 2; scene.add(vend);
+    box(1.6, 3, 1, M({ color: "#d9d4c8" }), 0, 1.5, 0, vend);
+    const panelTex = tex(128, 192, (c, w, h) => { c.fillStyle = "#cfe8f5"; c.fillRect(0, 0, w, h); for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) { c.fillStyle = ["#c8382c", "#2f6fb3", "#4f8a3a", "#e9c66a"][(r + k) % 4]; c.fillRect(10 + k * 28, 12 + r * 40, 18, 30); } });
+    const panel = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 1.8), new THREE.MeshBasicMaterial({ map: panelTex })); panel.position.set(0, 1.9, .51); vend.add(panel);
+    glow(7.25, 1.9, -2.6, 3.5, "#bfe6ff", .45);
+    // a little street lamp
+    box(.16, 4.6, .16, M({ color: "#2b2f36" }), -7.6, 2.3, 7.8); box(.7, .12, .12, M({ color: "#2b2f36" }), -7.35, 4.55, 7.8);
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(.22, 12, 10), M({ color: "#ffe2a0", emissive: "#ffd28a", emissiveIntensity: 1.2 })); bulb.position.set(-7.05, 4.35, 7.8); scene.add(bulb);
+    glow(-7.05, 4.3, 7.8, 4, "#ffd28a", .6);
+    const streetLight = new THREE.PointLight("#ffcf8a", .7, 12, 1.8); streetLight.position.set(-7, 4.2, 7.8); scene.add(streetLight);
+    // steam from the roof vent and the stockpot
+    box(.4, 1.2, .4, M({ color: "#8d949b", metalness: .3 }), 3.6, 7.1, -2.4);
+    const roofPuffs = [];
+    for (let k = 0; k < 10; k++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: puffTex, transparent: true, opacity: 0, depthWrite: false })); s.userData.ph = k / 10; scene.add(s); roofPuffs.push(s); }
+    ticks.push((tt) => {
+      roofPuffs.forEach(s => { const p = (tt * .18 + s.userData.ph) % 1; s.position.set(3.6 + p * 1.4, 7.8 + p * 3.2, -2.4 - p * .5); s.scale.setScalar(.5 + p * 1.6); s.material.opacity = (1 - p) * .35; });
+      steamPuffs.forEach(s => { const p = (tt * .3 + s.userData.ph) % 1; s.position.set(s.userData.x + Math.sin(p * 6 + s.userData.ph * 9) * .08, s.userData.y0 + p * 1.1, s.userData.z); s.scale.setScalar(.2 + p * .45); s.material.opacity = (1 - p) * .4; });
+    });
+    // fireflies and a starry sky with a moon
+    const FN = 26, ffGeo = new THREE.BufferGeometry(), fp = new Float32Array(FN * 3), fph = [];
+    for (let i = 0; i < FN; i++) { fp.set([-8 + rnd() * 5, .6 + rnd() * 3, -5 + rnd() * 13], i * 3); fph.push(rnd() * 10); }
+    ffGeo.setAttribute("position", new THREE.BufferAttribute(fp, 3));
+    const fireflies = new THREE.Points(ffGeo, new THREE.PointsMaterial({ color: "#ffe98a", size: .18, transparent: true, opacity: .9, blending: THREE.AdditiveBlending, depthWrite: false })); scene.add(fireflies); nightOnly.push(fireflies);
+    const base = fp.slice();
+    ticks.push((tt) => { if (reduce3) return; const a = ffGeo.attributes.position.array; for (let i = 0; i < FN; i++) { const k = i * 3, q = fph[i] + tt * .5; a[k] = base[k] + Math.sin(q) * .6; a[k + 1] = base[k + 1] + Math.sin(q * 1.7) * .4; a[k + 2] = base[k + 2] + Math.cos(q * .8) * .6; } ffGeo.attributes.position.needsUpdate = true; fireflies.material.opacity = .6 + Math.sin(tt * 3) * .3; });
+    const SN = 500, sGeo = new THREE.BufferGeometry(), sp = new Float32Array(SN * 3);
+    for (let i = 0; i < SN; i++) { const u = rnd() * Math.PI * 2, v = rnd() * .9 + .1; sp.set([Math.cos(u) * 120 * Math.cos(v), 25 + Math.sin(v) * 90, Math.sin(u) * 120 * Math.cos(v) - 40], i * 3); }
+    sGeo.setAttribute("position", new THREE.BufferAttribute(sp, 3));
+    const stars = new THREE.Points(sGeo, new THREE.PointsMaterial({ color: "#fff6e0", size: 1.2, sizeAttenuation: false, transparent: true, opacity: .8 })); scene.add(stars); nightOnly.push(stars);
+    const moon = new THREE.Mesh(new THREE.CircleGeometry(4, 32), new THREE.MeshBasicMaterial({ color: "#fff1cf" })); moon.position.set(-40, 38, -60); moon.lookAt(0, 0, 0); scene.add(moon); nightOnly.push(moon);
+    glow(-40, 38, -59, 26, "#ffe7b0", .35);
+    // gentle life inside: Claude stirs, Taka tastes, guests eat
+    ticks.push((tt) => {
+      if (reduce3) return;
+      chef.userData.armR.rotation.x = -1 + Math.sin(tt * 4) * .35; chef.userData.armL.rotation.x = -.8; chef.rotation.y = Math.sin(tt * .5) * .5;
+      taka.userData.armR.rotation.x = -.6 + Math.sin(tt * 1.3) * .5;
+      guests.forEach((g, i) => { g.userData.armR.rotation.x = -1.1 + Math.max(0, Math.sin(tt * 2 + i * 1.7)) * .5; g.rotation.z = Math.sin(tt * .7 + i) * .02; });
+      paw.position.y = .62 + Math.max(0, Math.sin(tt * 3)) * .12;
+    });
+    return {
+      tick(tt, dt) { ticks.forEach(f => f(tt, dt)); },
+      setDay(d, r) { nightOnly.forEach(o => { if (o.isSprite) o.material.opacity = d ? o.userData.base * .25 : o.userData.base; else o.visible = !d; }); stars.visible = moon.visible = !d && !r; streetLight.intensity = d ? .1 : .7; lanternMat.emissiveIntensity = d ? .35 : .9; },
+    };
+  })();
+
+  // lights: cool night fill, a key light, warm glow from the counter and lantern
+  const hemi = new THREE.HemisphereLight("#b9c3ff", "#4a3a3a", .55); scene.add(hemi);
+  const key = new THREE.DirectionalLight("#fff0dc", .8); key.position.set(-12, 22, 16); key.castShadow = true; key.shadow.mapSize.set(innerWidth < 700 ? 1024 : 2048, innerWidth < 700 ? 1024 : 2048);
+  Object.assign(key.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 80 }); key.shadow.bias = -.0005; key.shadow.normalBias = .03; scene.add(key);
+  const rim = new THREE.DirectionalLight("#7fd0c8", .35); rim.position.set(14, 8, -10); scene.add(rim);
+  const warm = new THREE.PointLight("#ffb168", 1.8, 16, 1.5); warm.position.set(0, 3.6, 1); scene.add(warm);
+  const warm2 = new THREE.PointLight("#ffb168", .8, 9, 1.6); warm2.position.set(0, 2.6, 5.4); scene.add(warm2);
+  const lampL = new THREE.PointLight("#ffc98a", .9, 9, 1.6); lampL.position.set(-7.3, 3.3, 4.6); scene.add(lampL);
+
+  // hover + click the door (or the noren) to go inside
+  const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(), clickables = [door, doorNoren, ...noren];
+  let hover = false, inside = false, zoom = null, downAt = null;
+  const pick = e => { const r = renderer.domElement.getBoundingClientRect(); mouse.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1); ray.setFromCamera(mouse, camera); return ray.intersectObjects(clickables).length > 0; };
+  renderer.domElement.addEventListener("pointermove", e => { hover = pick(e); renderer.domElement.style.cursor = hover ? "pointer" : "grab"; });
+  renderer.domElement.addEventListener("pointerdown", e => downAt = [e.clientX, e.clientY]);
+  renderer.domElement.addEventListener("pointerup", e => { if (downAt && Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) < 5 && pick(e)) goInside(); });
+  hint.onclick = () => goInside();
+  window.agentView = "outside"; window.agentEnter = goInside; window.agentRain = false;
+  // day / night and rain
+  let day = false, rain = false;
+  const rainGeo = new THREE.BufferGeometry(), RN = 700, rp = new Float32Array(RN * 6);
+  for (let i = 0; i < RN; i++) { const x = -12 + rnd() * 26, y = rnd() * 20, z = -9 + rnd() * 21; rp.set([x, y, z, x - .05, y - .7, z + .03], i * 6); }
+  rainGeo.setAttribute("position", new THREE.BufferAttribute(rp, 3));
+  const rainLines = new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: "#b8c6e6", transparent: true, opacity: .55 })); rainLines.visible = false; rainLines.frustumCulled = false; scene.add(rainLines);
+  const dayBtn = document.getElementById("dayBtn"), rainBtn = document.getElementById("rainBtn");
+  function applySky() {
+    const bg = day ? (rain ? "#8c98a8" : "#a9cbe9") : (rain ? "#24283a" : "#2b2a3c");
+    scene.background.set(bg); outside.style.background = bg;
+    hemi.color.set(day ? "#e4ecff" : "#b9c3ff"); hemi.groundColor.set(day ? "#8a7a5a" : "#4a3a3a"); hemi.intensity = day ? .95 : .55;
+    key.color.set(day ? "#fff4e0" : "#fff0dc"); key.intensity = (day ? 1.15 : .8) * (rain ? .6 : 1);
+    warm.intensity = day ? .7 : 1.5; warm2.intensity = day ? .3 : .8; lampL.intensity = day ? .3 : .9;
+    lantern.userData.base = day ? .3 : .7;
+    cozy.setDay(day, rain);
+    rainLines.visible = rain; window.agentRain = rain; window.agentMix && window.agentMix();
+    dayBtn.setAttribute("aria-pressed", day); dayBtn.textContent = day ? "☾ Night" : "☀ Day"; rainBtn.setAttribute("aria-pressed", rain);
+  }
+  dayBtn.onclick = () => { day = !day; applySky(); };
+  rainBtn.onclick = () => { rain = !rain; applySky(); };
+  lantern.userData.base = .7;
+  function goInside() {
+    if (inside || zoom) return;
+    const tgt = new THREE.Vector3(5.2, 1.6, .9);
+    zoom = { p0: camera.position.clone(), t0: controls.target.clone(), p1: new THREE.Vector3(11, 2.6, 1.4), t1: tgt, k: 0 };
+    if (reduce3) zoom.k = 1;
+  }
+  function finishInside() { fade.style.opacity = 1; setTimeout(() => { outside.hidden = true; inside = true; window.agentView = "inside"; window.agentMix && window.agentMix(); document.getElementById("backBtn").focus({ preventScroll: true }); fade.style.opacity = 0; }, reduce3 ? 0 : 380); }
+  document.getElementById("backBtn").onclick = () => {
+    fade.style.opacity = 1;
+    setTimeout(() => { outside.hidden = false; inside = false; window.agentView = "outside"; window.agentMix && window.agentMix(); camera.position.copy(HOME.p); controls.target.copy(HOME.t); fade.style.opacity = 0; requestAnimationFrame(loop); }, reduce3 ? 0 : 380);
+  };
+
+  function resize() { const w = outside.clientWidth || 1, h = outside.clientHeight || 1; renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = w < h ? Math.min(52, 27 / Math.pow(w / h, .75)) : 27; camera.updateProjectionMatrix(); }
+  new ResizeObserver(resize).observe(outside); resize();
+  const v = new THREE.Vector3(), clock = new THREE.Clock();
+  function loop() {
+    if (inside) return;
+    const dt = Math.min(.05, clock.getDelta()), t = clock.elapsedTime;
+    doorMat.emissiveIntensity += ((hover ? .45 : .08 + Math.sin(t * 2.4) * .06) - doorMat.emissiveIntensity) * .15;
+    if (!reduce3) noren.forEach((m, i) => { m.rotation.x = Math.sin(t * 1.3 + i * .8) * .05; });
+    lantern.material.emissiveIntensity = lantern.userData.base + (reduce3 ? 0 : Math.sin(t * 6) * .04 + Math.sin(t * 11) * .03);
+    cozy.tick(t, dt);
+    if (rain && !reduce3) { const a = rainGeo.attributes.position.array; for (let i = 0; i < RN; i++) { const k = i * 6; a[k + 1] -= dt * 22; a[k + 4] -= dt * 22; if (a[k + 4] < 0) { a[k + 1] += 20; a[k + 4] += 20; } } rainGeo.attributes.position.needsUpdate = true; }
+    if (zoom) {
+      zoom.k = Math.min(1, zoom.k + dt / 1.1); const e = zoom.k < .5 ? 4 * zoom.k ** 3 : 1 - (-2 * zoom.k + 2) ** 3 / 2;
+      camera.position.lerpVectors(zoom.p0, zoom.p1, e); controls.target.lerpVectors(zoom.t0, zoom.t1, e);
+      if (zoom.k >= .8 && !zoom.faded) { zoom.faded = true; finishInside(); }
+      if (zoom.k >= 1) zoom = null;
+    }
+    controls.update();
+    v.set(5.25, 3.2, .9).project(camera);
+    hint.style.left = (v.x + 1) / 2 * outside.clientWidth + "px"; hint.style.top = (1 - v.y) / 2 * outside.clientHeight + "px";
+    hint.hidden = !!zoom || v.z > 1;
+    renderer.render(scene, camera);
+    if (!loop.drawn) { loop.drawn = true; const ld = document.getElementById("loading"); ld.style.opacity = 0; setTimeout(() => ld.hidden = true, 450); }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>

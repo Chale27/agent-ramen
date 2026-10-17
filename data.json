@@ -1,0 +1,131 @@
+{
+ "pins": [
+  {
+   "id": "837810336976492537",
+   "title": "Dull Knives? How to Sharpen Kitchen Knives at Home (Beginner Way)",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "Work Sharp Precision Adjust",
+   "asin": "B08L72P245",
+   "layout": "photo",
+   "status": "live",
+   "releaseAt": "2026-10-17T15:45:00-05:00",
+   "pinUrl": "https://www.pinterest.com/pin/837810336976492537/"
+  },
+  {
+   "id": "837810336976492779",
+   "title": "Christmas Gift Idea for Home Cooks: A Tool They'll Use Every Week",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Work Sharp Precision Adjust",
+   "asin": "B08L72P245",
+   "layout": "photo",
+   "status": "live",
+   "releaseAt": "2026-10-17T16:20:00-05:00",
+   "pinUrl": "https://www.pinterest.com/pin/837810336976492779/"
+  },
+  {
+   "id": "837810336976492791",
+   "title": "Why Green Tea Tastes Bitter (and the 175°F Water Fix)",
+   "board": "Tea Lover's Kitchen",
+   "product": "Cuisinart PerfecTemp kettle",
+   "asin": "B003KYSLNQ",
+   "layout": "photo",
+   "status": "live",
+   "releaseAt": "2026-10-17T16:21:00-05:00",
+   "pinUrl": "https://www.pinterest.com/pin/837810336976492791/"
+  },
+  {
+   "id": "837810336976492795",
+   "title": "Etsy Shipping Setup: How to Print Shipping Labels at Home",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Rollo Wireless label printer",
+   "asin": "B0D3CQKTMR",
+   "layout": "photo",
+   "status": "live",
+   "releaseAt": "2026-10-17T16:22:00-05:00",
+   "pinUrl": "https://www.pinterest.com/pin/837810336976492795/"
+  },
+  {
+   "id": "837810336976492801",
+   "title": "Ship Small Orders for Less: Poly Mailers for Small Shops",
+   "board": "Small Business Packaging Ideas",
+   "product": "Metronic poly mailers",
+   "asin": "B00OLLFG0I",
+   "layout": "photo",
+   "status": "live",
+   "releaseAt": "2026-10-17T16:23:00-05:00",
+   "pinUrl": "https://www.pinterest.com/pin/837810336976492801/"
+  }
+ ],
+ "products": [
+  {
+   "id": "B00004RFNK",
+   "name": "Henckels Fine Edge Honing Steel",
+   "asin": "B00004RFNK",
+   "board": "Kitchen Knife Care & Sharpening"
+  },
+  {
+   "id": "B00006JSUA",
+   "name": "Lodge 10.25 inch Cast Iron Skillet",
+   "asin": "B00006JSUA",
+   "board": "Gift Ideas for Home Cooks"
+  },
+  {
+   "id": "B003KYSLNQ",
+   "name": "Cuisinart PerfecTemp 1.7L Kettle",
+   "asin": "B003KYSLNQ",
+   "board": "Tea Lover's Kitchen"
+  },
+  {
+   "id": "B00OLLFG0I",
+   "name": "Metronic 10x13 Poly Mailers (100)",
+   "asin": "B00OLLFG0I",
+   "board": "Small Business Packaging Ideas"
+  },
+  {
+   "id": "B01M63UE67",
+   "name": "Rollo 4x6 Thermal Labels (500)",
+   "asin": "B01M63UE67",
+   "board": "Etsy Shop Shipping Setup"
+  },
+  {
+   "id": "B08L72P245",
+   "name": "Work Sharp Precision Adjust Knife Sharpener",
+   "asin": "B08L72P245",
+   "board": "Kitchen Knife Care & Sharpening"
+  },
+  {
+   "id": "B0B181PBP8",
+   "name": "Sharp Pebble Whetstone Kit 1000/6000",
+   "asin": "B0B181PBP8",
+   "board": "Kitchen Knife Care & Sharpening"
+  },
+  {
+   "id": "B0D3CQKTMR",
+   "name": "Rollo Wireless Thermal Label Printer",
+   "asin": "B0D3CQKTMR",
+   "board": "Etsy Shop Shipping Setup"
+  }
+ ],
+ "stations": [
+  {
+   "id": "grand-canyon",
+   "program": "Amazon Associates × Pinterest",
+   "job": "Pin Bot",
+   "status": "on",
+   "desc": "Makes Pinterest pins with Amazon links every morning and keeps 3 days queued. Pinterest releases 5 a day at 10, 12, 2, 5 and 8."
+  }
+ ],
+ "pinbot": {
+  "status": {
+   "state": "ok",
+   "lastRunAt": "2026-10-17T17:48:00-05:00",
+   "lastSummary": "Simulation: dry run made 3 draft pins (overlay, cheat sheet, collage) for tomorrow and added 2 new products; nothing was posted to Pinterest.",
+   "issues": [],
+   "nextRun": "Daily · 9:03 AM"
+  },
+  "control": {
+   "paused": false
+  }
+ },
+ "updatedAt": "2026-10-17T18:02:05-05:00"
+}

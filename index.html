@@ -676,7 +676,11 @@ function listenRuns() {
 }
 function runBox(task, label, warn) {
   const box = el("div", "runbox");
-  if (!db || db.readOnly) return box;
+  if (!db || db.readOnly) {
+    const n = el("span", "st"); n.append(document.createTextNode(db ? "▶ Run now buttons are in the " : "▶ Run now buttons show when this page has loaded on claude.ai, signed in. Open the "));
+    const a = el("a", null, "Claude version of the shop"); a.href = "https://claude.ai/artifact/QLXtBuNqgZgd1MhjUgQzG5"; a.target = "_blank"; a.rel = "noopener"; n.append(a, document.createTextNode("."));
+    box.append(n); return box;
+  }
   const r = runReqs[task], waiting = r && r.status === "waiting";
   const b = el("button", "btn", waiting ? "Ticket pinned" : "▶ " + (label || "Run now")); b.type = "button"; b.disabled = !!waiting;
   const st = el("span", "st", runStatus(r));
@@ -730,7 +734,7 @@ function renderStation(id) {
   }
   hqTitle.textContent = `${name} · Pin Bot`;
   hqBody.append(back, el("p", "lead", s.desc));
-  if (db && !db.readOnly) { hqBody.append(runBox("pin-bot-dry-run", "Test run (no posting)")); hqBody.append(runBox("daily-pinterest-pins", "Run the Pin Bot now", "This posts real pins to Pinterest (up to 5 per day). Pin a run ticket?")); }
+  if (db && !db.readOnly) { hqBody.append(runBox("pin-bot-dry-run", "Test run (no posting)")); hqBody.append(runBox("daily-pinterest-pins", "Run the Pin Bot now", "This posts real pins to Pinterest (up to 5 per day). Pin a run ticket?")); } else hqBody.append(runBox("daily-pinterest-pins"));
   const state = pbState(), st = el("div", "hq-stats"), up = upcoming(), live = released();
   st.append(stat("Status", STATE_TXT[state] || state), stat("Last run", pbStatus && pbStatus.lastRunAt ? new Date(pbStatus.lastRunAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not yet"), stat("Next run", (pbStatus && pbStatus.nextRun) || "Daily · 9 AM"), stat("Queued", String(up.length)));
   hqBody.append(st);

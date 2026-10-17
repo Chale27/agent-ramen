@@ -46,7 +46,8 @@ h1 span { color: var(--red); }
 .tag.on { color: var(--tag); background: var(--gold); }
 .tag:disabled { opacity: 1; }
 .tag.chef { color: #fff; background: var(--red); }
-.bubble { position: absolute; transform: translate(-50%, calc(-100% - 22px)); pointer-events: none; font: 600 clamp(10px, 1.05vw, 13px) var(--body); color: var(--fg); background: #fffdf7; border: 2px solid var(--tag); border-radius: 4px; padding: 2px 8px; white-space: nowrap; box-shadow: 0 2px 0 rgba(58,36,22,.35); }
+.bubble { display: none !important; }
+.bubble-off { position: absolute; transform: translate(-50%, calc(-100% - 22px)); pointer-events: none; font: 600 clamp(10px, 1.05vw, 13px) var(--body); color: var(--fg); background: #fffdf7; border: 2px solid var(--tag); border-radius: 4px; padding: 2px 8px; white-space: nowrap; box-shadow: 0 2px 0 rgba(58,36,22,.35); }
 .bubble::after { content: ""; position: absolute; left: 50%; bottom: -6px; margin-left: -5px; border: 5px solid transparent; border-top-color: var(--tag); border-bottom: 0; }
 .sign:focus-visible, .tag:focus-visible, .card:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
 
@@ -139,6 +140,13 @@ details.prods ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
 .finds li small { display: block; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
 .earn { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
 .earn input { width: 100%; font: 500 14px var(--body); color: var(--fg); background: #fffdf7; border: 2px solid var(--tag); padding: 4px 6px; }
+.note-box { background: #fffdf7; border: 2px solid var(--tag); border-left: 6px solid var(--gold); padding: 8px 12px; display: grid; gap: 4px; }
+.note-box h4 { margin: 0; }
+.note-when { margin: 0; font: 600 11.5px var(--mono); color: var(--muted); }
+.note-text { margin: 0; font-size: 14.5px; }
+.note-box summary { cursor: pointer; font: 700 13px var(--pixel); }
+.note-log { margin: 4px 0 0; padding-left: 16px; font-size: 13px; display: grid; gap: 3px; }
+.note-log time { font: 600 11px var(--mono); color: var(--muted); }
 .runbox { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; background: var(--cream); border: 2px solid var(--tag); padding: 8px 10px; }
 .runbox .st { font: 600 12.5px var(--body); color: var(--muted); }
 .directory { z-index: 7; position: absolute; inset: 6% 12%; background: #fbecd0; border: 4px solid var(--tag); box-shadow: inset 0 0 0 3px #e8cfa2, 0 6px 0 rgba(43,29,18,.4); display: flex; flex-direction: column; min-height: 0; }
@@ -270,7 +278,7 @@ const SITES = [
     role: "Three cooks who move as one. A Ruflo agent swarm for big, many-step projects: it splits the job, works the pieces at once and remembers what worked.",
     model: "Ruflo swarm", file: "~/AgentRamen", when: "Big projects with many parts.", call: "Have the Ruflo swarm in ~/AgentRamen build it" },
   { id: "neko", name: "Neko the Courier Cat", group: "auto", station: "Website courier",
-    role: "Carries every change in the shop to the public website on GitHub.", model: "Scheduled task", file: "~/.claude/scheduled-tasks/website-sync", when: "Every 15 minutes, 8 AM to 11 PM.", call: "Ask Claude to sync the website now." },
+    role: "Carries every change in the shop to the public website on GitHub.", model: "Scheduled task", file: "~/.claude/scheduled-tasks/website-sync", when: "Every 5 minutes, 8 AM to 11 PM.", call: "Ask Claude to sync the website now." },
   { id: "old-faithful", name: "Old Faithful", group: "auto", station: "The stockpot that never sleeps",
     role: "A hook, not a cook. The stockpot boils over on its own: every time a note is written or edited, INDEX.md gets rebuilt.",
     model: "None (script)", file: "scripts/indexer-hook.py", when: "Automatic, after every note edit.", call: "Nothing to call. It just boils over." },
@@ -570,15 +578,15 @@ function nekoState() { return (syncStatus && syncStatus.state) || "on"; }
 const stamp = s => s ? new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not yet";
 function renderNeko(back) {
   hqTitle.textContent = "Neko the Courier Cat · Website";
-  hqBody.append(back, el("p", "lead", "Neko checks the shop every 15 minutes from 8 AM to 11 PM, and starts any task you pinned a run ticket for. Whenever something changed (new pins, products or status), she carries the update to the public website."));
+  hqBody.append(back, el("p", "lead", "Neko checks the shop every 5 minutes from 8 AM to 11 PM, and starts any task you pinned a run ticket for. Whenever something changed (new pins, products or status), she carries the update to the public website."));
   const st = el("div", "hq-stats"), web = db && db.readOnly;
   st.append(stat("Status", STATE_TXT[nekoState()] || "Running"),
-    stat("Last check", web ? "Every 15 min" : stamp(syncStatus && syncStatus.lastCheckAt)),
+    stat("Last check", web ? "Every 5 min" : stamp(syncStatus && syncStatus.lastCheckAt)),
     stat("Last delivery", stamp(web ? db.updatedAt : syncStatus && syncStatus.lastPublishAt)),
-    stat("Checks", "Every 15 min"));
+    stat("Checks", "Every 5 min"));
   hqBody.append(st);
-  if (syncStatus && syncStatus.lastSummary) hqBody.append(el("p", "lead", syncStatus.lastSummary));
-  if (syncStatus && Array.isArray(syncStatus.issues) && syncStatus.issues.length) { const u = el("ul", "issues"); syncStatus.issues.slice(0, 6).forEach(i => u.append(el("li", null, String(i)))); hqBody.append(u); }
+  hqBody.append(noteBox(syncStatus, syncStatus && (syncStatus.lastCheckAt || syncStatus.updatedAt)));
+
   hqBody.append(runBox("website-sync", "Sync the website now"));
   const p = el("p"); const a = el("a", "btn", "Open the website"); a.href = "https://chale27.github.io/agent-ramen/"; a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none"; p.append(a); hqBody.append(p);
   hqBody.append(el("p", "empty", "The website is public and view-only. Controls stay in the Claude version."));
@@ -624,8 +632,8 @@ function renderHelper(id, back) {
   st.append(stat("Status", STATE_TXT[helperState(id)] || helperState(id)), stat(id === "earnings-cat" ? "Updated" : "Last run", stamp(d.lastRunAt || d.updatedAt)), stat("Schedule", h.schedule));
   hqBody.append(st);
   if (id === "earnings-cat") return renderEarnings(d, web);
-  if (d.lastSummary) hqBody.append(el("p", "lead", d.lastSummary));
-  if (Array.isArray(d.issues) && d.issues.length) { const u = el("ul", "issues"); d.issues.slice(0, 6).forEach(i => u.append(el("li", null, String(i)))); hqBody.append(u); }
+  hqBody.append(noteBox(d, d.lastRunAt || d.updatedAt));
+
   const fs = el("section"); fs.append(el("h4", null, "Latest findings"));
   const list = Array.isArray(d.findings) ? d.findings : [];
   if (!list.length) fs.append(el("p", "empty", d.lastRunAt ? "Nothing to report." : "No run yet. First run: " + h.schedule + "."));
@@ -655,7 +663,7 @@ function renderEarnings(d, web) {
   form.append(save); hqBody.append(form);
 }
 
-/* ---- run tickets: a Run now button pins a ticket; Neko starts the task within 15 minutes ---- */
+/* ---- run tickets: a Run now button pins a ticket; Neko starts the task within 5 minutes ---- */
 const RUNNABLE = { "link-checker": "link-checker", "stats-reader": "stats-reader", "trend-scout": "trend-scout", "board-builder": "board-builder", "program-hunter": "program-hunter", "shop-doctor": "shop-doctor", neko: "website-sync" };
 const RUN_LABEL = { "daily-pinterest-pins": "Pin Bot", "pin-bot-dry-run": "Pin Bot test run" };
 let runReqs = {}, runFirst = true;
@@ -681,13 +689,30 @@ function runBox(task, label, warn) {
   box.append(b, st); return box;
 }
 function runStatus(r) {
-  if (!r) return "Neko starts it within 15 minutes (8 AM–11 PM).";
+  if (!r) return "Neko starts it within 5 minutes (8 AM–11 PM).";
   const at = s => s ? new Date(s).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
-  if (r.status === "waiting") return "Ticket pinned " + at(r.requestedAt) + " · Neko starts it within 15 min.";
+  if (r.status === "waiting") return "Ticket pinned " + at(r.requestedAt) + " · Neko starts it within 5 min.";
   if (r.status === "started") return "Started " + at(r.startedAt) + ". Results show here when it's done.";
   if (r.status === "failed") return "Couldn't start: " + String(r.note || "unknown reason").slice(0, 80);
   if (r.status === "expired") return "Ticket expired (Neko didn't run in time). Pin it again.";
   return "";
+}
+
+/* ---- run notes: every bot leaves a note after it runs ---- */
+function noteBox(doc, at) {
+  const box = el("section", "note-box");
+  box.append(el("h4", null, "📝 Last run note"));
+  if (!doc || !doc.lastSummary) { box.append(el("p", "empty", "No note yet. The bot leaves one here after its first run.")); return box; }
+  const head = el("p", "note-when", at ? stamp(at) : ""); box.append(head, el("p", "note-text", String(doc.lastSummary)));
+  if (Array.isArray(doc.issues) && doc.issues.length) { const u = el("ul", "issues"); doc.issues.slice(0, 6).forEach(i => u.append(el("li", null, String(i)))); box.append(u); }
+  const log = Array.isArray(doc.log) ? doc.log.filter(x => x && x.note).slice(0, 6) : [];
+  const older = log.filter(x => String(x.note) !== String(doc.lastSummary) || x.at !== at);
+  if (older.length) {
+    const det = el("details"); det.append(el("summary", null, `Earlier notes (${older.length})`));
+    const ul = el("ul", "note-log"); older.slice(0, 5).forEach(x => { const li = el("li"); li.append(el("time", null, stamp(x.at)), document.createTextNode(" " + String(x.note))); ul.append(li); });
+    det.append(ul); box.append(det);
+  }
+  return box;
 }
 function renderStation(id) {
   if (!byId[id] && !HELPER_BY[id]) return openHQ();
@@ -709,8 +734,8 @@ function renderStation(id) {
   const state = pbState(), st = el("div", "hq-stats"), up = upcoming(), live = released();
   st.append(stat("Status", STATE_TXT[state] || state), stat("Last run", pbStatus && pbStatus.lastRunAt ? new Date(pbStatus.lastRunAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not yet"), stat("Next run", (pbStatus && pbStatus.nextRun) || "Daily · 9 AM"), stat("Queued", String(up.length)));
   hqBody.append(st);
-  if (pbStatus && pbStatus.lastSummary) hqBody.append(el("p", "lead", pbStatus.lastSummary));
-  if (pbStatus && Array.isArray(pbStatus.issues) && pbStatus.issues.length) { const u = el("ul", "issues"); pbStatus.issues.slice(0, 6).forEach(i => u.append(el("li", null, String(i)))); hqBody.append(u); }
+  hqBody.append(noteBox(pbStatus, pbStatus && pbStatus.lastRunAt));
+
   // coming up, grouped by day
   const cu = el("section"); cu.append(el("h4", null, "Coming up"));
   if (!up.length) cu.append(el("p", "empty", db ? "Nothing queued. The next 9 AM run fills the next 3 days." : "Open on claude.ai to see the queue."));

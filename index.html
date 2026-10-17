@@ -132,6 +132,13 @@ h1 span { color: var(--red); }
 .empty { margin: 0; font-size: 13px; color: var(--muted); }
 details.prods summary { cursor: pointer; font: 700 14px var(--pixel); }
 details.prods ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
+.tag.mini { font-size: clamp(7px, .8vw, 10px); padding: 0 3px; background: rgba(43,29,18,.72); color: #f3ede1; }
+.finds { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.finds li { background: var(--cream); border-left: 4px solid #8d949b; padding: 4px 8px; font-size: 13.5px; }
+.finds li.ok { border-left-color: #4f8a3a; } .finds li.warn { border-left-color: #e0a030; } .finds li.bad { border-left-color: #d9442c; } .finds li.idea { border-left-color: #2f6fb3; }
+.finds li small { display: block; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+.earn { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.earn input { width: 100%; font: 500 14px var(--body); color: var(--fg); background: #fffdf7; border: 2px solid var(--tag); padding: 4px 6px; }
 .directory { z-index: 7; position: absolute; inset: 6% 12%; background: #fbecd0; border: 4px solid var(--tag); box-shadow: inset 0 0 0 3px #e8cfa2, 0 6px 0 rgba(43,29,18,.4); display: flex; flex-direction: column; min-height: 0; }
 .directory .top { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 3px solid #e0c391; }
 .directory h3 { margin: 0; font: 700 18px var(--pixel); white-space: nowrap; }
@@ -487,6 +494,11 @@ const STATE_TXT = { on: "Running", ok: "Running", paused: "Paused", needs_you: "
 function listenAff() {
   db.collection("stations").onSnapshot(s => { stationDocs = {}; s.docs.forEach(d => { if (d.exists) stationDocs[d.id] = d.data(); }); rerender(); }, () => {});
   db.doc("pinbot/status").onSnapshot(s => { const was = pbStatus && pbStatus.state; pbStatus = s.exists ? s.data() : null; if (pbStatus && pbStatus.state === "needs_you" && was !== "needs_you") { say(PINBOT_COOK, "❗ Pin Bot needs you", 10, true); sfx("ding"); } rerender(); }, () => {});
+  db.collection("helpers").onSnapshot(s => {
+    const before = helperDocs; helperDocs = {}; s.docs.forEach(d => { if (d.exists) helperDocs[d.id] = d.data(); });
+    Object.keys(helperDocs).forEach(id => { const a = before[id], b = helperDocs[id]; if (a && b.lastRunAt && a.lastRunAt !== b.lastRunAt && HELPER_BY[id]) { say(id, "✓ " + String(b.lastSummary || "Done").slice(0, 46), 7, true); sfx("ding"); } if (b.state === "needs_you" && (!a || a.state !== "needs_you")) say(id, "❗ Needs you", 9, true); });
+    rerender();
+  }, () => {});
   db.doc("sync/status").onSnapshot(s => {
     const was = syncStatus && syncStatus.lastPublishAt; syncStatus = s.exists ? s.data() : null;
     if (!syncFirst && syncStatus && syncStatus.lastPublishAt && syncStatus.lastPublishAt !== was) nekoDeliver();
@@ -540,7 +552,11 @@ function renderHQ() {
   const hs = el("section"); hs.append(el("h4", null, "Shop helpers"));
   const hl = el("ul", "st-list"), hli = el("li"), hb = el("button", "on"); hb.type = "button";
   hb.append(el("b", null, "Neko the Courier Cat · Website"), el("span", "pill " + nekoState(), STATE_TXT[nekoState()] || "Running"), el("small", null, "Copies the shop to the public website whenever something changes."));
-  hb.onclick = () => openStation("neko"); hli.append(hb); hl.append(hli); hs.append(hl); hqBody.append(hs);
+  hb.onclick = () => openStation("neko"); hli.append(hb); hl.append(hli);
+  HELPERS.forEach(h => { const d = helperOf(h.id), state = helperState(h.id), li = el("li"), b = el("button", d.lastRunAt ? "on" : ""); b.type = "button";
+    b.append(el("b", null, `${h.name} · ${h.job}`), el("span", "pill " + state, STATE_TXT[state] || "Waiting"), el("small", null, d.lastSummary || h.schedule));
+    b.onclick = () => openStation(h.id); li.append(b); hl.append(li); });
+  hs.append(hl); hqBody.append(hs);
   const row = el("div", "row"); row.style.cssText = "display:flex;flex-wrap:wrap;gap:8px";
   const pb = el("button", "btn", "Open Pin Bot"); pb.type = "button"; pb.onclick = () => openStation(PINBOT_COOK);
   const ord = el("button", "btn ghost", "New crew order"); ord.type = "button"; ord.onclick = () => { closeHQ(); openOrder(); };
@@ -564,11 +580,83 @@ function renderNeko(back) {
   const p = el("p"); const a = el("a", "btn", "Open the website"); a.href = "https://chale27.github.io/agent-ramen/"; a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none"; p.append(a); hqBody.append(p);
   hqBody.append(el("p", "empty", "The website is public and view-only. Controls stay in the Claude version."));
 }
+
+/* ================= shop helpers: animals and objects that keep the affiliate kitchen running ================= */
+const HELPERS = [
+  { id: "link-checker", name: "Tasu the Taste-Bot", job: "Link Checker", at: [22, 182], tagH: 16, schedule: "Daily · 7:30 AM",
+    desc: "Opens every affiliate link in your pins each morning: does the product still exist, is it in stock, does it still match the pin? Bad links go on a list the Pin Bot won't use.",
+    idle: ["Tasting every link…", "Beep: all links fresh?", "No dead links on my watch"] },
+  { id: "stats-reader", name: "Hoot the Owl", job: "Stats Reader", at: [19, 49], tagH: 12, schedule: "Weekly · Monday 8 AM",
+    desc: "Reads your Pinterest Analytics and Amazon Associates reports each week (in your signed-in Chrome) and writes what's working: top pins, clicks, orders. The Pin Bot leans toward the winners.",
+    idle: ["Reading the numbers…", "Which pins got clicks?", "Hoo earned the most?"] },
+  { id: "rules-guard", name: "Kitsune the Shrine Fox", job: "Rules Guard", at: [319, 18], tagH: 10, schedule: "Every Pin Bot run",
+    desc: "Checks every pin before it's scheduled: #affiliate present, no prices, free photo license, no banned or medical claims, link matches the product, Pinterest and Amazon rules followed. Failing pins are held back.",
+    idle: ["Every pin follows the rules", "No prices, ever", "Guarding your accounts"] },
+  { id: "trend-scout", name: "Chirp the Sparrow", job: "Trend Scout", at: [247, 35], tagH: 9, schedule: "Weekly · Sunday 6 PM",
+    desc: "Checks what's rising on Pinterest Trends and Amazon Movers & Shakers for your boards, and leaves timely pin ideas for the Pin Bot.",
+    idle: ["Something's trending!", "Gift season is coming", "Fresh ideas from outside"] },
+  { id: "program-hunter", name: "Pon the Tanuki", job: "Program Hunter", at: [374, 124], tagH: 14, schedule: "Monthly · 1st, 10 AM",
+    desc: "Researches affiliate programs that pay more than Amazon for your niches: rates, cookie length, payout rules, how to apply. You do the sign-ups; then each program can fill an open cook's station.",
+    idle: ["Sniffing out better programs", "12% beats 3%…", "Got a sign-up list for you"] },
+  { id: "board-builder", name: "Kiko the Carpenter Mouse", job: "Board Builder", at: [22, 128], tagH: 9, schedule: "Weekly · Sunday 7 PM",
+    desc: "Suggests new Pinterest boards when a topic is doing well, with names and descriptions ready. Nothing is created until you say yes.",
+    idle: ["Measuring a new board", "Tap tap tap", "A board for that topic?"] },
+  { id: "shop-doctor", name: "Doc the Raccoon", job: "Shop Doctor", at: [16, 288], tagH: 14, schedule: "Daily · 8 PM",
+    desc: "Checks every bot ran, the website updated and GitHub is still signed in. If something broke, you get one clear \"Needs you\" note.",
+    idle: ["Checking the shop's pulse", "All bots healthy?", "Doc's on call"] },
+  { id: "earnings-cat", name: "Maneki the Lucky Cat", job: "Earnings Tracker", at: [366, 234], tagH: 16, schedule: "Updated by Hoot or by you",
+    desc: "Keeps the till: clicks, orders and commission for the period. Hoot the Owl fills it in weekly, or you can type the numbers from your Amazon report.",
+    idle: [] },
+];
+const HELPER_BY = Object.fromEntries(HELPERS.map(h => [h.id, h]));
+let helperDocs = {};
+const helperOf = id => Object.assign({}, helperDocs[id] || {});
+const money = n => (Number(n) || 0).toLocaleString([], { style: "currency", currency: "USD" });
+function helperState(id) { const d = helperOf(id); return d.state || (d.lastRunAt ? "ok" : "idle"); }
+function renderHelper(id, back) {
+  const h = HELPER_BY[id], d = helperOf(id), web = db && db.readOnly;
+  hqTitle.textContent = `${h.name} · ${h.job}`;
+  hqBody.append(back, el("p", "lead", h.desc));
+  const st = el("div", "hq-stats");
+  st.append(stat("Status", STATE_TXT[helperState(id)] || helperState(id)), stat(id === "earnings-cat" ? "Updated" : "Last run", stamp(d.lastRunAt || d.updatedAt)), stat("Schedule", h.schedule));
+  hqBody.append(st);
+  if (id === "earnings-cat") return renderEarnings(d, web);
+  if (d.lastSummary) hqBody.append(el("p", "lead", d.lastSummary));
+  if (Array.isArray(d.issues) && d.issues.length) { const u = el("ul", "issues"); d.issues.slice(0, 6).forEach(i => u.append(el("li", null, String(i)))); hqBody.append(u); }
+  const fs = el("section"); fs.append(el("h4", null, "Latest findings"));
+  const list = Array.isArray(d.findings) ? d.findings : [];
+  if (!list.length) fs.append(el("p", "empty", d.lastRunAt ? "Nothing to report." : "No run yet. First run: " + h.schedule + "."));
+  else { const ul = el("ul", "finds"); list.slice(0, 25).forEach(x => { const li = el("li", ["ok", "warn", "bad", "idea"].includes(x.level) ? x.level : ""); li.append(el("b", null, String(x.title || "")), el("small", null, String(x.detail || ""))); ul.append(li); }); fs.append(ul); }
+  hqBody.append(fs);
+  if (id === "board-builder" || id === "program-hunter") hqBody.append(el("p", "empty", id === "board-builder" ? "To create a suggested board, tell Claude which one. Nothing is created without you." : "Sign up for a program yourself, then tell Claude: \"Assign <program> to <cook>.\""));
+}
+function renderEarnings(d, web) {
+  if (web) { hqBody.append(el("p", "lead", "Earnings are private, so they only show in the Claude version of the shop.")); return; }
+  const box = el("div", "hq-stats");
+  box.append(stat("Period", d.period || "This month"), stat("Clicks", String(d.clicks || 0)), stat("Orders", String(d.orders || 0)), stat("Earnings", money(d.earnings)));
+  hqBody.append(box);
+  if (d.source) hqBody.append(el("p", "empty", "From: " + d.source));
+  if (!db) return;
+  const form = el("section", "ctl"); form.append(el("h4", null, "Update the till"), el("p", "lead", "Type the numbers from Associates Central (Reports → Summary)."));
+  const g = el("div", "earn"), mk = (label, val, type) => { const l = el("label"); l.style.display = "grid"; const i = el("input"); i.type = type; i.value = val; if (type === "number") { i.min = "0"; i.step = "any"; } l.append(document.createTextNode(label), i); g.append(l); return i; };
+  const p = mk("Period", d.period || "This month", "text"), c = mk("Clicks", d.clicks || 0, "number"), o = mk("Orders", d.orders || 0, "number"), e = mk("Earnings ($)", d.earnings || 0, "number");
+  form.append(g);
+  const save = el("button", "btn", "Save to the till"); save.type = "button"; save.style.justifySelf = "start";
+  save.onclick = async () => {
+    const body = Object.assign({}, d, { period: p.value.trim().slice(0, 40) || "This month", clicks: Math.max(0, Number(c.value) || 0), orders: Math.max(0, Number(o.value) || 0), earnings: Math.max(0, Number(e.value) || 0), source: "Typed in by you", updatedAt: new Date().toISOString() });
+    save.disabled = true; save.textContent = "Saving…";
+    try { await db.doc("helpers/earnings-cat").set(body); helperDocs["earnings-cat"] = body; save.textContent = "Saved ✓"; say("earnings-cat", "💰 " + money(body.earnings) + " so far", 5, true); sfx("bell"); } catch (err) { save.textContent = "Couldn't save"; }
+    save.disabled = false;
+  };
+  form.append(save); hqBody.append(form);
+}
 function renderStation(id) {
-  const s = stationOf(id), name = byId[id].name;
+  if (!byId[id] && !HELPER_BY[id]) return openHQ();
+  const s = stationOf(id), name = (byId[id] || HELPER_BY[id]).name;
   hqBody.innerHTML = "";
   const back = el("button", "btn ghost", "← All stations"); back.type = "button"; back.style.justifySelf = "start"; back.onclick = openHQ;
   if (id === "neko") return renderNeko(back);
+  if (HELPER_BY[id]) return renderHelper(id, back);
   if (id !== PINBOT_COOK) {
     hqTitle.textContent = `${name} · ${s.program || "Open station"}`;
     hqBody.append(back);
@@ -1108,6 +1196,35 @@ function stepNeko(dt) {
     st.left -= dt; if (st.left <= 0) neko.route.shift();
   }
 }
+
+function drawHelpers(c, t) {
+  const bob = k => reduce ? 0 : (Math.floor(t * 2 + k) % 2), blink = k => !reduce && Math.floor(t * 3 + k) % 9 === 0;
+  // Tasu the Taste-Bot on the end of the bar counter
+  { const x = 22, y = 182 - bob(0); R(c, x - 4, y - 7, 8, 7, "#a9b0b6"); R(c, x - 4, y - 7, 8, 1, "#d6dce0"); R(c, x - 3, y - 12, 6, 5, "#c4c9ce"); R(c, x - 2, y - 10, 4, 2, "#2b1d12");
+    R(c, x - 2, y - 10, 1, 1, blink(1) ? "#2b1d12" : "#5fe0d0"); R(c, x + 1, y - 10, 1, 1, blink(1) ? "#2b1d12" : "#5fe0d0"); R(c, x, y - 14, 1, 2, "#5b6168"); R(c, x - 1, y - 15, 3, 1, "#c8382c");
+    R(c, x + 4, y - 6, 3, 1, "#8d949b"); R(c, x + 6, y - 7, 2, 2, "#e6e0d4"); R(c, x - 3, y - 4, 6, 1, "#5fe0d0"); R(c, x - 3, y, 2, 1, "#5b6168"); R(c, x + 1, y, 2, 1, "#5b6168"); }
+  // Hoot the Owl on top of the recipe shelf
+  { const x = 19, y = 49; disc(c, x, y - 4, 4, 4, "#8a5a34"); disc(c, x, y - 3, 3, 3, "#c49a62"); disc(c, x - 2, y - 6, 1, 1, "#fffaf0"); disc(c, x + 2, y - 6, 1, 1, "#fffaf0");
+    R(c, x - 2, y - 6, 1, 1, blink(2) ? "#c49a62" : "#2b1d12"); R(c, x + 2, y - 6, 1, 1, blink(2) ? "#c49a62" : "#2b1d12"); R(c, x, y - 4, 1, 1, "#f2a24a"); R(c, x - 4, y - 9, 1, 2, "#8a5a34"); R(c, x + 4, y - 9, 1, 2, "#8a5a34");
+    R(c, x - 5, y - 1, 3, 2, "#2f5f8a"); R(c, x - 5, y - 1, 3, 1, "#f6ecd6"); }
+  // Kitsune the Shrine Fox on the kamidana shelf
+  { const x = 319, y = 18; R(c, x - 3, y - 5, 6, 5, "#e07a3a"); R(c, x - 1, y - 4, 2, 4, "#fbf6ea"); R(c, x - 3, y - 8, 6, 4, "#e07a3a"); R(c, x - 3, y - 9, 1, 2, "#e07a3a"); R(c, x + 2, y - 9, 1, 2, "#e07a3a");
+    R(c, x - 2, y - 6, 1, 1, "#2b1d12"); R(c, x + 1, y - 6, 1, 1, "#2b1d12"); R(c, x - 3, y - 4, 6, 1, "#c8382c"); R(c, x + 3, y - 3 - bob(3), 3, 2, "#e07a3a"); R(c, x + 5, y - 4 - bob(3), 1, 1, "#fbf6ea"); }
+  // Chirp the Sparrow hopping on the window sill
+  { const hop = reduce ? 0 : (Math.floor(t * 1.3) % 6 === 0 ? 2 : 0), x = 247 + (reduce ? 0 : (Math.floor(t * .4) % 2) * 4), y = 35 - hop;
+    R(c, x - 2, y - 3, 4, 3, "#8a5a34"); R(c, x - 2, y - 1, 3, 1, "#e9d6b0"); R(c, x + 1, y - 4, 2, 2, "#6e4428"); R(c, x + 2, y - 4, 1, 1, "#2b1d12"); R(c, x + 3, y - 3, 1, 1, "#f2a24a"); R(c, x - 3, y - 2, 1, 1, "#6e4428"); }
+  // Pon the Tanuki in the pantry with a map
+  { const x = 374, y = 124 - bob(4); disc(c, x, y - 4, 4, 4, "#8a6a4e"); R(c, x - 3, y - 6, 6, 2, "#2b1d12"); R(c, x - 2, y - 6, 1, 1, "#fffaf0"); R(c, x + 1, y - 6, 1, 1, "#fffaf0"); R(c, x - 3, y - 9, 2, 2, "#5e3820"); R(c, x + 1, y - 9, 2, 2, "#5e3820");
+    R(c, x - 1, y - 11, 3, 2, "#5f9a42"); R(c, x - 1, y - 3, 3, 3, "#e9d6b0"); R(c, x - 7, y - 4, 4, 3, "#f3e3b8"); R(c, x - 6, y - 3, 2, 1, "#c8382c"); R(c, x + 3, y - 1, 3, 1, "#2b1d12"); }
+  // Kiko the Carpenter Mouse by the shelf, tapping a little board
+  { const x = 22, y = 128, tap = reduce ? 0 : Math.floor(t * 4) % 2; R(c, x - 2, y - 3, 5, 3, "#9aa1a7"); R(c, x + 2, y - 4, 2, 2, "#9aa1a7"); R(c, x + 3, y - 4, 1, 1, "#2b1d12"); R(c, x + 1, y - 5, 2, 1, "#e88a7a"); R(c, x - 4, y - 2, 2, 1, "#e88a7a");
+    R(c, x - 8, y - 1, 6, 2, "#b5824f"); R(c, x + 4, y - 6 + tap, 1, 3, "#7a4a2a"); R(c, x + 3, y - 6 + tap, 3, 1, "#5b6168"); }
+  // Doc the Raccoon with a medical bag
+  { const x = 16, y = 288 - bob(5); R(c, x - 4, y - 6, 8, 6, "#8d949b"); R(c, x - 3, y - 10, 6, 4, "#a9b0b6"); R(c, x - 3, y - 9, 6, 1, "#2b1d12"); R(c, x - 2, y - 9, 1, 1, "#fffaf0"); R(c, x + 1, y - 9, 1, 1, "#fffaf0"); R(c, x - 3, y - 11, 1, 1, "#8d949b"); R(c, x + 2, y - 11, 1, 1, "#8d949b");
+    for (let k = 0; k < 3; k++) R(c, x + 4 + k, y - 4 + k, 1, 1, k % 2 ? "#2b1d12" : "#a9b0b6"); R(c, x - 8, y - 4, 5, 4, "#fffaf0"); R(c, x - 6, y - 3, 1, 3, "#c8382c"); R(c, x - 7, y - 2, 3, 1, "#c8382c"); }
+  // Maneki the Lucky Cat: little coin when the till has numbers
+  if (helperDocs["earnings-cat"] && helperDocs["earnings-cat"].updatedAt && !reduce && Math.floor(t * 1.5) % 4 === 0) { disc(c, 372, 222, 2, 2, "#ffd45a"); R(c, 372, 221, 1, 2, "#d9a441"); }
+}
 function drawNeko(c, t) {
   const x = Math.round(neko.x), y = Math.round(neko.y), flip = neko.dir === 2, b = reduce ? 0 : Math.round(Math.sin(t * 1.6));
   const M = (dx, dy, w, h, col) => R(c, flip ? x - dx - w + 1 : x + dx, y + dy, w, h, col);
@@ -1127,6 +1244,17 @@ const tagEls = people.filter(p => !p.guest && !p.clone).map(p => {
 });
 { const b = document.createElement("button"); b.type = "button"; b.className = "tag"; b.dataset.id = "neko"; b.textContent = "Neko"; b.title = "Website courier"; b.onclick = () => openStation("neko"); overlay.appendChild(b);
   const bub = document.createElement("div"); bub.className = "bubble"; bub.hidden = true; overlay.appendChild(bub); tagEls.push({ p: neko, b, bub, until: 0 }); }
+HELPERS.forEach(h => {
+  const p = { id: h.id, x: h.at[0], y: h.at[1], tagH: h.tagH, helper: true };
+  const b = document.createElement("button"); b.type = "button"; b.className = "tag mini"; b.dataset.id = h.id; b.textContent = h.job; b.title = h.name; b.onclick = () => openStation(h.id); overlay.appendChild(b);
+  const bub = document.createElement("div"); bub.className = "bubble"; bub.hidden = true; overlay.appendChild(bub); tagEls.push({ p, b, bub, until: 0 });
+});
+setInterval(() => {
+  const h = HELPERS[Math.floor(Math.random() * HELPERS.length)], d = helperOf(h.id);
+  if (h.id === "earnings-cat") { if (d.updatedAt) say(h.id, "💰 " + money(d.earnings) + " · " + (d.orders || 0) + " orders", 4); return; }
+  const line = d.lastSummary && Math.random() < .5 ? d.lastSummary : h.idle[Math.floor(Math.random() * h.idle.length)];
+  if (line) say(h.id, String(line).slice(0, 46), 4);
+}, 6500);
 const ofTag = { bub: document.createElement("div"), until: 0 }; ofTag.bub.className = "bubble"; ofTag.bub.hidden = true; overlay.appendChild(ofTag.bub);
 let clock = 0;
 function say(id, text, secs, hold) {
@@ -1140,6 +1268,7 @@ cv.addEventListener("click", e => {
   const c = peopleBy.claude;
   if ((Math.abs(x - c.x) < 8 && y < c.y + 3 && y > c.y - 34) || (x >= 148 && x <= 230 && y >= 96 && y <= 130)) return openHQ();
   if (x >= 286 && x <= 326 && y >= 54 && y <= 90) return openStation(PINBOT_COOK);
+  const hh = HELPERS.find(h => Math.abs(x - h.at[0]) < 9 && y < h.at[1] + 3 && y > h.at[1] - 16); if (hh) return openStation(hh.id);
   const hit = tagEls.map(e => e.p).find(p => Math.abs(x - p.x) < 7 && y < p.y + 3 && y > p.y - 24); if (hit) openStation(hit.id);
 });
 cv.addEventListener("mousemove", e => {
@@ -1208,6 +1337,7 @@ function frame(now) {
   if (false) { const cx = 262, cy = 270, b = 0;
     R(ctx, cx - 5, cy - 3, 10, 4 + b * 0, "#f2a24a"); R(ctx, cx - 5, cy - 3, 10, 1, "#f7b866"); R(ctx, cx + 3, cy - 5, 4, 4, "#f2a24a"); R(ctx, cx + 3, cy - 6, 1, 1, "#f2a24a"); R(ctx, cx + 6, cy - 6, 1, 1, "#f2a24a");
     R(ctx, cx + 4, cy - 4, 2, 1, "#2b1d12"); R(ctx, cx - 7, cy - 1, 3, 1, "#f2a24a"); R(ctx, cx - 3, cy - 2, 2, 2, "#d9822b"); R(ctx, cx, cy - 2 - b, 1, 1, "#d9822b"); }
+  drawHelpers(ctx, t);
   ZASHIKI.forEach(([x, y]) => { R(ctx, x + 16, y - 6, 4, 3, "#f4ecd8"); R(ctx, x + 16, y - 6, 4, 1, "#c8382c"); });
   // round paper lamps hanging over the tables
   ZASHIKI.forEach(([x]) => { const y = 238, sway = reduce ? 0 : Math.round(Math.sin(t * 1.2 + x) * .6); R(ctx, x + sway, y - 12, 1, 7, "#2b1d12"); disc(ctx, x + sway, y - 1, 7, 5, "#fbeed2"); for (let k = -3; k <= 3; k += 3) R(ctx, x + sway - 6, y - 1 + k, 13, 1, "#e6cfa2"); R(ctx, x + sway - 3, y - 6, 7, 1, "#5e3820"); R(ctx, x + sway - 3, y + 4, 7, 1, "#5e3820"); R(ctx, x + sway - 4, y - 3, 2, 3, "#fffaf0"); });
@@ -1231,7 +1361,7 @@ function frame(now) {
   const sx = cv.clientWidth / W, sy = cv.clientHeight / H;
   signEls.forEach(({ s, b }) => { b.style.left = s.x * sx + "px"; b.style.top = s.y * sy + "px"; });
   tagEls.forEach(e => {
-    const p = e.p, top = p.y - (p.id === "claude" ? 34 : p.id === "neko" ? (neko.carry ? 13 : 9) : 24) + (p.sit ? 2 : 0);
+    const p = e.p, top = p.y - (p.tagH != null ? p.tagH : p.id === "claude" ? 34 : p.id === "neko" ? (neko.carry ? 13 : 9) : 24) + (p.sit ? 2 : 0);
     const half = e.b.offsetWidth / 2 + 4, bhalf = e.bub.offsetWidth / 2 + 4, px = p.x * sx, cw = cv.clientWidth;
     e.b.style.left = Math.max(half, Math.min(cw - half, px)) + "px"; e.bub.style.left = Math.max(bhalf, Math.min(cw - bhalf, px)) + "px";
     e.b.style.top = e.bub.style.top = top * sy + "px";

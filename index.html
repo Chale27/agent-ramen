@@ -139,6 +139,8 @@ details.prods ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
 .finds li small { display: block; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
 .earn { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
 .earn input { width: 100%; font: 500 14px var(--body); color: var(--fg); background: #fffdf7; border: 2px solid var(--tag); padding: 4px 6px; }
+.runbox { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; background: var(--cream); border: 2px solid var(--tag); padding: 8px 10px; }
+.runbox .st { font: 600 12.5px var(--body); color: var(--muted); }
 .directory { z-index: 7; position: absolute; inset: 6% 12%; background: #fbecd0; border: 4px solid var(--tag); box-shadow: inset 0 0 0 3px #e8cfa2, 0 6px 0 rgba(43,29,18,.4); display: flex; flex-direction: column; min-height: 0; }
 .directory .top { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 3px solid #e0c391; }
 .directory h3 { margin: 0; font: 700 18px var(--pixel); white-space: nowrap; }
@@ -268,7 +270,7 @@ const SITES = [
     role: "Three cooks who move as one. A Ruflo agent swarm for big, many-step projects: it splits the job, works the pieces at once and remembers what worked.",
     model: "Ruflo swarm", file: "~/AgentRamen", when: "Big projects with many parts.", call: "Have the Ruflo swarm in ~/AgentRamen build it" },
   { id: "neko", name: "Neko the Courier Cat", group: "auto", station: "Website courier",
-    role: "Carries every change in the shop to the public website on GitHub.", model: "Scheduled task", file: "~/.claude/scheduled-tasks/website-sync", when: "Hourly, 8 AM to 11 PM.", call: "Ask Claude to sync the website now." },
+    role: "Carries every change in the shop to the public website on GitHub.", model: "Scheduled task", file: "~/.claude/scheduled-tasks/website-sync", when: "Every 15 minutes, 8 AM to 11 PM.", call: "Ask Claude to sync the website now." },
   { id: "old-faithful", name: "Old Faithful", group: "auto", station: "The stockpot that never sleeps",
     role: "A hook, not a cook. The stockpot boils over on its own: every time a note is written or edited, INDEX.md gets rebuilt.",
     model: "None (script)", file: "scripts/indexer-hook.py", when: "Automatic, after every note edit.", call: "Nothing to call. It just boils over." },
@@ -568,15 +570,16 @@ function nekoState() { return (syncStatus && syncStatus.state) || "on"; }
 const stamp = s => s ? new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not yet";
 function renderNeko(back) {
   hqTitle.textContent = "Neko the Courier Cat · Website";
-  hqBody.append(back, el("p", "lead", "Neko checks the shop every hour from 8 AM to 11 PM. Whenever something changed (new pins, products or status), she carries the update to the public website."));
+  hqBody.append(back, el("p", "lead", "Neko checks the shop every 15 minutes from 8 AM to 11 PM, and starts any task you pinned a run ticket for. Whenever something changed (new pins, products or status), she carries the update to the public website."));
   const st = el("div", "hq-stats"), web = db && db.readOnly;
   st.append(stat("Status", STATE_TXT[nekoState()] || "Running"),
-    stat("Last check", web ? "Hourly" : stamp(syncStatus && syncStatus.lastCheckAt)),
+    stat("Last check", web ? "Every 15 min" : stamp(syncStatus && syncStatus.lastCheckAt)),
     stat("Last delivery", stamp(web ? db.updatedAt : syncStatus && syncStatus.lastPublishAt)),
-    stat("Checks", "Every hour"));
+    stat("Checks", "Every 15 min"));
   hqBody.append(st);
   if (syncStatus && syncStatus.lastSummary) hqBody.append(el("p", "lead", syncStatus.lastSummary));
   if (syncStatus && Array.isArray(syncStatus.issues) && syncStatus.issues.length) { const u = el("ul", "issues"); syncStatus.issues.slice(0, 6).forEach(i => u.append(el("li", null, String(i)))); hqBody.append(u); }
+  hqBody.append(runBox("website-sync", "Sync the website now"));
   const p = el("p"); const a = el("a", "btn", "Open the website"); a.href = "https://chale27.github.io/agent-ramen/"; a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none"; p.append(a); hqBody.append(p);
   hqBody.append(el("p", "empty", "The website is public and view-only. Controls stay in the Claude version."));
 }
@@ -628,6 +631,7 @@ function renderHelper(id, back) {
   if (!list.length) fs.append(el("p", "empty", d.lastRunAt ? "Nothing to report." : "No run yet. First run: " + h.schedule + "."));
   else { const ul = el("ul", "finds"); list.slice(0, 25).forEach(x => { const li = el("li", ["ok", "warn", "bad", "idea"].includes(x.level) ? x.level : ""); li.append(el("b", null, String(x.title || "")), el("small", null, String(x.detail || ""))); ul.append(li); }); fs.append(ul); }
   hqBody.append(fs);
+  if (RUNNABLE[id]) hqBody.append(runBox(RUNNABLE[id]));
   if (id === "board-builder" || id === "program-hunter") hqBody.append(el("p", "empty", id === "board-builder" ? "To create a suggested board, tell Claude which one. Nothing is created without you." : "Sign up for a program yourself, then tell Claude: \"Assign <program> to <cook>.\""));
 }
 function renderEarnings(d, web) {
@@ -650,6 +654,41 @@ function renderEarnings(d, web) {
   };
   form.append(save); hqBody.append(form);
 }
+
+/* ---- run tickets: a Run now button pins a ticket; Neko starts the task within 15 minutes ---- */
+const RUNNABLE = { "link-checker": "link-checker", "stats-reader": "stats-reader", "trend-scout": "trend-scout", "board-builder": "board-builder", "program-hunter": "program-hunter", "shop-doctor": "shop-doctor", neko: "website-sync" };
+const RUN_LABEL = { "daily-pinterest-pins": "Pin Bot", "pin-bot-dry-run": "Pin Bot test run" };
+let runReqs = {}, runFirst = true;
+function listenRuns() {
+  db.collection("requests").onSnapshot(s => {
+    const before = runReqs; runReqs = {}; s.docs.forEach(d => { if (d.exists) runReqs[d.id] = d.data(); });
+    if (!runFirst) Object.entries(runReqs).forEach(([task, r]) => { const a = before[task]; if (r.status === "started" && (!a || a.status !== "started")) { const who = Object.keys(RUNNABLE).find(k => RUNNABLE[k] === task) || (task.startsWith("daily-pinterest") || task.startsWith("pin-bot") ? PINBOT_COOK : "neko"); say(who, "▶ Started by your ticket!", 6, true); say("neko", "🎫 Started " + (RUN_LABEL[task] || task), 5, true); sfx("bell"); } });
+    runFirst = false; rerender();
+  }, () => {});
+}
+function runBox(task, label, warn) {
+  const box = el("div", "runbox");
+  if (!db || db.readOnly) return box;
+  const r = runReqs[task], waiting = r && r.status === "waiting";
+  const b = el("button", "btn", waiting ? "Ticket pinned" : "▶ " + (label || "Run now")); b.type = "button"; b.disabled = !!waiting;
+  const st = el("span", "st", runStatus(r));
+  b.onclick = async () => {
+    if (warn && !confirm(warn)) return;
+    b.disabled = true; b.textContent = "Pinning ticket…";
+    try { await db.doc("requests/" + task).set({ task, status: "waiting", requestedAt: new Date().toISOString() }); say("neko", "🎫 Got a run ticket!", 5, true); sfx("ding"); }
+    catch (e) { b.disabled = false; b.textContent = "Couldn't pin the ticket"; }
+  };
+  box.append(b, st); return box;
+}
+function runStatus(r) {
+  if (!r) return "Neko starts it within 15 minutes (8 AM–11 PM).";
+  const at = s => s ? new Date(s).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
+  if (r.status === "waiting") return "Ticket pinned " + at(r.requestedAt) + " · Neko starts it within 15 min.";
+  if (r.status === "started") return "Started " + at(r.startedAt) + ". Results show here when it's done.";
+  if (r.status === "failed") return "Couldn't start: " + String(r.note || "unknown reason").slice(0, 80);
+  if (r.status === "expired") return "Ticket expired (Neko didn't run in time). Pin it again.";
+  return "";
+}
 function renderStation(id) {
   if (!byId[id] && !HELPER_BY[id]) return openHQ();
   const s = stationOf(id), name = (byId[id] || HELPER_BY[id]).name;
@@ -666,6 +705,7 @@ function renderStation(id) {
   }
   hqTitle.textContent = `${name} · Pin Bot`;
   hqBody.append(back, el("p", "lead", s.desc));
+  if (db && !db.readOnly) { hqBody.append(runBox("pin-bot-dry-run", "Test run (no posting)")); hqBody.append(runBox("daily-pinterest-pins", "Run the Pin Bot now", "This posts real pins to Pinterest (up to 5 per day). Pin a run ticket?")); }
   const state = pbState(), st = el("div", "hq-stats"), up = upcoming(), live = released();
   st.append(stat("Status", STATE_TXT[state] || state), stat("Last run", pbStatus && pbStatus.lastRunAt ? new Date(pbStatus.lastRunAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not yet"), stat("Next run", (pbStatus && pbStatus.nextRun) || "Daily · 9 AM"), stat("Queued", String(up.length)));
   hqBody.append(st);

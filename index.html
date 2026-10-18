@@ -305,7 +305,7 @@ const SITES = [
     role: "Three cooks who move as one. A Ruflo agent swarm for big, many-step projects: it splits the job, works the pieces at once and remembers what worked.",
     model: "Ruflo swarm", file: "~/AgentRamen", when: "Big projects with many parts.", call: "Have the Ruflo swarm in ~/AgentRamen build it" },
   { id: "neko", name: "Neko the Courier Cat", group: "auto", station: "Website courier",
-    role: "Carries every change in the shop to the public website on GitHub.", model: "Scheduled task", file: "~/.claude/scheduled-tasks/website-sync", when: "Every 5 minutes, 8 AM to 11 PM.", call: "Ask Claude to sync the website now." },
+    role: "Carries every change in the shop to the public website on GitHub.", model: "Scheduled task", file: "~/.claude/scheduled-tasks/website-sync", when: "Every 15 minutes, 8 AM to 11 PM.", call: "Ask Claude to sync the website now." },
   { id: "old-faithful", name: "Old Faithful", group: "auto", station: "The stockpot that never sleeps",
     role: "A hook, not a cook. The stockpot boils over on its own: every time a note is written or edited, INDEX.md gets rebuilt.",
     model: "None (script)", file: "scripts/indexer-hook.py", when: "Automatic, after every note edit.", call: "Nothing to call. It just boils over." },
@@ -671,12 +671,12 @@ function nekoState() { return (syncStatus && syncStatus.state) || "on"; }
 const stamp = s => s ? new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not yet";
 function renderNeko(back) {
   hqTitle.textContent = "Neko the Courier Cat · Website";
-  hqBody.append(back, el("p", "lead", "Neko checks the shop every 5 minutes from 8 AM to 11 PM, and starts any task you pinned a run ticket for. Whenever something changed (new pins, products or status), she carries the update to the public website."));
+  hqBody.append(back, el("p", "lead", "Neko checks the shop every 15 minutes from 8 AM to 11 PM, and starts any task you pinned a run ticket for. Whenever something changed (new pins, products or status), she carries the update to the public website."));
   const st = el("div", "hq-stats"), web = db && db.readOnly;
   st.append(stat("Status", STATE_TXT[nekoState()] || "Running"),
-    stat("Last check", web ? "Every 5 min" : stamp(syncStatus && syncStatus.lastCheckAt)),
+    stat("Last check", web ? "Every 15 min" : stamp(syncStatus && syncStatus.lastCheckAt)),
     stat("Last delivery", stamp(web ? db.updatedAt : syncStatus && syncStatus.lastPublishAt)),
-    stat("Checks", "Every 5 min"));
+    stat("Checks", "Every 15 min"));
   hqBody.append(st);
   hqBody.append(noteBox(syncStatus, syncStatus && (syncStatus.lastCheckAt || syncStatus.updatedAt)));
 
@@ -756,8 +756,8 @@ function renderEarnings(d, web) {
   form.append(save); hqBody.append(form);
 }
 
-/* ---- run tickets: a Run now button pins a ticket; Neko starts the task within 5 minutes ---- */
-/*CONFIG-START*/const SHOP_CONFIG = [{"id": "grand-canyon", "task": "daily-pinterest-pins", "name": "Sumi", "emoji": "📌", "label": "Run the Pin Bot (posts pins)", "schedule": "Daily · 9 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "grand-canyon", "task": "pin-bot-dry-run", "name": "Sumi", "emoji": "🧪", "label": "Pin Bot test (no posting)", "schedule": "On demand", "kind": "cook", "runnable": true}, {"id": "death-valley", "task": "video-bot", "name": "Kaen", "emoji": "🎬", "label": "Make & schedule a video pin", "schedule": "Daily · 11 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "neko", "task": "website-sync", "name": "Neko", "emoji": "🐈", "label": "Sync the website", "schedule": "Every 5 min · 8 AM–11 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "link-checker", "task": "link-checker", "name": "Tasu", "emoji": "🤖", "label": "Check all affiliate links", "schedule": "Daily · 7:30 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "stats-reader", "task": "stats-reader", "name": "Hoot", "emoji": "🦉", "label": "Read my stats", "schedule": "Weekly · Monday 8 AM", "kind": "helper", "runnable": true}, {"id": "trend-scout", "task": "trend-scout", "name": "Chirp", "emoji": "🐦", "label": "Scout trends", "schedule": "Weekly · Sunday 6 PM", "kind": "helper", "runnable": true}, {"id": "board-builder", "task": "board-builder", "name": "Kiko", "emoji": "🐭", "label": "Board ideas", "schedule": "Weekly · Sunday 7 PM", "kind": "helper", "runnable": true}, {"id": "program-hunter", "task": "program-hunter", "name": "Pon", "emoji": "🦝", "label": "Find new affiliate programs", "schedule": "Daily · 10 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "shop-doctor", "task": "shop-doctor", "name": "Doc", "emoji": "🩺", "label": "Health check", "schedule": "Daily · 8 PM", "kind": "helper", "runnable": true, "daily": true}];/*CONFIG-END*/
+/* ---- run tickets: a Run now button pins a ticket; Neko starts the task within 15 minutes ---- */
+/*CONFIG-START*/const SHOP_CONFIG = [{"id": "grand-canyon", "task": "daily-pinterest-pins", "name": "Sumi", "emoji": "📌", "label": "Run the Pin Bot (posts pins)", "schedule": "Daily · 9 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "grand-canyon", "task": "pin-bot-dry-run", "name": "Sumi", "emoji": "🧪", "label": "Pin Bot test (no posting)", "schedule": "On demand", "kind": "cook", "runnable": true}, {"id": "death-valley", "task": "video-bot", "name": "Kaen", "emoji": "🎬", "label": "Make & schedule a video pin", "schedule": "Daily · 11 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "neko", "task": "website-sync", "name": "Neko", "emoji": "🐈", "label": "Sync the website", "schedule": "Every 15 min · 8 AM–11 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "link-checker", "task": "link-checker", "name": "Tasu", "emoji": "🤖", "label": "Check all affiliate links", "schedule": "Daily · 7:30 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "stats-reader", "task": "stats-reader", "name": "Hoot", "emoji": "🦉", "label": "Read my stats", "schedule": "Weekly · Monday 8 AM", "kind": "helper", "runnable": true}, {"id": "trend-scout", "task": "trend-scout", "name": "Chirp", "emoji": "🐦", "label": "Scout trends", "schedule": "Weekly · Sunday 6 PM", "kind": "helper", "runnable": true}, {"id": "board-builder", "task": "board-builder", "name": "Kiko", "emoji": "🐭", "label": "Board ideas", "schedule": "Weekly · Sunday 7 PM", "kind": "helper", "runnable": true}, {"id": "program-hunter", "task": "program-hunter", "name": "Pon", "emoji": "🦝", "label": "Find new affiliate programs", "schedule": "Daily · 10 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "shop-doctor", "task": "shop-doctor", "name": "Doc", "emoji": "🩺", "label": "Health check", "schedule": "Daily · 8 PM", "kind": "helper", "runnable": true, "daily": true}];/*CONFIG-END*/
 const RUNNABLE = Object.fromEntries(SHOP_CONFIG.filter(b => b.runnable && b.kind === "helper").map(b => [b.id, b.task]));
 const RUN_LABEL = { "daily-pinterest-pins": "Pin Bot", "pin-bot-dry-run": "Pin Bot test run" };
 let runReqs = {}, runFirst = true;
@@ -797,21 +797,21 @@ function loadGhTickets() {
     .then(r => r.ok ? r.json() : []).then(list => { ghTickets = (Array.isArray(list) ? list : []).filter(i => !i.pull_request && /^run:\s*/i.test(i.title || "")); rerender(); }).catch(() => {});
 }
 function ghRunBox(box, task, label, warn) {
-  const title = "run: " + task, body = "Pinned from the Agent Ramen website. Neko starts it within 5 minutes (8 AM–11 PM) and closes this ticket. Only tickets opened by @" + GH_OWNER + " are run.";
+  const title = "run: " + task, body = "Pinned from the Agent Ramen website. Neko starts it within 15 minutes (8 AM–11 PM) and closes this ticket. Only tickets opened by @" + GH_OWNER + " are run.";
   const a = el("a", "btn", "▶ " + (label || "Run now")); a.href = `https://github.com/${GH_REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`; a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none";
   if (warn) a.onclick = e => { if (!confirm(warn)) e.preventDefault(); };
   const st = el("span", "st"); loadGhTickets();
   const at = s => s ? new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "";
   const last = ghTickets && ghTickets.find(i => i.title.trim().toLowerCase() === title);
-  st.textContent = !last ? "Opens a GitHub ticket. Tap Submit, and Neko starts it within 5 minutes. Only your GitHub account can start runs."
+  st.textContent = !last ? "Opens a GitHub ticket. Tap Submit, and Neko starts it within 15 minutes. Only your GitHub account can start runs."
     : last.state === "open" ? "Ticket open since " + at(last.created_at) + " · waiting for Neko."
     : "Last started " + at(last.closed_at) + " (ticket #" + last.number + ").";
   box.append(a, st); return box;
 }
 function runStatus(r) {
-  if (!r) return "Neko starts it within 5 minutes (8 AM–11 PM).";
+  if (!r) return "Neko starts it within 15 minutes (8 AM–11 PM).";
   const at = s => s ? new Date(s).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
-  if (r.status === "waiting") return "Ticket pinned " + at(r.requestedAt) + " · Neko starts it within 5 min.";
+  if (r.status === "waiting") return "Ticket pinned " + at(r.requestedAt) + " · Neko starts it within 15 min.";
   if (r.status === "started") return "Started " + at(r.startedAt) + ". Results show here when it's done.";
   if (r.status === "failed") return "Couldn't start: " + String(r.note || "unknown reason").slice(0, 80);
   if (r.status === "expired") return "Ticket expired (Neko didn't run in time). Pin it again.";

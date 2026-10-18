@@ -70,10 +70,34 @@
    "board": "Gift Ideas for Home Cooks"
   },
   {
+   "id": "B000MVV6AA",
+   "name": "Scotch Heavy Duty Packing Tape",
+   "asin": "B000MVV6AA",
+   "board": "Etsy Shop Shipping Setup"
+  },
+  {
+   "id": "B00151WA06",
+   "name": "Microplane Premium Classic Zester",
+   "asin": "B00151WA06",
+   "board": "Gift Ideas for Home Cooks"
+  },
+  {
    "id": "B003KYSLNQ",
    "name": "Cuisinart PerfecTemp 1.7L Kettle",
    "asin": "B003KYSLNQ",
    "board": "Tea Lover's Kitchen"
+  },
+  {
+   "id": "B008M5U1C2",
+   "name": "Victorinox Fibrox Pro 8-inch Chef's Knife",
+   "asin": "B008M5U1C2",
+   "board": "Kitchen Knife Care & Sharpening"
+  },
+  {
+   "id": "B00MXUHHGK",
+   "name": "NoCry Cut Resistant Gloves",
+   "asin": "B00MXUHHGK",
+   "board": "Kitchen Knife Care & Sharpening"
   },
   {
    "id": "B00OLLFG0I",
@@ -82,10 +106,46 @@
    "board": "Small Business Packaging Ideas"
   },
   {
+   "id": "B00SMHWZ42",
+   "name": "Accuteck 8250 Shipping Scale",
+   "asin": "B00SMHWZ42",
+   "board": "Etsy Shop Shipping Setup"
+  },
+  {
+   "id": "B00U1OCPWQ",
+   "name": "Lodge 6-Qt Enameled Dutch Oven",
+   "asin": "B00U1OCPWQ",
+   "board": "Gift Ideas for Home Cooks"
+  },
+  {
+   "id": "B016ISHAC8",
+   "name": "Modern Innovations Magnetic Knife Bar",
+   "asin": "B016ISHAC8",
+   "board": "Kitchen Knife Care & Sharpening"
+  },
+  {
+   "id": "B01LZSA84J",
+   "name": "HIWARE Glass Teapot with Infuser",
+   "asin": "B01LZSA84J",
+   "board": "Tea Lover's Kitchen"
+  },
+  {
    "id": "B01M63UE67",
    "name": "Rollo 4x6 Thermal Labels (500)",
    "asin": "B01M63UE67",
    "board": "Etsy Shop Shipping Setup"
+  },
+  {
+   "id": "B07T1CH2HH",
+   "name": "Cosori Gooseneck Electric Kettle",
+   "asin": "B07T1CH2HH",
+   "board": "Tea Lover's Kitchen"
+  },
+  {
+   "id": "B07XXSYLL8",
+   "name": "ThermoPro TP19H Meat Thermometer",
+   "asin": "B07XXSYLL8",
+   "board": "Gift Ideas for Home Cooks"
   },
   {
    "id": "B08L72P245",
@@ -100,10 +160,28 @@
    "board": "Kitchen Knife Care & Sharpening"
   },
   {
+   "id": "B0B5ZTZL6G",
+   "name": "Reinmoson Fine Mesh Tea Infuser",
+   "asin": "B0B5ZTZL6G",
+   "board": "Tea Lover's Kitchen"
+  },
+  {
    "id": "B0D3CQKTMR",
    "name": "Rollo Wireless Thermal Label Printer",
    "asin": "B0D3CQKTMR",
    "board": "Etsy Shop Shipping Setup"
+  },
+  {
+   "id": "B0FF47LLL8",
+   "name": "RLAVBL 6x4x2 Shipping Boxes (50)",
+   "asin": "B0FF47LLL8",
+   "board": "Small Business Packaging Ideas"
+  },
+  {
+   "id": "B0FM7493Z9",
+   "name": "500 Thank You Stickers",
+   "asin": "B0FM7493Z9",
+   "board": "Small Business Packaging Ideas"
   }
  ],
  "stations": [
@@ -188,5 +266,5 @@
    "paused": false
   }
  },
- "updatedAt": "2026-10-17T19:00:18-05:00"
+ "updatedAt": "2026-10-17T19:45:11-05:00"
 }

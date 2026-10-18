@@ -1101,7 +1101,37 @@ const W = 384, H = 300, ZASHIKI = [[52, 255], [150, 255], [250, 255]], reduce = 
 const scene = document.getElementById("scene"), cv = document.getElementById("kitchen"), ctx = cv.getContext("2d"), overlay = document.getElementById("overlay");
 ctx.imageSmoothingEnabled = false;
 function layer() { const c = document.createElement("canvas"); c.width = W; c.height = H; return c.getContext("2d"); }
-const R = (c, x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
+// painted look: every flat colour is graded into a soft, warm, hand-painted palette (inspired by classic anime backgrounds)
+const GRADE = {};
+function grade(col) {
+  if (typeof col !== "string" || col[0] !== "#" || col.length !== 7) return col;
+  if (GRADE[col]) return GRADE[col];
+  const n = parseInt(col.slice(1), 16); let r = n >> 16, g = n >> 8 & 255, b = n & 255;
+  const l = .3 * r + .59 * g + .11 * b;
+  r = l + (r - l) * .74; g = l + (g - l) * .84; b = l + (b - l) * .8;          // calmer saturation
+  const sh = Math.max(0, (110 - l) / 110) * .5;                                // lift harsh darks to cool slate shadow
+  r += (66 - r) * sh; g += (66 - g) * sh; b += (84 - b) * sh;
+  if (r > g && g > b && l > 120 && l < 214) { g += 4; b += 10; }                 // tame the orange in mid-tones
+  const hi = Math.max(0, (l - 214) / 41) * .45;                                // whites become warm cream
+  r += (252 - r) * hi; g += (244 - g) * hi; b += (226 - b) * hi;
+  
+  const f = v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0");
+  return GRADE[col] = "#" + f(r) + f(g) + f(b);
+}
+// soft watercolour wash over a finished layer: blotchy value noise, paper grain and a gentle top light
+function paintify(c) {
+  const img = c.getImageData(0, 0, W, H), a = img.data;
+  const hash = (x, y) => { const v = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return v - Math.floor(v); };
+  const vnoise = (x, y, s) => { const gx = x / s, gy = y / s, x0 = Math.floor(gx), y0 = Math.floor(gy), fx = gx - x0, fy = gy - y0, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
+    const top = hash(x0, y0) * (1 - u) + hash(x0 + 1, y0) * u, bot = hash(x0, y0 + 1) * (1 - u) + hash(x0 + 1, y0 + 1) * u; return (top * (1 - v) + bot * v) * 2 - 1; };
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const k = (y * W + x) * 4; if (a[k + 3] < 8) continue;
+    const m = 1 + .08 * vnoise(x, y, 9) + .06 * vnoise(x + 50, y, 23) + .025 * vnoise(x, y * 3, 6) + (hash(x, y) - .5) * .035 + .03 * (1 - y / H);
+    a[k] = Math.min(255, a[k] * m * 1.01); a[k + 1] = Math.min(255, a[k + 1] * m); a[k + 2] = Math.min(255, a[k + 2] * m * .985);
+  }
+  c.putImageData(img, 0, 0);
+}
+const R = (c, x, y, w, h, col) => { c.fillStyle = grade(col); c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
 const disc = (c, cx, cy, rx, ry, col) => { for (let dy = -ry; dy <= ry; dy++) { const dx = Math.round(rx * Math.sqrt(Math.max(0, 1 - (dy / ry) ** 2))); R(c, cx - dx, cy + dy, dx * 2 + 1, 1, col); } };
 let seed = 7; const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 
@@ -1261,7 +1291,7 @@ const bg = layer();
     R(c, x - 5, y - Math.round(10 * s), 11, 2, "#2b1d12"); R(c, x - 5, y + Math.round(9 * s), 11, 2, "#2b1d12");
     R(c, x - 1, y - 4, 3, 1, "#1a1418"); R(c, x, y - 4, 1, 7, "#1a1418"); R(c, x - 2, y, 5, 1, "#1a1418"); R(c, x - 2, y + 3, 1, 2, "#1a1418"); R(c, x + 2, y + 3, 1, 2, "#1a1418");
   });
-})(bg);
+})(bg); paintify(bg);
 
 // front pieces that cooks can stand behind (drawn in depth order)
 const fg = layer();
@@ -1284,7 +1314,7 @@ const fg = layer();
   [40, 312].forEach(x => { R(c, x - 3, 174, 7, 4, "#efe6d2"); R(c, x - 2, 175, 5, 2, "#c9a873"); });
   [40, 72, 120, 168, 216, 264, 312].forEach(x => { R(c, x + 10, 173, 3, 5, "#7a4a2a"); R(c, x + 10, 172, 1, 1, "#e3c38f"); R(c, x + 12, 172, 1, 1, "#e3c38f"); });
   R(c, 190, 171, 5, 7, "#d9e4ea"); R(c, 190, 171, 5, 1, "#ffffff"); R(c, 195, 173, 1, 3, "#d9e4ea");
-})(fg);
+})(fg); paintify(fg);
 const FRONT = [{ y: 128, x: 150, w: 78, top: 100, h: 28 }, { y: 164, x: 238, w: 66, top: 146, h: 18 }, { y: 192, x: 6, w: 326, top: 170, h: 22 }];
 
 /* ---- people ---- */
@@ -1400,7 +1430,15 @@ function drawSprite(c, p, t) {
   const img = sctx.getImageData(0, 0, 40, 56), a = img.data, out = new Uint8ClampedArray(a);
   for (let j = 1; j < 55; j++) for (let i = 1; i < 39; i++) {
     const k = (j * 40 + i) * 4; if (a[k + 3] > 120) continue;
-    if (a[k - 1] > 120 || a[k + 7] > 120 || a[k - 160 + 3] > 120 || a[k + 160 + 3] > 120) { out[k] = 43; out[k + 1] = 29; out[k + 2] = 18; out[k + 3] = 255; }
+    const near = (a[k - 1] > 120) + (a[k + 7] > 120) + (a[k - 160 + 3] > 120) + (a[k + 160 + 3] > 120);
+    if (near) { out[k] = 92; out[k + 1] = 62; out[k + 2] = 50; out[k + 3] = near > 1 ? 240 : 200; }  // soft warm-brown line, lighter on corners
+  }
+  // round, painted shading: light from the top-left, soft shade on the lower right
+  for (let j = 1; j < 55; j++) for (let i = 1; i < 39; i++) {
+    const k = (j * 40 + i) * 4; if (a[k + 3] < 120) continue;
+    const lit = a[k - 160 + 3] < 120 || a[k - 4 + 3] < 120, dim = a[k + 160 + 3] < 120 || a[k + 4 + 3] < 120;
+    const m = lit && !dim ? 1.16 : dim && !lit ? .86 : 1;
+    if (m !== 1) { out[k] = Math.min(255, a[k] * m + (m > 1 ? 8 : 0)); out[k + 1] = Math.min(255, a[k + 1] * m + (m > 1 ? 6 : 0)); out[k + 2] = Math.min(255, a[k + 2] * m); }
   }
   img.data.set(out); sctx.putImageData(img, 0, 0);
   c.drawImage(spr, x - 20, y - 48);

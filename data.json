@@ -213,6 +213,13 @@
  ],
  "stations": [
   {
+   "id": "death-valley",
+   "program": "Amazon Associates × Pinterest video",
+   "job": "Video Bot",
+   "status": "on",
+   "desc": "Makes one 9:16 video pin a day for the 8 PM slot, and scouts the best creator videos for your products. Creator videos only post with their written permission."
+  },
+  {
    "id": "grand-canyon",
    "program": "Amazon Associates × Pinterest",
    "job": "Pin Bot",
@@ -332,5 +339,25 @@
    "paused": false
   }
  },
- "updatedAt": "2026-10-17T20:49:49-05:00"
+ "videobot": {
+  "status": {
+   "state": "ok",
+   "lastSummary": "Set up: video maker tested (8 s, 0.7 MB). First run tomorrow 11 AM.",
+   "issues": [],
+   "log": [
+    {
+     "at": "2026-10-17T20:05:00-05:00",
+     "note": "Set up: video maker tested (8 s, 0.7 MB). First run tomorrow 11 AM."
+    }
+   ],
+   "tracker": {
+    "asked": 0,
+    "found": 0,
+    "posted": 0,
+    "removed": 0,
+    "yes": 0
+   }
+  }
+ },
+ "updatedAt": "2026-10-17T20:59:42-05:00"
 }

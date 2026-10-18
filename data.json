@@ -166,6 +166,15 @@
    "releaseAt": "2026-10-20T19:00:00-05:00"
   },
   {
+   "id": "2026-10-20-2000",
+   "title": "Knife Sharpening Tips: Sharpen at the Right Angle for an Even Edge",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "Work Sharp Precision Adjust Knife Sharpener",
+   "layout": "video",
+   "status": "scheduled",
+   "releaseAt": "2026-10-20T20:00:00-05:00"
+  },
+  {
    "id": "2026-10-21-0800",
    "title": "Etsy Shipping Tips: Packing Tape That Holds Through the Holiday Rush",
    "board": "Etsy Shop Shipping Setup",
@@ -1135,17 +1144,21 @@
  },
  "videobot": {
   "status": {
-   "state": "ok",
-   "lastRunAt": "2026-10-18T01:30:00-05:00",
-   "lastSummary": "Scheduled Dutch oven gift video for Oct 19 8 PM; 5 creator finds logged.",
+   "state": "needs_you",
+   "lastRunAt": "2026-10-18T11:40:00-05:00",
+   "lastSummary": "Scheduled knife-angle video for Oct 20 8 PM; 3 skillet creators logged.",
    "issues": [
-    "Product tag skipped again: Pinterest would make an extra pin from Amazon photos",
+    "Image backlog not uploaded: permission check blocked the bulk upload, 29 pins wait (first 10-19 7 PM)",
+    "2 backlog pins use out-of-stock Rollo printer (10-23 5 PM, 10-24 10 AM); left out of pins.csv",
+    "Bulk time test: UTC is right; local-time pin landed 10/21 7:00 AM instead of 12 PM",
     "Video tracking IDs not created yet; used homeandshop07-20",
-    "Henckels search: only brand or paid videos; found generic honing-steel creators instead",
-    "Sumi's loose-leaf tea pin shows 10/21 7:00 AM in Pinterest, but posted.csv says 12:00",
-    "posted.csv has the Oct 18 8 PM honing steel row twice"
+    "Work Sharp and Rollo labels: no unpaid creator videos from the last 6 months"
    ],
    "log": [
+    {
+     "at": "2026-10-18T11:40:00-05:00",
+     "note": "Scheduled knife-angle video for Oct 20 8 PM; 3 skillet creators logged."
+    },
     {
      "at": "2026-10-18T01:30:00-05:00",
      "note": "Scheduled Dutch oven gift video for Oct 19 8 PM; 5 creator finds logged."
@@ -1161,12 +1174,12 @@
    ],
    "tracker": {
     "asked": 0,
-    "found": 7,
+    "found": 10,
     "posted": 0,
     "removed": 0,
     "yes": 0
    }
   }
  },
- "updatedAt": "2026-10-18T10:46:24-05:00"
+ "updatedAt": "2026-10-18T11:39:00-05:00"
 }

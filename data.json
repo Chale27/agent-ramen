@@ -87,6 +87,15 @@
    "releaseAt": "2026-10-19T17:00:00-05:00"
   },
   {
+   "id": "2026-10-19-2000",
+   "title": "Christmas Gifts for Home Cooks: The Dutch Oven They'll Use All Winter",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Lodge 6-Quart Enameled Cast Iron Dutch Oven",
+   "layout": "video",
+   "status": "scheduled",
+   "releaseAt": "2026-10-19T20:00:00-05:00"
+  },
+  {
    "id": "2026-10-20-1000",
    "title": "Gooseneck Kettle for Tea Lovers: A Gentler Pour and the Right Temperature",
    "board": "Tea Lover's Kitchen",
@@ -348,53 +357,174 @@
  ],
  "helpers": [
   {
+   "id": "board-builder",
+   "state": "ok",
+   "lastRunAt": "2026-10-18T00:53:56-05:00",
+   "lastSummary": "No new boards: max sub-topic is 5 pins, and there's no trend or insight data yet.",
+   "findings": [
+    {
+     "title": "Watch: stocking stuffers for home cooks",
+     "detail": "5 pins use gift/holiday/stocking wording. Suggest a board at 8+ pins or if Chirp sees it rising.",
+     "level": "info"
+    },
+    {
+     "title": "Watch: cast iron",
+     "detail": "2 products (skillet, Dutch oven), 1 pin so far.",
+     "level": "info"
+    },
+    {
+     "title": "Watch: pour-over coffee",
+     "detail": "Both kettles list it as an angle; no pins yet.",
+     "level": "info"
+    }
+   ],
+   "log": [
+    {
+     "at": "2026-10-18T00:53:56-05:00",
+     "note": "No new boards: max sub-topic is 5 pins, and there's no trend or insight data yet."
+    }
+   ]
+  },
+  {
+   "id": "efficiency-builder",
+   "state": "ok",
+   "lastRunAt": "2026-10-18T00:00:00Z"
+  },
+  {
    "id": "efficiency-inspector",
    "state": "needs_you",
    "lastRunAt": "2026-10-17T23:58:00-05:00"
   },
   {
-   "id": "program-hunter",
+   "id": "link-checker",
    "state": "ok",
-   "lastRunAt": "2026-10-17T18:50:00-05:00",
-   "lastSummary": "4 new network programs; best: HexClad on Awin, up to 20%, 30-day cookie.",
+   "lastRunAt": "2026-10-18T00:54:28-05:00",
+   "lastSummary": "Checked 8 of 21 links today: all 8 good (labels roll low, 1 left).",
    "findings": [
     {
-     "title": "HexClad (US) on Awin",
-     "detail": "Up to 20% (10% assumed), 30-day cookie. Est. $0.30/click vs Amazon $0.27 ($0.60 at 20%).",
-     "level": "idea"
-    },
-    {
-     "title": "Made In Cookware on FlexOffers",
-     "detail": "8% new / 6.4% returning, 30-day cookie. Est. $0.18/click vs Amazon $0.20.",
-     "level": "idea"
-    },
-    {
-     "title": "Sur La Table on Partnerize",
-     "detail": "4-7% (unverified), 30-day cookie (15 on Impact). Est. $0.10/click vs Amazon $0.135.",
-     "level": "idea"
-    },
-    {
-     "title": "Etsy on Awin",
-     "detail": "~4% (unverified), 30 days on web, 7 in the app. Est. $0.03/click vs Amazon $0.036, but covers unique gifts Amazon lacks.",
-     "level": "idea"
-    },
-    {
-     "title": "Pans-worth-the-splurge gift pins",
-     "detail": "3-5 hero-pan vs budget pins before Black Friday (Nov 27). Use HexClad/Made In once approved.",
-     "level": "idea"
-    },
-    {
-     "title": "One Awin account, two programs",
-     "detail": "HexClad + Etsy share one Awin sign-up and one $20 payout threshold, so you get paid sooner.",
-     "level": "idea"
-    },
-    {
-     "title": "Sign up next: Rollo (FlexOffers/CJ)",
-     "detail": "12%, 30-day cookie, about $0.51/click vs Amazon $0.235. Assign to Kaze (yosemite) after you sign up.",
+     "title": "8 links good",
+     "detail": "Honing steel, glass teapot, thank-you stickers, TP19H thermometer, shipping scale, knife bar, gooseneck kettle, Rollo labels: all in stock. Prioritized pins releasing Oct 18–20.",
      "level": "ok"
     }
    ],
    "log": [
+    {
+     "at": "2026-10-18T00:54:28-05:00",
+     "note": "Checked 8 of 21 links today: all 8 good (labels roll low, 1 left)."
+    }
+   ]
+  },
+  {
+   "id": "link-promoter",
+   "state": "needs_you",
+   "lastRunAt": "2026-10-18T08:30:00-05:00",
+   "lastSummary": "First promo plan: push Work Sharp sharpener; headline test E-2026-10-18 started.",
+   "findings": [
+    {
+     "title": "Push: Work Sharp Precision Adjust (B08L72P245)",
+     "detail": "Gift-priced; 'knife sharpening angles chart' angle",
+     "level": "idea"
+    },
+    {
+     "title": "Push: ThermoPro TP19H (B07XXSYLL8)",
+     "detail": "Stocking stuffer; 'meat thermometer chart' / 'gift'",
+     "level": "idea"
+    },
+    {
+     "title": "Push: Lodge 6-Qt Dutch Oven (B00U1OCPWQ)",
+     "detail": "Biggest-ticket gift, not pinned yet",
+     "level": "idea"
+    },
+    {
+     "title": "Push: Cosori Gooseneck Kettle (B07T1CH2HH)",
+     "detail": "'tea lover gift basket ideas' angle",
+     "level": "idea"
+    },
+    {
+     "title": "Push: Rollo Label Printer (B0D3CQKTMR)",
+     "detail": "Holiday shipping rush; 'etsy shipping station'",
+     "level": "idea"
+    },
+    {
+     "title": "Experiment E-2026-10-18",
+     "detail": "Headline: A how-to/cheat sheet vs B gift; 3+ pins each; clicks per 1k impressions",
+     "level": "idea"
+    },
+    {
+     "title": "Suggestion: Gift board description",
+     "detail": "Keyword-rich text in promo-plan.md section 7",
+     "level": "idea"
+    },
+    {
+     "title": "Suggestion: shop link on profile",
+     "detail": "Website field set to the shop page",
+     "level": "idea"
+    },
+    {
+     "title": "Suggestion: Stocking Stuffers section",
+     "detail": "New section on Gift Ideas for Home Cooks",
+     "level": "idea"
+    },
+    {
+     "title": "No stats yet",
+     "detail": "Hoot's first report is due 2026-10-19",
+     "level": "warn"
+    }
+   ],
+   "log": [
+    {
+     "at": "2026-10-18T08:30:00-05:00",
+     "note": "First run: wrote promo plan, keyword bank from autocomplete, started E-2026-10-18 (how-to vs gift headlines)."
+    }
+   ]
+  },
+  {
+   "id": "program-hunter",
+   "state": "ok",
+   "lastRunAt": "2026-10-18T12:00:00-05:00",
+   "lastSummary": "4 new Etsy-seller tools; best: Alura, 30% recurring, ~$0.48/click.",
+   "findings": [
+    {
+     "title": "Alura (Etsy SEO tool), direct via Rewardful",
+     "detail": "30% recurring for up to 6 months on $19.99/mo, 30-day cookie. Est. ~$0.48/click vs Amazon $0.16.",
+     "level": "idea"
+    },
+    {
+     "title": "ShipStation on CJ",
+     "detail": "$35-$400 per paid customer, 30-day cookie. Est. ~$0.45/click vs Amazon $0.16.",
+     "level": "idea"
+    },
+    {
+     "title": "eRank (Etsy SEO tool), direct",
+     "detail": "30% recurring for 12 months, cookie 60 days (unverified). Est. ~$0.36/click vs Amazon $0.16.",
+     "level": "idea"
+    },
+    {
+     "title": "Printful (print-on-demand), direct",
+     "detail": "10% of fulfillment for 12 months (unverified), 30-day cookie. Est. ~$0.30/click vs Amazon $0.16.",
+     "level": "idea"
+    },
+    {
+     "title": "Etsy seller holiday rush board",
+     "detail": "Seller-facing checklist pins for the Q4 shipping rush in 4-8 weeks: Rollo + ShipStation + eRank/Alura.",
+     "level": "idea"
+    },
+    {
+     "title": "eRank vs Alura comparison pins",
+     "detail": "Tall pins with a feature/price table and two links. Recurring pay means each sign-up earns for 6-12 months.",
+     "level": "idea"
+    },
+    {
+     "title": "Sign up next: Rollo + ShipStation on one CJ account",
+     "detail": "Rollo about $0.51/click (12%, 30 days). Apply on CJ so ShipStation comes with it. Assign to Kaze (yosemite).",
+     "level": "ok"
+    }
+   ],
+   "log": [
+    {
+     "at": "2026-10-18T12:00:00-05:00",
+     "note": "4 new Etsy-seller tools; best: Alura, 30% recurring, ~$0.48/click."
+    },
     {
      "at": "2026-10-17T18:50:00-05:00",
      "note": "4 new network programs; best: HexClad on Awin, up to 20%, 30-day cookie."
@@ -462,23 +592,23 @@
   },
   {
    "id": "shop-doctor",
-   "state": "ok",
-   "lastRunAt": "2026-10-17T20:42:00-05:00",
-   "lastSummary": "All bots healthy; Pin Bot and link checker make their first scheduled runs tomorrow.",
+   "state": "needs_you",
+   "lastRunAt": "2026-10-18T00:10:00-05:00",
+   "lastSummary": "1 problem: shop run tickets can't start bots without your approval.",
    "findings": [
     {
      "title": "Scheduled runs",
-     "detail": "No failed runs. website-sync and program-hunter ran today. daily-pinterest-pins and link-checker have no runs yet, but were set up today and first run tomorrow (7:30 and 9:03 AM). Weekly bots not due yet.",
-     "level": "warn"
-    },
-    {
-     "title": "Pin Bot health",
-     "detail": "Pin Bot, website sync and Pon all 'ok'. Pin Bot last ran 5:48 PM today (dry run).",
+     "detail": "No failed runs. Pin Bot, Kaen, Neko, Pon and Kame ran in the last 26 h. link-checker, efficiency-builder and link-promoter were set up Oct 17 and make their first runs this morning. Weekly bots not due yet.",
      "level": "ok"
     },
     {
+     "title": "Pin Bot health",
+     "detail": "Pin Bot ok (last ran 10:08 PM Oct 17), sync ok, Kaen ok. Kame is needs_you: run tickets can't start bots (approval prompt). Neko logged the same.",
+     "level": "bad"
+    },
+    {
      "title": "Website",
-     "detail": "data.json returned 200, updated 7:45 PM today.",
+     "detail": "data.json returned 200, updated 12:02 AM Oct 18.",
      "level": "ok"
     },
     {
@@ -488,14 +618,102 @@
     },
     {
      "title": "Link health",
-     "detail": "link-status.csv has no rows yet; the link checker hasn't had its first run. No dead or mismatched links reported.",
+     "detail": "21 products checked 10:19 PM Oct 17, all ok. None dead or mismatched.",
+     "level": "ok"
+    },
+    {
+     "title": "Weekly digest",
+     "detail": "Pins: 20 made (5 live, 15 scheduled through Oct 21), plus 3 test drafts. Videos: 1 (honing steel, posts Oct 18 8 PM). New: 4 affiliate programs (best HexClad on Awin), 2 new products, board ideas due tonight. Problems: 1 open (run tickets need approval), none fixed yet. Next: let shop run tickets start bots without an approval prompt.",
+     "level": "idea"
+    }
+   ],
+   "log": [
+    {
+     "at": "2026-10-18T00:10:00-05:00",
+     "note": "1 problem: shop run tickets can't start bots without your approval."
+    },
+    {
+     "at": "2026-10-17T20:42:00-05:00",
+     "note": "All bots healthy; Pin Bot and link checker make their first scheduled runs tomorrow."
+    }
+   ]
+  },
+  {
+   "id": "stats-reader",
+   "state": "needs_you",
+   "lastRunAt": "2026-10-18T08:00:00-07:00"
+  },
+  {
+   "id": "trend-scout",
+   "state": "ok",
+   "lastRunAt": "2026-10-18T18:00:00-05:00",
+   "lastSummary": "10 holiday-led pin ideas saved; Amazon Movers & Shakers empty, no ASINs",
+   "findings": [
+    {
+     "title": "christmas gifts for home cooks",
+     "detail": "Gift Ideas board; Dec gift peak on Trends; collage; gadget gift sets",
+     "level": "idea"
+    },
+    {
+     "title": "diy gifts for home cooks",
+     "detail": "Gift Ideas board; Pinterest suggestion; collage",
+     "level": "idea"
+    },
+    {
+     "title": "christmas gift basket ideas (tea)",
+     "detail": "Tea board; gift basket terms peak Dec; collage; tea sampler",
+     "level": "idea"
+    },
+    {
+     "title": "tea temperature chart",
+     "detail": "Tea board; top Pinterest suggestion; cheatsheet; variable-temp kettle",
+     "level": "idea"
+    },
+    {
+     "title": "chai latte recipe",
+     "detail": "Tea board; rising on Trends; overlay; chai concentrate/frother",
+     "level": "idea"
+    },
+    {
+     "title": "knife sharpening angle guide",
+     "detail": "Knife board; Pinterest chips angle guide/chart; cheatsheet; whetstone",
+     "level": "idea"
+    },
+    {
+     "title": "magnetic rolling knife sharpener",
+     "detail": "Knife board; Horl/rolling chips, giftable; overlay",
+     "level": "idea"
+    },
+    {
+     "title": "etsy shipping tips (holiday deadlines)",
+     "detail": "Etsy board; top suggestion, holiday rush; cheatsheet; label printer",
+     "level": "idea"
+    },
+    {
+     "title": "etsy shipping station",
+     "detail": "Etsy board; station suggestions; collage; packing organizer",
+     "level": "idea"
+    },
+    {
+     "title": "cookie packaging ideas",
+     "detail": "Packaging board; holiday spike on Trends; collage; cookie boxes",
+     "level": "idea"
+    },
+    {
+     "title": "Fading: broad knife & design-inspiration terms",
+     "detail": "'kitchen knife' flat; 'packaging design inspiration' and 'small kitchen ideas' easing",
+     "level": "warn"
+    },
+    {
+     "title": "Fading: plain 'tea'/'shipping'",
+     "detail": "Swamped by teal/teacher and shipping containers; use long-tail phrases",
      "level": "warn"
     }
    ],
    "log": [
     {
-     "at": "2026-10-17T20:42:00-05:00",
-     "note": "All bots healthy; Pin Bot and link checker make their first scheduled runs tomorrow."
+     "at": "2026-10-18T18:00:00-05:00",
+     "note": "10 holiday-led pin ideas saved; Amazon Movers & Shakers empty, no ASINs"
     }
    ]
   }
@@ -529,15 +747,20 @@
  "videobot": {
   "status": {
    "state": "ok",
-   "lastRunAt": "2026-10-17T21:06:00-05:00",
-   "lastSummary": "Scheduled honing steel video for Oct 18 8 PM; 2 weak creator finds logged.",
+   "lastRunAt": "2026-10-18T01:30:00-05:00",
+   "lastSummary": "Scheduled Dutch oven gift video for Oct 19 8 PM; 5 creator finds logged.",
    "issues": [
-    "Product tag skipped: Pinterest would make an extra pin from Amazon photos",
+    "Product tag skipped again: Pinterest would make an extra pin from Amazon photos",
     "Video tracking IDs not created yet; used homeandshop07-20",
-    "No recent unsponsored Work Sharp videos on TikTok",
-    "Both creator finds have low engagement (13 and 63 likes)"
+    "Henckels search: only brand or paid videos; found generic honing-steel creators instead",
+    "Sumi's loose-leaf tea pin shows 10/21 7:00 AM in Pinterest, but posted.csv says 12:00",
+    "posted.csv has the Oct 18 8 PM honing steel row twice"
    ],
    "log": [
+    {
+     "at": "2026-10-18T01:30:00-05:00",
+     "note": "Scheduled Dutch oven gift video for Oct 19 8 PM; 5 creator finds logged."
+    },
     {
      "at": "2026-10-17T21:06:00-05:00",
      "note": "Scheduled honing steel video for Oct 18 8 PM; 2 weak creator finds logged."
@@ -549,12 +772,12 @@
    ],
    "tracker": {
     "asked": 0,
-    "found": 2,
+    "found": 7,
     "posted": 0,
     "removed": 0,
     "yes": 0
    }
   }
  },
- "updatedAt": "2026-10-18T00:02:24-05:00"
+ "updatedAt": "2026-10-18T10:33:06-05:00"
 }

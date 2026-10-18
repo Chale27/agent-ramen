@@ -42,6 +42,11 @@ h1 span { color: var(--red); }
 
 .stage { width: min(100%, calc((100vh - 40px) * 384 / 300)); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); border: 4px solid var(--tag); border-radius: 6px; overflow: hidden; background: #3a2416; box-shadow: 0 8px 0 rgba(58,36,22,.18); }
 #scene { position: relative; aspect-ratio: 384 / 300; width: 100%; background: #3a2416; overflow: hidden; }
+#scene #glow { pointer-events: none; image-rendering: auto; filter: blur(2.5px) saturate(1.4); mix-blend-mode: soft-light; opacity: .4; }
+#scene #kitchen { filter: saturate(1.1) contrast(1.05) brightness(1.02); }
+#scene .paper { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply; opacity: .12;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .45 0 0 0 0 .32 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 50% 45%, rgba(255,255,255,0) 55%, rgba(120,90,50,.35) 100%); }
 #scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; cursor: pointer; }
 .overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .sign { position: absolute; transform: translate(-50%, -50%); pointer-events: auto; cursor: pointer; font: 700 clamp(9px, 1.15vw, 14px) var(--pixel); letter-spacing: .06em; text-transform: uppercase; color: var(--wood); background: #fbecd0; border: 2px solid #a4553a; outline: 2px solid #fbecd0; padding: 1px 7px; white-space: nowrap; box-shadow: 0 2px 0 rgba(58,36,22,.4); }
@@ -244,7 +249,7 @@ footer code { font-family: var(--mono); font-size: 12px; color: var(--fg); }
 <div class="wrap">
   <section class="stage">
     <div id="scene" aria-label="Agent Ramen: a 3D ramen stand and the pixel-art kitchen inside, where Head Chef Claude runs the crew. Click Head Chef Claude to place an order.">
-      <canvas id="kitchen" width="384" height="300"></canvas>
+      <canvas id="kitchen" width="384" height="300"></canvas><canvas id="glow" width="192" height="150" aria-hidden="true"></canvas><div class="paper" aria-hidden="true"></div>
       <button class="btn back" id="backBtn" type="button">← Step outside</button>
       <button class="btn sound" id="soundBtn" type="button" aria-pressed="false">🔈 Sound off</button>
       <div class="overlay" id="overlay"></div>
@@ -1613,6 +1618,19 @@ cv.addEventListener("mousemove", e => {
 const LIGHTS = [[10, 214, 46, .26], [374, 206, 46, .26], [150, 226, 40, .2], [62, 44, 34, .22], [96, 44, 22, .14], [270, 146, 34, .2], [258, 22, 34, .12], [365, 250, 22, .14], [100, 176, 60, .08], [230, 176, 60, .08], [52, 255, 42, .1], [150, 255, 42, .1], [250, 255, 42, .1], [189, 112, 44, .1]];
 /* ---- main loop ---- */
 let last = performance.now();
+const motes = Array.from({ length: 26 }, (_, i) => ({ x: 232 + Math.random() * 40, y: 20 + Math.random() * 150, vy: .04 + Math.random() * .08, p: i }));
+const glowCv = document.getElementById("glow"), glowCtx = glowCv.getContext("2d");
+function drawGreenery(c, t) { // hanging ivy along the beams and potted plants, swaying a little
+  const sway = k => reduce ? 0 : Math.round(Math.sin(t * 1.1 + k) * .8);
+  [[30, 4, 14], [118, 4, 10], [196, 4, 16], [288, 2, 12], [336, 8, 18]].forEach(([x, y, len], k) => {
+    for (let i = 0; i < len; i++) { const xx = x + sway(k + i * .3) * (i / len); R(c, xx, y + i, 1, 1, "#3f6b34"); if (i % 3 === 1) { R(c, xx - 2, y + i, 2, 2, i % 2 ? "#6fae4a" : "#5f9a42"); R(c, xx + 1, y + i + 1, 2, 2, "#7fbe5a"); } }
+  });
+  [[34, 168, 1], [326, 168, 0], [140, 296, 1], [296, 296, 0]].forEach(([x, y, big], k) => {
+    R(c, x - 4, y - 6, 9, 6, "#b85c34"); R(c, x - 4, y - 6, 9, 1, "#d27a4c"); R(c, x - 3, y, 7, 1, "#8a4426");
+    const s = sway(k * 2); disc(c, x + s, y - 11, big ? 6 : 5, big ? 5 : 4, "#4f8a3a"); disc(c, x - 2 + s, y - 13, 3, 3, "#6fae4a"); disc(c, x + 3 + s, y - 10, 3, 2, "#5f9a42");
+    if (big) { R(c, x + s - 1, y - 19, 2, 4, "#5f9a42"); R(c, x + s + 1, y - 21, 2, 3, "#7fbe5a"); }
+  });
+}
 const FRAME_MS = 1000 / 30; // pixel art looks the same at 30 fps and uses far less battery
 function frame(now) {
   if (document.hidden || window.agentView === "outside" || now - last < FRAME_MS - 2) { if (window.agentView === "outside" || document.hidden) last = now; requestAnimationFrame(frame); return; }
@@ -1649,6 +1667,7 @@ function frame(now) {
     R(ctx, 239, 11, 38, 22, sky); if (!rain && n <= 0) R(ctx, 239, 11, 38, 6, "#bfe3f7");
     if (n > .6 && !rain) [[243, 14], [251, 19], [262, 13], [271, 17], [266, 26], [246, 27]].forEach(([x, y], i) => R(ctx, x, y, 1, 1, (Math.floor(clock * 2) + i) % 5 ? "#fff6cc" : "#9aa6d6"));
     if (n > .6 && !rain) { disc(ctx, 270, 15, 3, 3, "#f4ecd8"); disc(ctx, 271, 14, 2, 2, sky); } else if (n < .4 && !rain) disc(ctx, 246, 16, 3, 3, "#ffe08a");
+    if (n < .7 && !rain) [[0, 15], [17, 26]].forEach(([o, cy]) => { const cx = 243 + ((clock * 1.5 + o * 2.3) % 28); disc(ctx, cx, cy, 4, 2, "#fbf6ea"); disc(ctx, cx + 3, cy - 1, 3, 2, "#ffffff"); disc(ctx, cx - 3, cy + 1, 2, 1, "#f0eadc"); });
     if (rain) for (let i = 0; i < 9; i++) { const rx = 240 + ((i * 7 + Math.floor(clock * 30)) % 36), ry = 11 + ((i * 5 + Math.floor(clock * 60)) % 20); R(ctx, rx, ry, 1, 2, "#c6d4ee"); }
     if (SEASON === "winter" && n > .3) for (let i = 0; i < 7; i++) R(ctx, 240 + ((i * 11 + Math.floor(clock * 6)) % 36), 11 + ((i * 7 + Math.floor(clock * 10)) % 21), 1, 1, "#ffffff");
     R(ctx, 257, 11, 2, 22, "#7a4a2a"); R(ctx, 239, 21, 38, 2, "#7a4a2a");
@@ -1694,6 +1713,7 @@ function frame(now) {
     R(ctx, cx - 5, cy - 3, 10, 4 + b * 0, "#f2a24a"); R(ctx, cx - 5, cy - 3, 10, 1, "#f7b866"); R(ctx, cx + 3, cy - 5, 4, 4, "#f2a24a"); R(ctx, cx + 3, cy - 6, 1, 1, "#f2a24a"); R(ctx, cx + 6, cy - 6, 1, 1, "#f2a24a");
     R(ctx, cx + 4, cy - 4, 2, 1, "#2b1d12"); R(ctx, cx - 7, cy - 1, 3, 1, "#f2a24a"); R(ctx, cx - 3, cy - 2, 2, 2, "#d9822b"); R(ctx, cx, cy - 2 - b, 1, 1, "#d9822b"); }
   drawHelpers(ctx, t);
+  drawGreenery(ctx, t);
   ZASHIKI.forEach(([x, y]) => { R(ctx, x + 16, y - 6, 4, 3, "#f4ecd8"); R(ctx, x + 16, y - 6, 4, 1, "#c8382c"); });
   // round paper lamps hanging over the tables
   ZASHIKI.forEach(([x]) => { const y = 238, sway = reduce ? 0 : Math.round(Math.sin(t * 1.2 + x) * .6); R(ctx, x + sway, y - 12, 1, 7, "#2b1d12"); disc(ctx, x + sway, y - 1, 7, 5, "#fbeed2"); for (let k = -3; k <= 3; k += 3) R(ctx, x + sway - 6, y - 1 + k, 13, 1, "#e6cfa2"); R(ctx, x + sway - 3, y - 6, 7, 1, "#5e3820"); R(ctx, x + sway - 3, y + 4, 7, 1, "#5e3820"); R(ctx, x + sway - 4, y - 3, 2, 3, "#fffaf0"); });
@@ -1707,6 +1727,18 @@ function frame(now) {
   ctx.globalCompositeOperation = "lighter";
   const fl = reduce ? 1 : .9 + Math.sin(t * 7) * .05 + Math.sin(t * 13) * .04;
   LIGHTS.forEach(([x, y, r, a]) => { const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(255,160,80,${Math.min(.85, a * fl * (1 + 1.8 * nightK))})`); g.addColorStop(1, "rgba(255,160,80,0)"); ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2); });
+  { // Ghibli-style sunbeams from the window, angled by the shop clock, with drifting dust
+    const h = sceneHour(), day = 1 - nightness(h), sun = day * (sceneRaining() ? .35 : 1);
+    if (sun > .05) {
+      const tilt = (h - 12) * 6; // the beams lean with the sun
+      [[242, 22, .22], [256, 28, .16], [266, 20, .12]].forEach(([wx, spread, a]) => {
+        const g = ctx.createLinearGradient(wx, 12, wx - tilt, 175); g.addColorStop(0, `rgba(255,236,170,${a * sun})`); g.addColorStop(1, "rgba(255,236,170,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(wx, 12); ctx.lineTo(wx + 10, 12); ctx.lineTo(wx + 10 - tilt + spread, 178); ctx.lineTo(wx - tilt - spread * .4, 178); ctx.closePath(); ctx.fill();
+      });
+      ctx.fillStyle = `rgba(255,246,210,${.55 * sun})`;
+      motes.forEach(m => { m.y += m.vy; m.x += Math.sin(clock * .6 + m.p) * .05; if (m.y > 175) { m.y = 20; m.x = 232 + Math.random() * 40; } ctx.fillRect(m.x - (m.y - 20) * (h - 12) * .05, m.y, 1, 1); });
+    }
+  }
   ctx.globalCompositeOperation = "source-over";
   const vg = ctx.createRadialGradient(W / 2, H / 2, H * .38, W / 2, H / 2, H * .95); vg.addColorStop(0, "rgba(50,20,0,0)"); vg.addColorStop(1, "rgba(50,20,0,.38)"); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
   ctx.restore();
@@ -1724,6 +1756,7 @@ function frame(now) {
     e.b.style.top = e.bub.style.top = top * sy + "px";
     e.bub.hidden = clock > e.until;
   });
+  glowCtx.clearRect(0, 0, 192, 150); glowCtx.drawImage(cv, 0, 0, 192, 150);
   ofTag.bub.style.left = 62 * sx + "px"; ofTag.bub.style.top = 6 * sy + "px"; ofTag.bub.hidden = clock > ofTag.until;
   requestAnimationFrame(frame);
 }

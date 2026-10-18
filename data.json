@@ -351,9 +351,19 @@
  "videobot": {
   "status": {
    "state": "ok",
-   "lastSummary": "Set up: video maker tested (8 s, 0.7 MB). First run tomorrow 11 AM.",
-   "issues": [],
+   "lastRunAt": "2026-10-17T21:06:00-05:00",
+   "lastSummary": "Scheduled honing steel video for Oct 18 8 PM; 2 weak creator finds logged.",
+   "issues": [
+    "Product tag skipped: Pinterest would make an extra pin from Amazon photos",
+    "Video tracking IDs not created yet; used homeandshop07-20",
+    "No recent unsponsored Work Sharp videos on TikTok",
+    "Both creator finds have low engagement (13 and 63 likes)"
+   ],
    "log": [
+    {
+     "at": "2026-10-17T21:06:00-05:00",
+     "note": "Scheduled honing steel video for Oct 18 8 PM; 2 weak creator finds logged."
+    },
     {
      "at": "2026-10-17T20:05:00-05:00",
      "note": "Set up: video maker tested (8 s, 0.7 MB). First run tomorrow 11 AM."
@@ -361,12 +371,12 @@
    ],
    "tracker": {
     "asked": 0,
-    "found": 0,
+    "found": 2,
     "posted": 0,
     "removed": 0,
     "yes": 0
    }
   }
  },
- "updatedAt": "2026-10-17T21:04:43-05:00"
+ "updatedAt": "2026-10-17T21:09:46-05:00"
 }

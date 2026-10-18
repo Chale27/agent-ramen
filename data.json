@@ -348,6 +348,11 @@
  ],
  "helpers": [
   {
+   "id": "efficiency-inspector",
+   "state": "needs_you",
+   "lastRunAt": "2026-10-17T23:58:00-05:00"
+  },
+  {
    "id": "program-hunter",
    "state": "ok",
    "lastRunAt": "2026-10-17T18:50:00-05:00",
@@ -551,5 +556,5 @@
    }
   }
  },
- "updatedAt": "2026-10-17T23:38:49-05:00"
+ "updatedAt": "2026-10-18T00:02:24-05:00"
 }

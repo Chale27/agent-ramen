@@ -1,0 +1,14 @@
+{
+ "name": "Agent Ramen",
+ "short_name": "Ramen",
+ "description": "Home & Shop Finds' affiliate kitchen: pins, bots and the shop.",
+ "start_url": "/agent-ramen/",
+ "scope": "/agent-ramen/",
+ "display": "standalone",
+ "background_color": "#2b1d12",
+ "theme_color": "#2b1d12",
+ "icons": [
+  {"src": "/agent-ramen/icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+  {"src": "/agent-ramen/icons/icon-512.png", "sizes": "512x512", "type": "image/png"}
+ ]
+}

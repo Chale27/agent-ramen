@@ -3,6 +3,11 @@
 <meta name="description" content="Agent Ramen: an affiliate kitchen where each cook runs one affiliate program.">
 <meta name="theme-color" content="#2b1d12">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ramen">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
@@ -149,6 +154,20 @@ details.prods ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
 .note-log time { font: 600 11px var(--mono); color: var(--muted); }
 .runbox { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; background: var(--cream); border: 2px solid var(--tag); padding: 8px 10px; }
 .runbox .st { font: 600 12.5px var(--body); color: var(--muted); }
+.tag[data-state]::before { content: ""; display: inline-block; width: .55em; height: .55em; border-radius: 50%; margin-right: .35em; vertical-align: .05em; background: #8d949b; box-shadow: 0 0 0 1px var(--tag); }
+.tag[data-state="ok"]::before { background: #5fd35f; } .tag[data-state="needs_you"]::before { background: #ff5a3d; box-shadow: 0 0 6px #ff5a3d; }
+.tag[data-state="paused"]::before { background: #f2a24a; } .tag[data-state="running"]::before { background: var(--gold); animation: blink 0.9s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .tag[data-state="running"]::before { animation: none; } }
+.hq-tabs { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; position: sticky; top: 38px; z-index: 1; background: #fbecd0; padding: 4px 0 8px; }
+.hq-tabs button { font: 700 13px var(--pixel); color: var(--fg); background: var(--cream); border: 2px solid var(--tag); padding: 3px 10px; cursor: pointer; }
+.hq-tabs button.on { background: var(--tag); color: var(--cream); }
+.hq-tabs a { margin-left: auto; font: 700 12px var(--pixel); color: var(--red); }
+.inbox-btn { all: unset; display: block; width: 100%; cursor: pointer; } .inbox-btn b { display: block; font-size: 14px; }
+.pin-tools { display: grid; gap: 6px; } .pin-tools input { font: 500 14px var(--body); color: var(--fg); background: #fffdf7; border: 2px solid var(--tag); padding: 5px 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; } .chips button { font: 600 12px var(--body); color: var(--fg); background: var(--cream); border: 2px solid var(--line); border-radius: 999px; padding: 2px 10px; cursor: pointer; } .chips button.on { border-color: var(--red); background: #ffe2da; }
+.chart-wrap { margin: 0; } .pin-chart { width: 100%; max-width: 460px; height: auto; display: block; } .chart-wrap figcaption { font-size: 12px; color: var(--muted); }
+.clock-chip { position: absolute; right: 8px; top: 40px; z-index: 6; font: 700 11px var(--pixel); color: var(--cream); background: rgba(43,29,18,.82); border: 2px solid var(--tag); padding: 1px 7px; pointer-events: none; }
 .directory { z-index: 7; position: absolute; inset: 6% 12%; background: #fbecd0; border: 4px solid var(--tag); box-shadow: inset 0 0 0 3px #e8cfa2, 0 6px 0 rgba(43,29,18,.4); display: flex; flex-direction: column; min-height: 0; }
 .directory .top { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 3px solid #e0c391; }
 .directory h3 { margin: 0; font: 700 18px var(--pixel); white-space: nowrap; }
@@ -545,9 +564,73 @@ setInterval(() => { if (PHONE.matches && window.agentView === "inside" && hqEl.h
 document.getElementById("hqClose").onclick = closeHQ;
 
 function stat(label, value) { const d = el("div"); d.append(el("small", null, label), el("b", null, value)); return d; }
+let hqTab = "inbox", pinQuery = "", pinFilter = "all";
+function inboxItems() {
+  const out = [], add = (level, title, detail, open) => out.push({ level, title, detail, open });
+  const bad = (doc, who, open) => { if (doc && doc.state === "needs_you") (doc.issues && doc.issues.length ? doc.issues : ["Needs you"]).slice(0, 3).forEach(i => add("bad", who, String(i), open)); };
+  bad(pbStatus, "Sumi · Pin Bot", PINBOT_COOK); bad(videoStatus, "Kaen · Video Bot", "death-valley"); bad(syncStatus, "Neko · Website", "neko");
+  HELPERS.forEach(h => bad(helperDocs[h.id], h.name, h.id));
+  if (pbControl && pbControl.paused) add("warn", "Pin Bot is paused", "Unpause it in Sumi's controls when you're ready.", PINBOT_COOK);
+  Object.entries(runReqs).forEach(([task, r]) => { if (r.status === "failed") add("warn", "Run ticket failed: " + task, String(r.note || ""), "neko"); });
+  const w = videoStatus && Array.isArray(videoStatus.waitingForYou) ? videoStatus.waitingForYou.length : 0;
+  if (w) add("todo", `Message ${w} creator${w > 1 ? "s" : ""}`, "Ask for permission to share their video (template in the Creator Licensing note).", "death-valley");
+  const bb = helperDocs["board-builder"]; if (bb && Array.isArray(bb.findings)) { const n = bb.findings.filter(x => x.level === "idea").length; if (n) add("todo", `${n} board idea${n > 1 ? "s" : ""} to review`, "Say yes to any you like and Claude creates the board.", "board-builder"); }
+  const ph = helperDocs["program-hunter"]; if (ph && Array.isArray(ph.findings)) { const pick = ph.findings.find(x => x.level === "ok"); if (pick) add("todo", String(pick.title || "Sign up next"), String(pick.detail || ""), "program-hunter"); }
+  const till = helperDocs["earnings-cat"]; if (!till || !till.updatedAt || Date.now() - new Date(till.updatedAt) > 8 * 86400000) add("todo", "Update the till", "Type this month's clicks, orders and earnings from Associates Central (or let Hoot read them Monday).", "earnings-cat");
+  const order = { bad: 0, warn: 1, todo: 2 }; return out.sort((a, b) => order[a.level] - order[b.level]);
+}
 function renderHQ() {
   hqTitle.textContent = "Affiliate HQ · Head Chef Claude";
   hqBody.innerHTML = "";
+  const items = db ? inboxItems() : [], tabs = el("div", "hq-tabs");
+  [["inbox", "Inbox" + (items.length ? ` (${items.length})` : "")], ["stations", "Stations"], ["pins", "Pins"]].forEach(([k, label]) => { const b = el("button", hqTab === k ? "on" : "", label); b.type = "button"; b.onclick = () => { hqTab = k; renderHQ(); }; tabs.append(b); });
+  const shopA = el("a", null, "Shop page ↗"); shopA.href = "https://chale27.github.io/agent-ramen/shop/"; shopA.target = "_blank"; shopA.rel = "noopener"; tabs.append(shopA);
+  hqBody.append(tabs);
+  if (hqTab === "inbox") return renderInbox(items);
+  if (hqTab === "pins") return renderPinsTab();
+  renderHQStations();
+}
+function renderInbox(items) {
+  if (!db) { hqBody.append(el("p", "empty", "Loading…")); return; }
+  if (!items.length) { hqBody.append(el("p", "lead", "✓ Nothing needs you right now. The kitchen is running on its own.")); }
+  else { const ul = el("ul", "finds"); items.forEach(x => { const li = el("li", x.level === "bad" ? "bad" : x.level === "warn" ? "warn" : "idea"), b = el("button", "inbox-btn"); b.type = "button"; b.append(el("b", null, x.title), el("small", null, x.detail)); b.onclick = () => openStation(x.open); li.append(b); ul.append(li); }); hqBody.append(ul); }
+  const up = upcoming(), live = released();
+  const st = el("div", "hq-stats"); st.append(stat("Pins queued", String(up.length)), stat("Pins live", String(live.length)), stat("Next pin", up[0] ? when(up[0].releaseAt) : "—"), stat("Shop time", fmtSceneTime())); hqBody.append(st);
+}
+function renderPinsTab() {
+  const box = el("div", "pin-tools"), q = el("input"); q.type = "search"; q.placeholder = "Search pins, boards, products"; q.value = pinQuery;
+  q.oninput = () => { pinQuery = q.value; drawList(); };
+  const chips = el("div", "chips"); [["all", "All"], ["up", "Coming up"], ["live", "Live"], ["video", "Videos"], ["shop", "Shop roundups"]].forEach(([k, l]) => { const c = el("button", pinFilter === k ? "on" : "", l); c.type = "button"; c.onclick = () => { pinFilter = k; renderHQ(); }; chips.append(c); });
+  box.append(q, chips); hqBody.append(box, pinChart());
+  const listBox = el("div"); hqBody.append(listBox);
+  function drawList() {
+    listBox.innerHTML = "";
+    const qq = pinQuery.trim().toLowerCase();
+    let list = pins.filter(p => p.status !== "draft").slice().sort((a, b) => String(b.releaseAt).localeCompare(String(a.releaseAt)));
+    if (pinFilter === "up") list = list.filter(p => !isLive(p)); if (pinFilter === "live") list = list.filter(isLive);
+    if (pinFilter === "video") list = list.filter(p => p.layout === "video"); if (pinFilter === "shop") list = list.filter(p => String(p.product || "").startsWith("Shop"));
+    if (qq) list = list.filter(p => [p.title, p.board, p.product].join(" ").toLowerCase().includes(qq));
+    if (!list.length) { listBox.append(el("p", "empty", "No pins match.")); return; }
+    const ul = el("ul", "pin-list"); list.slice(0, 60).forEach(p => { const li = el("li", isLive(p) ? "live" : ""); li.append(el("time", null, p.releaseAt ? new Date(p.releaseAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric" }) : ""), el("span", null, (p.layout === "video" ? "🎬 " : "") + (p.title || "Pin")), el("small", null, [p.board, p.product].filter(Boolean).join(" · "))); ul.append(li); }); listBox.append(ul);
+  }
+  drawList();
+}
+function pinChart() {
+  const days = [], today = new Date(); today.setHours(0, 0, 0, 0);
+  for (let i = -6; i <= 4; i++) { const d = new Date(today); d.setDate(today.getDate() + i); days.push(d); }
+  const counts = days.map(d => { const k = d.toDateString(); const ps = pins.filter(p => p.status !== "draft" && p.releaseAt && new Date(p.releaseAt).toDateString() === k); return { d, live: ps.filter(isLive).length, up: ps.filter(p => !isLive(p)).length }; });
+  const max = Math.max(5, ...counts.map(c => c.live + c.up)), Wc = 320, Hc = 96, bw = Wc / counts.length;
+  const ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg"); svg.setAttribute("viewBox", `0 0 ${Wc} ${Hc + 16}`); svg.setAttribute("class", "pin-chart"); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Pins per day: last 7 days and next 4");
+  counts.forEach((c, i) => {
+    const x = i * bw + 4, hl = c.live / max * Hc, hu = c.up / max * Hc;
+    const r1 = document.createElementNS(ns, "rect"); r1.setAttribute("x", x); r1.setAttribute("y", Hc - hl); r1.setAttribute("width", bw - 8); r1.setAttribute("height", hl); r1.setAttribute("fill", "#4f8a3a"); svg.append(r1);
+    const r2 = document.createElementNS(ns, "rect"); r2.setAttribute("x", x); r2.setAttribute("y", Hc - hl - hu); r2.setAttribute("width", bw - 8); r2.setAttribute("height", hu); r2.setAttribute("fill", "#c8382c"); svg.append(r2);
+    const tx = document.createElementNS(ns, "text"); tx.setAttribute("x", x + (bw - 8) / 2); tx.setAttribute("y", Hc + 12); tx.setAttribute("text-anchor", "middle"); tx.setAttribute("font-size", "8"); tx.setAttribute("fill", "#8a6a4e"); tx.textContent = c.d.toLocaleDateString([], { weekday: "narrow" }); svg.append(tx);
+    if (c.live + c.up) { const n = document.createElementNS(ns, "text"); n.setAttribute("x", x + (bw - 8) / 2); n.setAttribute("y", Hc - hl - hu - 3); n.setAttribute("text-anchor", "middle"); n.setAttribute("font-size", "8"); n.setAttribute("fill", "#3a2416"); n.textContent = c.live + c.up; svg.append(n); }
+  });
+  const wrap = el("figure", "chart-wrap"); wrap.append(svg, el("figcaption", null, "Pins per day: green = live, red = scheduled (last 7 days, next 4)")); return wrap;
+}
+function renderHQStations() {
   hqBody.append(el("p", "lead", "Every cook runs one affiliate program. Click a station to see its work. Open stations are waiting for a program: sign up, then tell Claude which cook should run it."));
   const st = el("div", "hq-stats");
   st.append(stat("Stations running", String(STATION_COOKS.filter(id => stationOf(id).program).length)), stat("Pins queued", db ? String(upcoming().length) : "—"), stat("Pins live", db ? String(released().length) : "—"), stat("Products", db ? String(products.length) : "—"));
@@ -589,7 +672,7 @@ function renderNeko(back) {
   hqBody.append(st);
   hqBody.append(noteBox(syncStatus, syncStatus && (syncStatus.lastCheckAt || syncStatus.updatedAt)));
 
-  hqBody.append(runBox("website-sync", "Sync the website now"));
+  hqBody.append(runBox("website-sync", "Sync the website now"), pauseBox("website-sync", "Neko's website sync"));
   const p = el("p"); const a = el("a", "btn", "Open the website"); a.href = "https://chale27.github.io/agent-ramen/"; a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none"; p.append(a); hqBody.append(p);
   hqBody.append(el("p", "empty", "The website is public and view-only. Controls stay in the Claude version."));
 }
@@ -641,7 +724,7 @@ function renderHelper(id, back) {
   if (!list.length) fs.append(el("p", "empty", d.lastRunAt ? "Nothing to report." : "No run yet. First run: " + h.schedule + "."));
   else { const ul = el("ul", "finds"); list.slice(0, 25).forEach(x => { const li = el("li", ["ok", "warn", "bad", "idea"].includes(x.level) ? x.level : ""); li.append(el("b", null, String(x.title || "")), el("small", null, String(x.detail || ""))); ul.append(li); }); fs.append(ul); }
   hqBody.append(fs);
-  if (RUNNABLE[id]) hqBody.append(runBox(RUNNABLE[id]));
+  if (RUNNABLE[id]) hqBody.append(runBox(RUNNABLE[id]), pauseBox(RUNNABLE[id], h.name.split(" ")[0]));
   if (id === "board-builder" || id === "program-hunter") hqBody.append(el("p", "empty", id === "board-builder" ? "To create a suggested board, tell Claude which one. Nothing is created without you." : "Sign up for a program yourself, then tell Claude: \"Assign <program> to <cook>.\""));
 }
 function renderEarnings(d, web) {
@@ -765,8 +848,49 @@ function renderVideo(back) {
     if (w.length) { const ul = el("ul", "finds"); w.slice(0, 8).forEach(x => { const li = el("li", "idea"); const a = /^https:\/\/(www\.)?tiktok\.com\//.test(String(x.video_url || "")) ? Object.assign(el("a", null, "@" + String(x.handle || "").replace(/^@/, "")), { href: x.video_url, target: "_blank", rel: "noopener" }) : el("b", null, "@" + String(x.handle || "")); li.append(a, el("small", null, [x.product, x.views ? x.views + " views" : ""].filter(Boolean).join(" · "))); ul.append(li); }); cs.append(ul); }
     cs.append(el("p", "empty", "When a creator says yes, save their reply in Pin Bot/video/permissions/ and their original file in Pin Bot/video/inbox/<handle>/. Nothing posts without both."));
   }
-  hqBody.append(cs, runBox("video-bot", "Run the Video Bot now", "This schedules a real video pin for the next open 8 PM slot. Pin a run ticket?"));
+  hqBody.append(cs, runBox("video-bot", "Run the Video Bot now", "This schedules a real video pin for the next open 8 PM slot. Pin a run ticket?"), pauseBox("video-bot", "Kaen"));
 }
+
+/* ---- live status: lantern dots on every name tag, steam over cooks whose bot is running ---- */
+const TASK_OF = { "grand-canyon": "daily-pinterest-pins", "death-valley": "video-bot", neko: "website-sync", "link-checker": "link-checker", "stats-reader": "stats-reader", "trend-scout": "trend-scout", "board-builder": "board-builder", "program-hunter": "program-hunter", "shop-doctor": "shop-doctor" };
+function docOf(id) { return id === "grand-canyon" ? pbStatus : id === "death-valley" ? videoStatus : id === "neko" ? syncStatus : helperDocs[id]; }
+function isRunning(id) {
+  const r = runReqs[TASK_OF[id]], now = Date.now();
+  if (r && r.status === "started" && now - new Date(r.startedAt) < 20 * 60000) { const d = docOf(id); if (!d || !d.lastRunAt || new Date(d.lastRunAt) < new Date(r.startedAt)) return true; }
+  return false;
+}
+function liveState(id) {
+  if (id === "claude") return typeof inboxItems === "function" && inboxItems().some(x => x.level === "bad") ? "needs_you" : "ok";
+  if (isRunning(id)) return "running";
+  if (id === "grand-canyon") return pbState() === "paused" ? "paused" : pbState() === "needs_you" ? "needs_you" : "ok";
+  if (id === "earnings-cat" || id === "rules-guard") { const d = helperDocs[id]; return d && d.state === "needs_you" ? "needs_you" : "ok"; }
+  const d = docOf(id); if (!d) return STATION_DEFAULTS[id] || HELPER_BY[id] || id === "neko" ? "idle" : null;
+  return d.state === "needs_you" ? "needs_you" : d.state === "paused" ? "paused" : "ok";
+}
+setInterval(() => {
+  if (!db) return;
+  tagEls.forEach(e => { const s = liveState(e.p.id); if (s) e.b.dataset.state = s; else delete e.b.dataset.state; if (s === "running" && !reduce) for (let i = 0; i < 2; i++) puffs.push({ x: e.p.x + (Math.random() - .5) * 6, y: e.p.y - (e.p.tagH || 24) + 2, vx: (Math.random() - .5) * 4, vy: -10, life: 1.6, max: 1.6, s: 2 }); });
+}, 700);
+
+/* ---- per-bot settings: a Pause switch on every bot's panel (the bot reads settings/<task> before it starts) ---- */
+let botSettings = {};
+function listenSettings() { db.collection("settings").onSnapshot(s => { botSettings = {}; s.docs.forEach(d => { if (d.exists) botSettings[d.id] = d.data(); }); rerender(); }, () => {}); }
+function pauseBox(task, label) {
+  const box = el("div", "runbox");
+  if (!db || db.readOnly) return box;
+  const on = !!(botSettings[task] && botSettings[task].paused);
+  const i = el("input"); i.type = "checkbox"; i.checked = on; const l = el("label"); l.append(i, document.createTextNode(" Pause " + (label || "this bot")));
+  const st = el("span", "st", on ? "Paused: it skips its runs until you unpause." : "Running on its schedule.");
+  i.onchange = async () => { i.disabled = true; try { await db.doc("settings/" + task).set({ paused: i.checked, updatedAt: new Date().toISOString() }); botSettings[task] = { paused: i.checked }; st.textContent = i.checked ? "Paused ✓" : "Unpaused ✓"; } catch (e) { st.textContent = "Couldn't save"; i.checked = !i.checked; } i.disabled = false; };
+  box.append(l, st); return box;
+}
+// sounds for real events: a chime when a pin goes live, the till when earnings go up
+let liveSeen = null, tillSeen = null;
+setInterval(() => {
+  if (!db) return;
+  const n = released().length; if (liveSeen !== null && n > liveSeen) { sfx("live"); say(PINBOT_COOK, "📌 A pin just went live", 4, true); } liveSeen = n;
+  const e = helperDocs["earnings-cat"] && Number(helperDocs["earnings-cat"].earnings) || 0; if (tillSeen !== null && e > tillSeen) sfx("chaching"); tillSeen = e;
+}, 15000);
 function renderStation(id) {
   if (!byId[id] && !HELPER_BY[id]) return openHQ();
   const s = stationOf(id), name = (byId[id] || HELPER_BY[id]).name;
@@ -840,36 +964,60 @@ function renderStation(id) {
   }
 }
 
-/* ---- sound: broth, rain, bells (off until you turn it on) ---- */
-let actx = null, soundOn = false, rainGain = null, roomGain = null;
+/* ---- sound: a warm room, a simmering pot, soft koto, rain and night crickets (off until you turn it on) ---- */
+let actx = null, soundOn = false, rainGain = null, roomGain = null, master = null;
 const soundBtn = document.getElementById("soundBtn");
-function noiseBuf(c, secs) { const b = c.createBuffer(1, c.sampleRate * secs, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; }
+const KOTO = [293.66, 329.63, 392.0, 440.0, 493.88, 587.33, 659.25]; // D pentatonic-ish
+function brownBuf(c, secs) { const b = c.createBuffer(1, c.sampleRate * secs, c.sampleRate), d = b.getChannelData(0); let last = 0; for (let i = 0; i < d.length; i++) { const w = Math.random() * 2 - 1; last = (last + .02 * w) / 1.02; d[i] = last * 3.2; } return b; }
+function pinkBuf(c, secs) { const b = c.createBuffer(1, c.sampleRate * secs, c.sampleRate), d = b.getChannelData(0); let b0 = 0, b1 = 0, b2 = 0; for (let i = 0; i < d.length; i++) { const w = Math.random() * 2 - 1; b0 = .99765 * b0 + w * .099; b1 = .963 * b1 + w * .2965; b2 = .57 * b2 + w * 1.0526; d[i] = (b0 + b1 + b2 + w * .1848) * .11; } return b; }
+function bed(buf, type, freq) { const s = actx.createBufferSource(); s.buffer = buf; s.loop = true; const f = actx.createBiquadFilter(); f.type = type; f.frequency.value = freq; const g = actx.createGain(); g.gain.value = 0; s.connect(f).connect(g).connect(master); s.start(); return g; }
+function tone(freq, start, len, vol, type, glideTo) {
+  const o = actx.createOscillator(), g = actx.createGain(), lp = actx.createBiquadFilter();
+  o.type = type || "sine"; o.frequency.setValueAtTime(freq, start); if (glideTo) o.frequency.exponentialRampToValueAtTime(glideTo, start + len * .6);
+  lp.type = "lowpass"; lp.frequency.value = Math.min(4000, freq * 6);
+  g.gain.setValueAtTime(0, start); g.gain.linearRampToValueAtTime(vol, start + .008); g.gain.exponentialRampToValueAtTime(.0001, start + len);
+  o.connect(lp).connect(g).connect(master); o.start(start); o.stop(start + len + .05);
+}
 function startAudio() {
   actx = new (window.AudioContext || window.webkitAudioContext)();
-  const loop = (filterType, freq, q) => { const s = actx.createBufferSource(); s.buffer = noiseBuf(actx, 3); s.loop = true; const f = actx.createBiquadFilter(); f.type = filterType; f.frequency.value = freq; f.Q.value = q; const g = actx.createGain(); g.gain.value = 0; s.connect(f).connect(g).connect(actx.destination); s.start(); return g; };
-  rainGain = loop("bandpass", 2600, .5); roomGain = loop("lowpass", 420, .7);
-  setInterval(() => { // broth bubbles inside
-    if (!soundOn || window.agentView !== "inside") return;
-    for (let i = 0; i < 2; i++) if (Math.random() < .6) { const t = actx.currentTime + Math.random() * .5, o = actx.createOscillator(), g = actx.createGain(); o.type = "sine"; o.frequency.setValueAtTime(180 + Math.random() * 260, t); o.frequency.exponentialRampToValueAtTime(600 + Math.random() * 500, t + .06); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.05, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .09); o.connect(g).connect(actx.destination); o.start(t); o.stop(t + .1); }
-  }, 500);
+  const comp = actx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 4;
+  master = actx.createGain(); master.gain.value = .8; master.connect(comp).connect(actx.destination);
+  roomGain = bed(brownBuf(actx, 4), "lowpass", 380);   // the room: warm, low hum
+  rainGain = bed(pinkBuf(actx, 4), "lowpass", 5200);    // rain: soft pink noise
+  const isNight = () => typeof sceneHour === "function" && (sceneHour() >= 20 || sceneHour() < 5);
+  (function simmer() { // low, round bubbles from the stockpot
+    if (soundOn && window.agentView === "inside") { const t = actx.currentTime + .02, f = 110 + Math.random() * 90; tone(f, t, .16, .035, "sine", f * 1.6); if (Math.random() < .35) tone(f * 1.3, t + .09, .12, .02, "sine", f * 1.9); }
+    setTimeout(simmer, 450 + Math.random() * 1400);
+  })();
+  (function koto() { // a soft pluck now and then, like a radio in the back
+    if (soundOn) { const t = actx.currentTime + .02, n = 1 + (Math.random() * 3 | 0); for (let i = 0; i < n; i++) { const f = KOTO[Math.random() * KOTO.length | 0]; tone(f, t + i * .32, 1.6, .028, "triangle"); tone(f * 2, t + i * .32, .5, .008, "sine"); } }
+    setTimeout(koto, 7000 + Math.random() * 9000);
+  })();
+  (function crickets() { // only at night in the shop's clock
+    if (soundOn && isNight()) { const t = actx.currentTime + .02; for (let i = 0; i < 3; i++) tone(4200 + Math.random() * 300, t + i * .07, .05, .006, "sine"); }
+    setTimeout(crickets, 900 + Math.random() * 2200);
+  })();
 }
 function mixSound() {
   if (!actx) return;
   const t = actx.currentTime, inside = window.agentView === "inside";
-  rainGain.gain.setTargetAtTime(soundOn && window.agentRain ? (inside ? .025 : .09) : 0, t, .4);
-  roomGain.gain.setTargetAtTime(soundOn && inside ? .05 : 0, t, .4);
+  rainGain.gain.setTargetAtTime(soundOn && window.agentRain ? (inside ? .05 : .16) : 0, t, .6);
+  roomGain.gain.setTargetAtTime(soundOn ? (inside ? .14 : .05) : 0, t, .6);
 }
 window.agentMix = mixSound;
 function sfx(kind) {
   if (!soundOn || !actx) return;
-  const t = actx.currentTime;
-  const tones = kind === "bell" ? [[1320, .9], [1980, .5], [2640, .25]] : [[1760, .4], [2640, .2]];
-  tones.forEach(([f, a]) => { const o = actx.createOscillator(), g = actx.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.08 * a, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + (kind === "bell" ? 1.6 : .7)); o.connect(g).connect(actx.destination); o.start(t); o.stop(t + 1.7); });
+  const t = actx.currentTime + .01;
+  if (kind === "bell") { [[880, .07], [1320, .04], [1760, .02]].forEach(([f, v]) => tone(f, t, 1.8, v, "sine")); return; }  // shop bell
+  if (kind === "chaching") { tone(1568, t, .25, .05, "square"); tone(2093, t + .09, .5, .05, "triangle"); tone(2637, t + .2, .8, .035, "sine"); return; } // till
+  if (kind === "live") { [523.25, 659.25, 783.99].forEach((f, i) => tone(f, t + i * .11, .9, .045, "triangle")); return; } // a pin went live
+  tone(1175, t, .5, .04, "sine"); tone(1760, t + .06, .4, .02, "sine"); // ding
 }
 function toggleSound() {
   if (!actx) startAudio();
   soundOn = !soundOn; if (actx.state === "suspended") actx.resume();
   soundBtn.setAttribute("aria-pressed", soundOn); soundBtn.textContent = soundOn ? "🔊 Sound on" : "🔈 Sound off"; mixSound();
+  if (soundOn) sfx("bell");
 }
 soundBtn.onclick = toggleSound;
 
@@ -885,6 +1033,18 @@ addEventListener("keydown", e => {
 });
 
 
+
+
+/* ---- shop clock: follows your real clock, 20x faster (a full shop day every 72 minutes) ---- */
+const CLOCK_SPEED = 20;
+function sceneMs() { const n = new Date(); return (n.getTime() - n.getTimezoneOffset() * 60000) * CLOCK_SPEED; }
+function sceneHour() { return (sceneMs() / 3600000) % 24; }
+function sceneDay() { return Math.floor(sceneMs() / 86400000); }
+function sceneRaining() { const d = sceneDay(), r = Math.abs(Math.sin(d * 12.9898) * 43758.5453) % 1, start = 6 + (r * 997 % 1) * 14, h = sceneHour(); return r < .3 && h >= start && h < start + 4; }
+function nightness(h) { if (h >= 7 && h < 17) return 0; if (h >= 17 && h < 20) return (h - 17) / 3; if (h >= 5 && h < 7) return 1 - (h - 5) / 2; return 1; }
+const SEASON = (() => { const m = new Date().getMonth(); return m === 9 ? "autumn" : (m === 11 || m === 0) ? "winter" : m >= 2 && m <= 4 ? "spring" : m >= 5 && m <= 7 ? "summer" : "autumn"; })();
+function fmtSceneTime() { const h = sceneHour(), hh = Math.floor(h), mm = Math.floor((h - hh) * 60); return `${(hh % 12) || 12}:${String(mm).padStart(2, "0")} ${hh < 12 ? "AM" : "PM"}`; }
+const clockChip = document.createElement("div"); clockChip.className = "clock-chip"; document.getElementById("scene").appendChild(clockChip);
 
 /* ================= pixel kitchen ================= */
 const W = 384, H = 300, ZASHIKI = [[52, 255], [150, 255], [250, 255]], reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1426,6 +1586,26 @@ function frame(now) {
   for (let i = tickets.length - 1; i >= 0; i--) { tickets[i].k += dt / 1.1; if (tickets[i].k >= 1) tickets.splice(i, 1); }
 
   ctx.drawImage(bg.canvas, 0, 0);
+  { // window sky, the wall clock and seasonal touches follow the shop clock
+    const h = sceneHour(), n = nightness(h), rain = sceneRaining();
+    const sky = rain ? (n > .5 ? "#262a40" : "#8c98a8") : n >= 1 ? "#1b2348" : n <= 0 ? "#9fd0f0" : (h < 12 ? "#f2b38a" : (n < .5 ? "#e88a5a" : "#5a4a8a"));
+    R(ctx, 239, 11, 38, 22, sky); if (!rain && n <= 0) R(ctx, 239, 11, 38, 6, "#bfe3f7");
+    if (n > .6 && !rain) [[243, 14], [251, 19], [262, 13], [271, 17], [266, 26], [246, 27]].forEach(([x, y], i) => R(ctx, x, y, 1, 1, (Math.floor(clock * 2) + i) % 5 ? "#fff6cc" : "#9aa6d6"));
+    if (n > .6 && !rain) { disc(ctx, 270, 15, 3, 3, "#f4ecd8"); disc(ctx, 271, 14, 2, 2, sky); } else if (n < .4 && !rain) disc(ctx, 246, 16, 3, 3, "#ffe08a");
+    if (rain) for (let i = 0; i < 9; i++) { const rx = 240 + ((i * 7 + Math.floor(clock * 30)) % 36), ry = 11 + ((i * 5 + Math.floor(clock * 60)) % 20); R(ctx, rx, ry, 1, 2, "#c6d4ee"); }
+    if (SEASON === "winter" && n > .3) for (let i = 0; i < 7; i++) R(ctx, 240 + ((i * 11 + Math.floor(clock * 6)) % 36), 11 + ((i * 7 + Math.floor(clock * 10)) % 21), 1, 1, "#ffffff");
+    R(ctx, 257, 11, 2, 22, "#7a4a2a"); R(ctx, 239, 21, 38, 2, "#7a4a2a");
+    R(ctx, 268, 30, 8, 6, "#b85c34"); disc(ctx, 272, 27, 5, 3, "#5f9a42"); R(ctx, 271, 22, 2, 3, "#4f8a3a");
+    // wall clock hands
+    disc(ctx, 226, 15, 5, 5, "#fbf6ea");
+    const hand = (ang, len, col) => { for (let k = 1; k <= len; k++) R(ctx, Math.round(226 + Math.sin(ang) * k), Math.round(15 - Math.cos(ang) * k), 1, 1, col); };
+    hand((h % 12) / 12 * Math.PI * 2, 3, "#2b1d12"); hand((h % 1) * Math.PI * 2, 4, "#c8382c");
+    // seasonal decor
+    if (SEASON === "autumn") [[118, 60], [300, 176], [20, 196]].forEach(([x, y]) => { disc(ctx, x, y, 3, 2, "#e07a3a"); R(ctx, x, y - 3, 1, 2, "#4f8a3a"); if (n > .5) R(ctx, x - 1, y, 2, 1, "#ffd45a"); });
+    if (SEASON === "winter") for (let i = 0; i < 24; i++) R(ctx, 8 + i * 14, 46 + (i % 2), 2, 2, ["#e04a3a", "#4f8a3a", "#ffd45a", "#2f6fb3"][(i + Math.floor(clock * 2)) % 4]);
+    if (SEASON === "spring") [[110, 30], [290, 30]].forEach(([x, y]) => { disc(ctx, x, y, 2, 2, "#f2b8c6"); disc(ctx, x + 4, y + 1, 2, 2, "#f7cfd8"); });
+    clockChip.textContent = "Shop time " + fmtSceneTime() + (rain ? " · ☂" : "");
+  }
   // stockpot (Old Faithful) + small pot, flames
   const flick = reduce ? 0 : Math.floor(t * 10) % 3;
   [[62, 44], [96, 44]].forEach(([x, y], i) => { const w = i ? 9 : 14; R(ctx, x - w, y - 2, w * 2, 2, flick === i ? "#ffb04a" : "#ff7a2a"); R(ctx, x - w + 2 + flick, y - 3, 3, 1, "#ffd45a"); });
@@ -1466,9 +1646,10 @@ function frame(now) {
   // warm lantern light over everything
   ctx.save();
   ctx.globalCompositeOperation = "multiply"; ctx.fillStyle = "#ffdcb0"; ctx.fillRect(0, 0, W, H);
+  const nightK = nightness(sceneHour()) * .72; if (nightK > 0) { ctx.fillStyle = `rgb(${Math.round(255 - 170 * nightK)},${Math.round(255 - 150 * nightK)},${Math.round(255 - 80 * nightK)})`; ctx.fillRect(0, 0, W, H); }
   ctx.globalCompositeOperation = "lighter";
   const fl = reduce ? 1 : .9 + Math.sin(t * 7) * .05 + Math.sin(t * 13) * .04;
-  LIGHTS.forEach(([x, y, r, a]) => { const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(255,160,80,${a * fl})`); g.addColorStop(1, "rgba(255,160,80,0)"); ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2); });
+  LIGHTS.forEach(([x, y, r, a]) => { const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(255,160,80,${Math.min(.85, a * fl * (1 + 1.8 * nightK))})`); g.addColorStop(1, "rgba(255,160,80,0)"); ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2); });
   ctx.globalCompositeOperation = "source-over";
   const vg = ctx.createRadialGradient(W / 2, H / 2, H * .38, W / 2, H / 2, H * .95); vg.addColorStop(0, "rgba(50,20,0,0)"); vg.addColorStop(1, "rgba(50,20,0,.38)"); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
   ctx.restore();
@@ -1844,8 +2025,11 @@ function frame(now) {
     rainLines.visible = rain; window.agentRain = rain; window.agentMix && window.agentMix();
     dayBtn.setAttribute("aria-pressed", day); dayBtn.textContent = day ? "☾ Night" : "☀ Day"; rainBtn.setAttribute("aria-pressed", rain);
   }
-  dayBtn.onclick = () => { day = !day; applySky(); };
-  rainBtn.onclick = () => { rain = !rain; applySky(); };
+  let manualUntil = 0;
+  dayBtn.onclick = () => { day = !day; manualUntil = Date.now() + 10 * 60000; applySky(); };
+  rainBtn.onclick = () => { rain = !rain; manualUntil = Date.now() + 10 * 60000; applySky(); };
+  const followClock = () => { if (Date.now() < manualUntil || typeof sceneHour !== "function") return; const d = nightness(sceneHour()) < .5, r = sceneRaining(); if (d !== day || r !== rain) { day = d; rain = r; applySky(); } };
+  setInterval(followClock, 4000); setTimeout(followClock, 300);
   lantern.userData.base = .7;
   function goInside() {
     if (inside || zoom) return;

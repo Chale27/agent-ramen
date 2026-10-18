@@ -803,13 +803,13 @@ function ghRunBox(box, task, label, warn) {
   const st = el("span", "st"); loadGhTickets();
   const at = s => s ? new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "";
   const last = ghTickets && ghTickets.find(i => i.title.trim().toLowerCase() === title);
-  st.textContent = !last ? "Opens a GitHub ticket. Tap Submit, and Neko starts it within 15 minutes. Only your GitHub account can start runs."
+  st.textContent = !last ? "Opens a GitHub ticket. Tap Submit, and Neko starts it within 15 minutes. Only your GitHub account can start runs. Need it now? Claude app → Scheduled → this task → Run now."
     : last.state === "open" ? "Ticket open since " + at(last.created_at) + " · waiting for Neko."
     : "Last started " + at(last.closed_at) + " (ticket #" + last.number + ").";
   box.append(a, st); return box;
 }
 function runStatus(r) {
-  if (!r) return "Neko starts it within 15 minutes (8 AM–11 PM).";
+  if (!r) return "Neko starts it within 15 minutes (8 AM–11 PM). Need it now? Claude app → Scheduled → this task → Run now.";
   const at = s => s ? new Date(s).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
   if (r.status === "waiting") return "Ticket pinned " + at(r.requestedAt) + " · Neko starts it within 15 min.";
   if (r.status === "started") return "Started " + at(r.startedAt) + ". Results show here when it's done.";

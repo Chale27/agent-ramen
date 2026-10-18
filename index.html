@@ -299,7 +299,7 @@ const STATUS = { queued: "Queued", working: "Cooking", done: "Done", needs_you: 
 
 function siteDb(j) {
   const rows = name => {
-    if (name === "pinbot" || name === "sync") return Object.entries(j[name] || {}).map(([id, v]) => Object.assign({ id }, v));
+    if (name === "pinbot" || name === "sync" || name === "videobot") return Object.entries(j[name] || {}).map(([id, v]) => Object.assign({ id }, v));
     return (j[name] || []).slice();
   };
   const snapDoc = (id, d) => ({ id, exists: !!d, data: () => d });
@@ -485,12 +485,13 @@ orderForm.addEventListener("submit", async e => {
 /* ================= affiliate kitchen: every cook is a station for one affiliate program ================= */
 const PINBOT_COOK = "grand-canyon";
 const STATION_DEFAULTS = {
+  "death-valley": { program: "Amazon Associates × Pinterest video", job: "Video Bot", status: "on", desc: "Makes one 9:16 video pin a day for the 8 PM slot, and scouts the best creator videos for your products. Creator videos only post with their written permission." },
   "grand-canyon": { program: "Amazon Associates × Pinterest", job: "Pin Bot", status: "on", desc: "Makes Pinterest pins with Amazon links every morning and keeps 3 days queued. Pinterest releases 5 a day at 10, 12, 2, 5 and 8." },
 };
 const STATION_COOKS = ["grand-canyon", "denali", "death-valley", "yosemite", "sequoia", "ruflo"];
 const BOARDS = ["Kitchen Knife Care & Sharpening", "Tea Lover's Kitchen", "Gift Ideas for Home Cooks", "Etsy Shop Shipping Setup", "Small Business Packaging Ideas"];
 const hqEl = document.getElementById("hq"), hqBody = document.getElementById("hqBody"), hqTitle = document.getElementById("hqTitle");
-let syncStatus = null, syncFirst = true, stationDocs = {}, pbStatus = null, pbControl = null, pins = [], products = [], hqView = null, pinsFirst = true, ctlSaving = false;
+let videoStatus = null, syncStatus = null, syncFirst = true, stationDocs = {}, pbStatus = null, pbControl = null, pins = [], products = [], hqView = null, pinsFirst = true, ctlSaving = false;
 const stationOf = id => Object.assign({}, STATION_DEFAULTS[id] || {}, stationDocs[id] || {});
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 const when = s => { const d = new Date(s); return isNaN(d) ? "" : d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); };
@@ -509,6 +510,7 @@ function listenAff() {
     Object.keys(helperDocs).forEach(id => { const a = before[id], b = helperDocs[id]; if (a && b.lastRunAt && a.lastRunAt !== b.lastRunAt && HELPER_BY[id]) { say(id, "✓ " + String(b.lastSummary || "Done").slice(0, 46), 7, true); sfx("ding"); } if (b.state === "needs_you" && (!a || a.state !== "needs_you")) say(id, "❗ Needs you", 9, true); });
     rerender();
   }, () => {});
+  db.doc("videobot/status").onSnapshot(s => { videoStatus = s.exists ? s.data() : null; rerender(); }, () => {});
   db.doc("sync/status").onSnapshot(s => {
     const was = syncStatus && syncStatus.lastPublishAt; syncStatus = s.exists ? s.data() : null;
     if (!syncFirst && syncStatus && syncStatus.lastPublishAt && syncStatus.lastPublishAt !== was) nekoDeliver();
@@ -740,6 +742,31 @@ function noteBox(doc, at) {
   }
   return box;
 }
+
+function renderVideo(back) {
+  const s = stationOf("death-valley"), web = db && db.readOnly;
+  hqTitle.textContent = "Kaen Firetongue · Video Bot";
+  hqBody.append(back, el("p", "lead", s.desc));
+  const st = el("div", "hq-stats"), vids = pins.filter(p => p.layout === "video" && p.status !== "draft");
+  st.append(stat("Status", STATE_TXT[(videoStatus && videoStatus.state) || "on"] || "Running"), stat("Last run", stamp(videoStatus && videoStatus.lastRunAt)), stat("Schedule", "Daily · 11 AM"), stat("Video slot", "8 PM daily"));
+  hqBody.append(st, noteBox(videoStatus, videoStatus && videoStatus.lastRunAt));
+  const up = vids.filter(p => !isLive(p)).sort((a, b) => String(a.releaseAt).localeCompare(String(b.releaseAt)));
+  const cu = el("section"); cu.append(el("h4", null, "Video pins coming up"));
+  if (!up.length) cu.append(el("p", "empty", "None queued yet. Kaen fills the next open 8 PM slot each morning."));
+  else { const ul = el("ul", "pin-list"); up.slice(0, 8).forEach(p => { const li = el("li"); li.append(el("time", null, new Date(p.releaseAt).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })), el("span", null, p.title || "Video pin"), el("small", null, [p.board, p.product].filter(Boolean).join(" · "))); ul.append(li); }); cu.append(ul); }
+  hqBody.append(cu);
+  const tr = (videoStatus && videoStatus.tracker) || {};
+  const cs = el("section"); cs.append(el("h4", null, "Creator videos"));
+  const cst = el("div", "hq-stats"); cst.append(stat("Found", String(tr.found || 0)), stat("Asked", String(tr.asked || 0)), stat("Said yes", String(tr.yes || 0)), stat("Posted", String(tr.posted || 0)));
+  cs.append(cst);
+  if (!web) {
+    const w = (videoStatus && Array.isArray(videoStatus.waitingForYou)) ? videoStatus.waitingForYou : [];
+    cs.append(el("p", "lead", w.length ? "Waiting for your message (copy the template from the Creator Licensing note):" : "No creators waiting. Kaen scouts about 3 products a day."));
+    if (w.length) { const ul = el("ul", "finds"); w.slice(0, 8).forEach(x => { const li = el("li", "idea"); const a = /^https:\/\/(www\.)?tiktok\.com\//.test(String(x.video_url || "")) ? Object.assign(el("a", null, "@" + String(x.handle || "").replace(/^@/, "")), { href: x.video_url, target: "_blank", rel: "noopener" }) : el("b", null, "@" + String(x.handle || "")); li.append(a, el("small", null, [x.product, x.views ? x.views + " views" : ""].filter(Boolean).join(" · "))); ul.append(li); }); cs.append(ul); }
+    cs.append(el("p", "empty", "When a creator says yes, save their reply in Pin Bot/video/permissions/ and their original file in Pin Bot/video/inbox/<handle>/. Nothing posts without both."));
+  }
+  hqBody.append(cs, runBox("video-bot", "Run the Video Bot now", "This schedules a real video pin for the next open 8 PM slot. Pin a run ticket?"));
+}
 function renderStation(id) {
   if (!byId[id] && !HELPER_BY[id]) return openHQ();
   const s = stationOf(id), name = (byId[id] || HELPER_BY[id]).name;
@@ -747,6 +774,7 @@ function renderStation(id) {
   const back = el("button", "btn ghost", "← All stations"); back.type = "button"; back.style.justifySelf = "start"; back.onclick = openHQ;
   if (id === "neko") return renderNeko(back);
   if (HELPER_BY[id]) return renderHelper(id, back);
+  if (id === "death-valley") return renderVideo(back);
   if (id !== PINBOT_COOK) {
     hqTitle.textContent = `${name} · ${s.program || "Open station"}`;
     hqBody.append(back);

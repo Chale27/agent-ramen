@@ -115,18 +115,78 @@
    "desc": "Makes Pinterest pins with Amazon links every morning and keeps 3 days queued. Pinterest releases 5 a day at 10, 12, 2, 5 and 8."
   }
  ],
- "helpers": [],
+ "helpers": [
+  {
+   "id": "program-hunter",
+   "state": "ok",
+   "lastRunAt": "2026-10-17T18:50:00-05:00",
+   "lastSummary": "4 new network programs; best: HexClad on Awin, up to 20%, 30-day cookie.",
+   "findings": [
+    {
+     "title": "HexClad (US) on Awin",
+     "detail": "Up to 20% (10% assumed), 30-day cookie. Est. $0.30/click vs Amazon $0.27 ($0.60 at 20%).",
+     "level": "idea"
+    },
+    {
+     "title": "Made In Cookware on FlexOffers",
+     "detail": "8% new / 6.4% returning, 30-day cookie. Est. $0.18/click vs Amazon $0.20.",
+     "level": "idea"
+    },
+    {
+     "title": "Sur La Table on Partnerize",
+     "detail": "4-7% (unverified), 30-day cookie (15 on Impact). Est. $0.10/click vs Amazon $0.135.",
+     "level": "idea"
+    },
+    {
+     "title": "Etsy on Awin",
+     "detail": "~4% (unverified), 30 days on web, 7 in the app. Est. $0.03/click vs Amazon $0.036, but covers unique gifts Amazon lacks.",
+     "level": "idea"
+    },
+    {
+     "title": "Pans-worth-the-splurge gift pins",
+     "detail": "3-5 hero-pan vs budget pins before Black Friday (Nov 27). Use HexClad/Made In once approved.",
+     "level": "idea"
+    },
+    {
+     "title": "One Awin account, two programs",
+     "detail": "HexClad + Etsy share one Awin sign-up and one $20 payout threshold, so you get paid sooner.",
+     "level": "idea"
+    },
+    {
+     "title": "Sign up next: Rollo (FlexOffers/CJ)",
+     "detail": "12%, 30-day cookie, about $0.51/click vs Amazon $0.235. Assign to Kaze (yosemite) after you sign up.",
+     "level": "ok"
+    }
+   ],
+   "log": [
+    {
+     "at": "2026-10-17T18:50:00-05:00",
+     "note": "4 new network programs; best: HexClad on Awin, up to 20%, 30-day cookie."
+    }
+   ]
+  }
+ ],
  "pinbot": {
   "status": {
    "state": "ok",
    "lastRunAt": "2026-10-17T17:48:00-05:00",
    "lastSummary": "Simulation: dry run made 3 draft pins (overlay, cheat sheet, collage) for tomorrow and added 2 new products; nothing was posted to Pinterest.",
    "issues": [],
-   "nextRun": "Daily · 9:03 AM"
+   "nextRun": "Daily · 9:03 AM",
+   "log": [
+    {
+     "at": "2026-10-17T17:48:00-05:00",
+     "note": "Simulation: dry run made 3 draft pins (overlay, cheat sheet, collage) for tomorrow and added 2 new products; nothing was posted to Pinterest."
+    },
+    {
+     "at": "2026-10-17T16:10:00-05:00",
+     "note": "Set up by hand: 5 pins posted live on Pinterest."
+    }
+   ]
   },
   "control": {
    "paused": false
   }
  },
- "updatedAt": "2026-10-17T18:43:18-05:00"
+ "updatedAt": "2026-10-17T19:00:18-05:00"
 }

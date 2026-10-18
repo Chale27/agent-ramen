@@ -1143,8 +1143,17 @@ const bg = layer();
   R(c, 0, 0, 336, 4, "#6e4428"); R(c, 0, 44, 336, 4, "#6e4428");
   [0, 112, 224, 330].forEach(x => R(c, x, 0, 6, 48, "#7a4a2a"));
   // kitchen floor: warm checker tiles
-  for (let y = 48; y < 172; y += 8) for (let x = 0; x < 336; x += 8) R(c, x, y, 8, 8, ((x + y) / 8) % 2 ? "#e8c08c" : "#d6a872");
-  for (let y = 48; y < 172; y += 8) R(c, 0, y, 336, 1, "rgba(120,80,40,.12)");
+  // kitchen floor: worn honey-coloured wooden planks with grain and knots
+  const plank = ["#d9b07a", "#cfa46e", "#e0b984", "#d4a974"];
+  for (let y = 48, row = 0; y < 172; y += 7, row++) {
+    for (let x = -((row * 23) % 40), k = row; x < 336; x += 40 + (k % 3) * 8, k++) {
+      const w = 40 + (k % 3) * 8; R(c, x, y, w, 7, plank[(k * 7 + row) % 4]);
+      for (let g = 0; g < 3; g++) R(c, x + 3 + rand() * (w - 12), y + 1 + ((rand() * 5) | 0), 4 + rand() * 8, 1, "rgba(130,85,45,.18)");
+      if (rand() < .25) disc(c, x + 6 + rand() * (w - 12), y + 3, 1, 1, "rgba(120,75,40,.35)");
+      R(c, x, y, 1, 7, "rgba(110,70,35,.35)");
+    }
+    R(c, 0, y + 6, 336, 1, "rgba(110,70,35,.3)"); R(c, 0, y, 336, 1, "rgba(255,240,210,.12)");
+  }
   R(c, 0, 48, 336, 3, "rgba(80,50,20,.25)");
   R(c, 0, 48, 4, 124, "#7a4a2a");
   // wooden duckboard mats where the cooks stand
@@ -1206,13 +1215,18 @@ const bg = layer();
   disc(c, 376, 24, 4, 4, "#c8382c"); R(c, 374, 22, 4, 3, "#f4ecd8"); R(c, 375, 23, 1, 1, "#1a1418"); R(c, 377, 23, 1, 1, "#1a1418");
   for (let i = 0; i < 4; i++) { R(c, 343 + i * 5, 58, 4, 10, ["#2f5a3a", "#e9e0cc", "#2f4f7a", "#5e3820"][i]); R(c, 344 + i * 5, 55, 2, 3, "#3a2416"); R(c, 343 + i * 5, 61, 4, 3, "#f4ecd8"); }
   // hanging ladles
-  for (let i = 0; i < 4; i++) { const x = 18 + i * 7; R(c, x, 6, 1, 14, "#9aa1a7"); R(c, x - 1, 20, 3, 3, "#9aa1a7"); }
+  // copper pans and a ladle hanging from a rail
+  R(c, 14, 6, 22, 1, "#5e3820");
+  [[17, 3], [25, 4], [33, 2]].forEach(([x, r]) => { R(c, x, 7, 1, 4, "#8a5530"); disc(c, x, 12 + r, r + 1, r + 1, "#a0583a"); disc(c, x, 12 + r, r, r, "#d08a5a"); R(c, x - r + 1, 11 + r, 2, 1, "#f0b888"); });
   // stove hood
   R(c, 36, 4, 80, 4, "#8d949b"); for (let y = 8; y < 20; y++) R(c, 36 + (y - 8), y, 80 - (y - 8) * 2, 1, y % 3 ? "#a9b0b6" : "#9aa1a7");
   // stove
-  R(c, 36, 44, 80, 30, "#6d737a"); R(c, 36, 40, 80, 8, "#a9b0b6"); R(c, 36, 47, 80, 1, "#5b6168");
-  [44, 58, 86, 100].forEach(x => { disc(c, x, 64, 3, 3, "#3b3f45"); R(c, x - 1, 63, 2, 2, "#c8c8c8"); });
-  R(c, 40, 52, 72, 6, "#5b6168");
+  // stove: a warm brick hearth with an iron top and glowing fire mouths
+  R(c, 36, 44, 80, 30, "#b0644a");
+  for (let y = 48, r = 0; y < 74; y += 4, r++) for (let x = 36 - (r % 2) * 4; x < 116; x += 8) { R(c, Math.max(36, x), y, Math.min(7, 116 - Math.max(36, x)), 3, ["#b86a4e", "#a85c42", "#c27458"][(x + y) % 3]); }
+  R(c, 34, 40, 84, 8, "#4a4448"); R(c, 34, 40, 84, 1, "#6a6468"); R(c, 36, 47, 80, 1, "#3a3438");
+  [50, 92].forEach(x => { disc(c, x, 64, 6, 5, "#3a2a26"); disc(c, x, 66, 5, 3, "#e8743a"); disc(c, x, 67, 3, 2, "#ffc060"); R(c, x - 6, 59, 13, 1, "#6a4a3a"); });
+  R(c, 36, 72, 80, 2, "#7a4a36");
   // prep counter with cutting board, noodles, scallions, eggs
   R(c, 124, 44, 72, 18, "#d9a873"); R(c, 124, 62, 72, 12, "#8a5530"); R(c, 124, 44, 72, 1, "#e9c08f");
   for (let x = 128; x < 196; x += 17) R(c, x, 64, 12, 7, "#7a4a2a");
@@ -1344,79 +1358,77 @@ function shade(hex, k) {
 }
 // one ninja-chef or guest, feet at (p.x, p.y); drawSprite adds the outline
 function drawPerson(c, p, t) {
-  const L = LOOK[p.look], x = Math.round(p.x), y = Math.round(p.y), d = p.dir, sit = p.sit, by = sit ? 2 : 0;
-  const P = (dx, dy, w, h, col) => R(c, x + dx, y + dy, w, h, col);
-  const shirtD = shade(L.shirt, .76), shirtL = shade(L.shirt, 1.12), skinD = shade(L.skin, .86), hairL = shade(L.hair, 1.4), pantsD = shade(L.pants, .75);
+  const L = LOOK[p.look], x = Math.round(p.x), y = Math.round(p.y), d = p.dir, sit = p.sit, by = sit ? 3 : 0;
+  const P = (dx, dy, w, h, col) => R(c, x + dx, y + dy, w, h, col), D = (dx, dy, rx, ry, col) => disc(c, x + dx, y + dy, rx, ry, col);
+  const shirtD = shade(L.shirt, .8), shirtL = shade(L.shirt, 1.12), skinD = shade(L.skin, .9), hairD = shade(L.hair, .78), hairL = shade(L.hair, 1.4), pantsD = shade(L.pants, .8);
+  const bob = p.moving && !reduce ? p.frame % 2 : 0, ty = -11 + by + bob, hy = -16 + by + bob, side = d === 2 ? -1 : d === 3 ? 1 : 0;
+  // short legs and round shoes
   if (!sit) {
     const a = p.moving ? [0, -1, 0, 1][p.frame % 4] : 0;
-    P(-3, -5 + (a < 0 ? 1 : 0), 3, 4 - (a < 0 ? 1 : 0), L.pants); P(1, -5 + (a > 0 ? 1 : 0), 3, 4 - (a > 0 ? 1 : 0), L.pants);
-    P(-1, -5, 1, 3, pantsD); P(3, -5 + (a > 0 ? 1 : 0), 1, 3, pantsD);
-    if (L.wraps) { P(-3, -3 + (a < 0 ? 1 : 0), 3, 1, "#e9e4da"); P(1, -3 + (a > 0 ? 1 : 0), 3, 1, "#e9e4da"); P(1, -4, 1, 1, "#7a5a3a"); }
-    P(-4, -1, 4, 1, "#2b2f3a"); P(1, -1, 4, 1, "#2b2f3a"); P(-3, -1, 1, 1, L.skin); P(2, -1, 1, 1, L.skin);
+    P(-3, -4 + (a < 0 ? 1 : 0), 3, 3, L.pants); P(1, -4 + (a > 0 ? 1 : 0), 3, 3, L.pants); P(3, -4, 1, 3, pantsD);
+    if (L.wraps) { P(-3, -2, 3, 1, "#ece6da"); P(1, -2, 3, 1, "#ece6da"); }
+    D(-2 + (a < 0 ? -1 : 0), -1, 2, 1, "#5a4232"); D(2 + (a > 0 ? 1 : 0), -1, 2, 1, "#5a4232");
   }
-  // torso
-  P(-4, -11 + by, 9, 6, L.shirt); P(4, -11 + by, 1, 6, shirtD); P(-4, -11 + by, 1, 3, shirtL);
-  P(-4, -6 + by, 9, 1, shirtD);
-  if (L.vest) { P(-4, -11 + by, 3, 6, L.vest); P(2, -11 + by, 3, 6, shade(L.vest, .85)); P(-4, -9 + by, 2, 1, shade(L.vest, .65)); P(3, -9 + by, 2, 1, shade(L.vest, .6)); P(-3, -12 + by, 7, 1, L.vest); }
-  if (L.coat && d === 0) { P(-2, -11 + by, 5, 1, "#e6e0d4"); [-10, -8].forEach(r => { P(-3, r + by, 1, 1, "#b9b2a2"); P(3, r + by, 1, 1, "#b9b2a2"); }); }
-  if (L.apron && d !== 1) { P(-2, -9 + by, 5, 6, L.apron); P(2, -9 + by, 1, 6, shade(L.apron, .82)); P(-4, -7 + by, 9, 1, shade(L.apron, .9)); P(-1, -6 + by, 2, 1, shade(L.apron, .7)); }
-  if (L.apron && d === 1) { P(-4, -7 + by, 9, 1, L.apron); P(-1, -7 + by, 3, 1, shade(L.apron, .8)); P(0, -6 + by, 1, 2, L.apron); }
-  if (L.scarf && d !== 1) { P(-2, -11 + by, 5, 2, L.scarf); P(0, -9 + by, 1, 2, L.scarf); }
-  if (!sit && !L.apron) { P(4, -6, 2, 2, "#4a3a2a"); P(4, -6, 2, 1, "#6a5a4a"); } // kunai pouch
-  // arms
+  // soft rounded tunic
+  P(-3, ty - 1, 7, 1, L.shirt); P(-4, ty, 9, 3, L.shirt); P(-5, ty + 3, 11, 4, L.shirt); P(-4, ty + 7, 9, 1, shirtD);
+  P(4, ty + 1, 1, 6, shirtD); P(5, ty + 3, 1, 4, shirtD); P(-4, ty, 1, 3, shirtL); P(-5, ty + 3, 1, 2, shirtL);
+  if (L.vest) { P(-5, ty + 1, 3, 6, L.vest); P(3, ty + 1, 3, 6, shade(L.vest, .85)); P(-4, ty, 2, 1, L.vest); P(3, ty, 2, 1, L.vest); }
+  if (L.coat && d === 0) { P(-1, ty, 3, 1, "#e9e3d6"); P(0, ty + 2, 1, 1, "#c9c0ae"); P(0, ty + 4, 1, 1, "#c9c0ae"); }
+  if (L.apron && d !== 1) { P(-3, ty + 2, 7, 5, L.apron); P(-2, ty + 7, 5, 1, L.apron); P(3, ty + 2, 1, 5, shade(L.apron, .84)); P(-1, ty + 1, 3, 1, shade(L.apron, .9)); P(-1, ty + 4, 3, 1, shade(L.apron, 1.15)); }
+  if (L.apron && d === 1) { P(-5, ty + 3, 11, 1, L.apron); D(0, ty + 4, 1, 1, shade(L.apron, .85)); }
+  if (L.scarf && d !== 1) { P(-3, ty - 1, 7, 2, L.scarf); P(1, ty + 1, 2, 2, L.scarf); P(1, ty + 3, 1, 1, shade(L.scarf, .8)); }
+  // arms with little round hands
   const sw = p.work && !reduce ? (Math.sin(t * 14 + x) > 0 ? 1 : 0) : 0, sw2 = p.work ? 1 - sw : 0;
-  const sleeve = L.vest ? L.shirt : L.shirt;
-  P(-6, -11 + by + sw, 2, 4, sleeve); P(-6, -11 + by + sw, 1, 4, shirtL); P(5, -11 + by + sw2, 2, 4, shirtD);
-  if (L.coat) { P(-6, -8 + by + sw, 2, 1, "#e6e0d4"); P(5, -8 + by + sw2, 2, 1, "#d9d2c4"); }
-  P(-6, -7 + by + sw, 2, 1, L.skin); P(5, -7 + by + sw2, 2, 1, skinD);
-  // head
-  P(-1, -12 + by, 3, 1, skinD);
-  P(-4, -19 + by, 9, 7, L.skin); P(4, -19 + by, 1, 7, skinD);
-  if (d === 0 || d === 1) { P(-5, -16 + by, 1, 2, L.skin); P(5, -16 + by, 1, 2, skinD); }
-  // hair
-  P(-4, -20 + by, 9, 3, L.hair); P(-3, -20 + by, 2, 1, hairL);
-  if (L.style === "spiky") { [[-4, -22], [-2, -23], [0, -22], [2, -23], [4, -22]].forEach(([hx, hy]) => P(hx, hy + by, 1, 2, L.hair)); P(-2, -23 + by, 1, 1, hairL); }
-  if (L.style === "long") { P(-5, -18 + by, 1, 8, L.hair); P(5, -18 + by, 1, 8, shade(L.hair, .85)); if (d === 1) P(-4, -13 + by, 9, 4, L.hair); }
-  if (L.style === "pony") { if (d === 1) { P(-1, -13 + by, 3, 4, L.hair); P(0, -9 + by, 1, 2, L.hair); } else if (d === 2) P(4, -17 + by, 3, 3, L.hair); else if (d === 3) P(-6, -17 + by, 3, 3, L.hair); else P(-5, -17 + by, 1, 3, L.hair); }
-  if (d === 1) { P(-4, -19 + by, 9, 6, L.hair); P(-2, -18 + by, 2, 1, hairL); }
-  else if (d === 2) { P(1, -19 + by, 4, 4, L.hair); P(-4, -18 + by, 2, 1, L.hair); }
-  else if (d === 3) { P(-4, -19 + by, 4, 4, L.hair); P(3, -18 + by, 2, 1, L.hair); }
-  else { P(-4, -18 + by, 1, 3, L.hair); P(4, -18 + by, 1, 3, L.hair); P(-2, -18 + by, 3, 1, L.hair); }
-  // face
+  P(-7, ty + 1 + sw, 2, 4, L.shirt); P(-7, ty + 1 + sw, 1, 3, shirtL); P(6, ty + 1 + sw2, 2, 4, shirtD);
+  D(-6, ty + 5 + sw, 1, 1, L.skin); D(7, ty + 5 + sw2, 1, 1, skinD);
+  // big round head
+  D(0, hy, 5, 5, L.skin); P(3, hy - 2, 2, 5, skinD); P(-1, hy + 5, 3, 1, skinD);
+  if (d !== 1) { if (side <= 0) D(-5, hy + 1, 1, 1, L.skin); if (side >= 0) D(5, hy + 1, 1, 1, skinD); }
+  // hair: soft rounded mop with a highlight
+  const H = L.hair;
+  if (d === 1) { D(0, hy - 1, 5, 5, H); P(-5, hy, 11, 4, H); P(-4, hy + 4, 9, 1, hairD); P(-2, hy - 4, 3, 1, hairL); }
+  else {
+    D(0, hy - 3, 5, 3, H); P(-5, hy - 3, 11, 2, H); P(-2, hy - 5, 3, 1, hairL); P(-3, hy - 4, 1, 1, hairL);
+    if (side === 0) { P(-5, hy - 1, 2, 3, H); P(4, hy - 1, 2, 3, hairD); P(-3, hy - 1, 2, 1, H); P(1, hy - 1, 1, 1, H); }
+    else if (side < 0) { P(1, hy - 2, 5, 5, H); P(4, hy + 2, 2, 2, hairD); P(-5, hy - 1, 2, 1, H); }
+    else { P(-5, hy - 2, 5, 5, H); P(-5, hy + 2, 2, 2, hairD); P(4, hy - 1, 2, 1, H); }
+  }
+  if (L.style === "spiky") { D(-3, hy - 6, 1, 1, H); D(1, hy - 7, 1, 1, H); D(4, hy - 5, 1, 1, hairD); P(1, hy - 8, 1, 1, hairL); }
+  if (L.style === "long") { P(-6, hy - 1, 2, 9, H); P(5, hy - 1, 2, 9, hairD); if (d === 1) P(-5, hy + 3, 11, 5, H); }
+  if (L.style === "pony") { if (d === 1) { D(0, hy + 3, 2, 3, H); D(0, hy - 1, 1, 1, "#c8524a"); } else if (side < 0) D(5, hy - 1, 2, 2, H); else if (side > 0) D(-5, hy - 1, 2, 2, H); else D(-5, hy - 3, 1, 2, H); }
+  // gentle face: dark oval eyes with a shine, rosy cheeks
+  const EY = "#3a2a32", CH = "#f09a8a";
   if (d === 0) {
-    P(-2, -16 + by, 1, 2, "#1a1418"); P(2, -16 + by, 1, 2, "#1a1418"); P(-2, -17 + by, 1, 1, shade(L.hair, .8)); P(2, -17 + by, 1, 1, shade(L.hair, .8));
-    P(-3, -14 + by, 1, 1, "#eaa08e"); P(3, -14 + by, 1, 1, "#eaa08e"); P(0, -13 + by, 2, 1, "#a8574a");
-    if (L.glasses) { P(-3, -16 + by, 3, 1, "#2b1d12"); P(1, -16 + by, 3, 1, "#2b1d12"); P(0, -16 + by, 1, 1, "#2b1d12"); }
-    if (L.beard) { P(-3, -14 + by, 7, 2, L.beard); P(-2, -12 + by, 5, 2, L.beard); P(-1, -10 + by, 3, 1, L.beard); P(-1, -14 + by, 3, 1, "#a8574a"); }
-    if (L.mask) { P(-4, -15 + by, 9, 3, L.mask); P(-4, -15 + by, 9, 1, shade(L.mask, 1.25)); }
+    P(-3, hy, 2, 2, EY); P(2, hy, 2, 2, EY); P(-3, hy, 1, 1, "#ffffff"); P(2, hy, 1, 1, "#ffffff");
+    P(-4, hy + 2, 2, 1, CH); P(3, hy + 2, 2, 1, CH); P(0, hy + 3, 1, 1, "#b8645a");
+    if (L.glasses) { P(-4, hy - 1, 4, 1, "#6a4a3a"); P(1, hy - 1, 4, 1, "#6a4a3a"); P(-4, hy + 2, 4, 1, "#6a4a3a"); P(1, hy + 2, 4, 1, "#6a4a3a"); P(0, hy, 1, 1, "#6a4a3a"); }
+    if (L.beard) { D(0, hy + 4, 4, 2, L.beard); P(-1, hy + 3, 3, 1, L.beard); P(0, hy + 3, 1, 1, "#b8645a"); }
+    if (L.mask) { P(-4, hy + 2, 9, 3, L.mask); P(-4, hy + 2, 9, 1, shade(L.mask, 1.25)); }
+  } else if (d !== 1) {
+    const ex = side < 0 ? -3 : 2; P(ex, hy, 2, 2, EY); P(ex + (side < 0 ? 0 : 1), hy, 1, 1, "#ffffff");
+    if (L.mask) P(side < 0 ? -5 : 0, hy + 2, 6, 3, L.mask); else P(side < 0 ? -5 : 4, hy + 2, 2, 1, CH);
   }
-  if (d === 2) { P(-3, -16 + by, 1, 2, "#1a1418"); if (L.mask) P(-4, -15 + by, 4, 3, L.mask); else P(-4, -14 + by, 1, 1, "#eaa08e"); }
-  if (d === 3) { P(3, -16 + by, 1, 2, "#1a1418"); if (L.mask) P(1, -15 + by, 4, 3, L.mask); else P(4, -14 + by, 1, 1, "#eaa08e"); }
-  // forehead protector: cloth band with a metal plate stamped with a little ramen bowl
+  // cloth headband (tenugui) with a fluttering knot
   if (L.hb) {
-    P(-4, -19 + by, 9, 2, L.hb);
-    if (d === 0) { P(-3, -19 + by, 7, 2, "#aeb6bd"); P(-3, -19 + by, 7, 1, "#dfe4e8"); P(-1, -18 + by, 3, 1, "#5b6168"); P(0, -19 + by, 1, 1, "#5b6168"); P(-4, -19 + by, 1, 2, "#7d858c"); P(4, -19 + by, 1, 2, "#7d858c"); }
-    if (d === 2) { P(-4, -19 + by, 4, 2, "#aeb6bd"); P(-4, -19 + by, 4, 1, "#dfe4e8"); }
-    if (d === 3) { P(1, -19 + by, 4, 2, "#aeb6bd"); P(1, -19 + by, 4, 1, "#dfe4e8"); }
-    if (d === 1) { const fl = reduce ? 0 : Math.round(Math.sin(t * 5 + x) * .6); P(-1, -17 + by, 1, 4, L.hb); P(1 + fl, -16 + by, 1, 4, L.hb); }
-    else if (d === 0) { const fl = reduce ? 0 : Math.round(Math.sin(t * 5 + x)); P(5, -18 + by + fl, 1, 3, L.hb); }
+    P(-5, hy - 3, 11, 2, L.hb); P(-5, hy - 3, 11, 1, shade(L.hb, 1.25));
+    const fl = reduce ? 0 : Math.round(Math.sin(t * 5 + x));
+    if (d === 1) { P(-1, hy - 2, 3, 2, shade(L.hb, .85)); P(-1, hy, 1, 3, L.hb); P(1, hy + fl * .5, 1, 3, L.hb); }
+    else if (side >= 0) { D(5, hy - 2, 1, 1, shade(L.hb, .85)); P(6, hy - 1 + fl, 2, 1, L.hb); }
+    else { D(-5, hy - 2, 1, 1, shade(L.hb, .85)); P(-7, hy - 1 + fl, 2, 1, L.hb); }
   }
-  if (L.chef) {
-    P(-4, -22 + by, 9, 3, "#ffffff"); P(-4, -20 + by, 9, 1, "#e6e0d4");
-    P(-3, -28 + by, 7, 6, "#ffffff"); P(-4, -27 + by, 1, 4, "#ffffff"); P(4, -27 + by, 1, 4, "#f0ebe2");
-    P(-1, -27 + by, 1, 4, "#ebe5da"); P(2, -27 + by, 1, 4, "#ebe5da"); P(3, -28 + by, 1, 6, "#e6e0d4");
-  }
+  // puffy chef hat
+  if (L.chef) { P(-4, hy - 6, 9, 3, "#f3eee4"); D(-3, hy - 9, 2, 2, "#ffffff"); D(3, hy - 9, 2, 2, "#ffffff"); D(0, hy - 10, 3, 3, "#ffffff"); P(-4, hy - 4, 9, 1, "#ddd5c4"); P(2, hy - 11, 2, 1, "#f0ebe2"); }
   const k = p.carry;
-  if (k === "crate") { P(-6, -12, 13, 8, "#b5864f"); P(-6, -12, 13, 1, "#d0a06a"); P(-6, -8, 13, 1, "#8a5a34"); P(6, -12, 1, 8, "#8a5a34"); P(-4, -14, 3, 2, "#7fae4a"); P(1, -14, 3, 2, "#e07a3a"); }
-  if (k === "book") { P(-4, -11 + by, 8, 5, "#2f5f8a"); P(-3, -11 + by, 6, 1, "#f6ecd6"); P(-4, -11 + by, 1, 5, "#1f3f5a"); }
-  if (k === "scroll") { P(-5, -10 + by, 11, 3, "#f3e3b8"); P(-6, -10 + by, 1, 3, "#7a4a2a"); P(6, -10 + by, 1, 3, "#7a4a2a"); P(-3, -9 + by, 6, 1, "#5a4030"); }
-  if (k === "bowl") { P(-5, -11 + by, 11, 4, "#f6efe2"); P(-4, -11 + by, 9, 1, "#d9a35c"); P(-2, -11 + by, 2, 1, "#f4e8c8"); P(1, -11 + by, 2, 1, "#f2d16b"); P(-5, -8 + by, 11, 1, "#c8382c"); }
-  if (k === "clip") { P(3, -11, 5, 6, "#c49a62"); P(4, -10, 3, 4, "#fbf6ea"); P(4, -12, 3, 1, "#7d8389"); P(4, -9, 3, 1, "#c8382c"); }
-  if (k === "chalk") { P(6, -9, 2, 1, "#f5f0e0"); }
+  if (k === "crate") { P(-6, -12, 13, 8, "#b5864f"); P(-6, -12, 13, 1, "#d0a06a"); P(-6, -8, 13, 1, "#8a5a34"); D(-3, -13, 2, 1, "#7fae4a"); D(2, -13, 2, 1, "#e07a3a"); }
+  if (k === "book") { P(-4, ty + 2, 8, 5, "#4f7aa8"); P(-3, ty + 2, 6, 1, "#f6ecd6"); P(-4, ty + 2, 1, 5, "#3a5a80"); }
+  if (k === "scroll") { P(-5, ty + 3, 11, 3, "#f3e3b8"); D(-6, ty + 4, 1, 1, "#9a6a44"); D(6, ty + 4, 1, 1, "#9a6a44"); P(-3, ty + 4, 6, 1, "#8a6a50"); }
+  if (k === "bowl") { D(0, ty + 3, 5, 2, "#f6efe2"); P(-4, ty + 1, 9, 2, "#e0b070"); P(-2, ty + 1, 2, 1, "#f4e8c8"); P(1, ty + 1, 2, 1, "#f2d16b"); P(-4, ty + 4, 9, 1, "#c8524a"); }
+  if (k === "clip") { P(3, ty + 1, 5, 6, "#c49a62"); P(4, ty + 2, 3, 4, "#fbf6ea"); P(4, ty, 3, 1, "#7d8389"); P(4, ty + 3, 3, 1, "#c8524a"); }
+  if (k === "chalk") { P(7, ty + 3, 2, 1, "#f5f0e0"); }
   if (p.look === "claude") {
-    const s = reduce ? 0 : Math.floor(t * 4) % 2;
-    P(0, -33, 1, 3, "#ff8a4c"); P(-1, -32, 3, 1, "#ff8a4c");
-    if (s) { P(-2, -34, 1, 1, "#ffb37a"); P(2, -30, 1, 1, "#ffb37a"); } else { P(2, -34, 1, 1, "#ffb37a"); P(-2, -30, 1, 1, "#ffb37a"); }
+    const s = reduce ? 0 : Math.floor(t * 4) % 2, sy = hy - 15;
+    P(0, sy, 1, 3, "#ff8a4c"); P(-1, sy + 1, 3, 1, "#ff8a4c");
+    if (s) { P(-2, sy - 1, 1, 1, "#ffb37a"); P(2, sy + 3, 1, 1, "#ffb37a"); } else { P(2, sy - 1, 1, 1, "#ffb37a"); P(-2, sy + 3, 1, 1, "#ffb37a"); }
   }
 }
 // render a person into a scratch canvas, add a dark 1px outline, then stamp it onto the scene
@@ -1564,54 +1576,63 @@ function stepNeko(dt) {
   }
 }
 
+// critters are lists of soft shapes: [kind "d" disc | "r" rect, x, y, rx|w, ry|h, colour, noOutline]; outlines go under everything first
+const OUTLINE = "#5c3e32";
+function critter(c, list, flipAt) {
+  const fx = s => flipAt == null ? s[1] : s[0] === "d" ? 2 * flipAt - s[1] : 2 * flipAt - s[1] - s[3] + 1;
+  list.forEach(s => { if (s[6]) return; s[0] === "d" ? disc(c, fx(s), s[2], s[3] + 1, s[4] + 1, OUTLINE) : R(c, fx(s) - 1, s[2] - 1, s[3] + 2, s[4] + 2, OUTLINE); });
+  list.forEach(s => s[0] === "d" ? disc(c, fx(s), s[2], s[3], s[4], s[5]) : R(c, fx(s), s[2], s[3], s[4], s[5]));
+}
+const at2x = (c, x, y, f) => { c.save(); c.translate(x, y); c.scale(2, 2); c.translate(-x, -y); f(); c.restore(); };
 function drawHelpers(c, t) {
-  const bob = k => reduce ? 0 : (Math.floor(t * 2 + k) % 2), blink = k => !reduce && Math.floor(t * 3 + k) % 9 === 0;
-  // Tasu the Taste-Bot on the end of the bar counter
-  c.save(); c.translate(22, 182); c.scale(2, 2); c.translate(-22, -182);
-  { const x = 22, y = 182 - bob(0); R(c, x - 4, y - 7, 8, 7, "#a9b0b6"); R(c, x - 4, y - 7, 8, 1, "#d6dce0"); R(c, x - 3, y - 12, 6, 5, "#c4c9ce"); R(c, x - 2, y - 10, 4, 2, "#2b1d12");
-    R(c, x - 2, y - 10, 1, 1, blink(1) ? "#2b1d12" : "#5fe0d0"); R(c, x + 1, y - 10, 1, 1, blink(1) ? "#2b1d12" : "#5fe0d0"); R(c, x, y - 14, 1, 2, "#5b6168"); R(c, x - 1, y - 15, 3, 1, "#c8382c");
-    R(c, x + 4, y - 6, 3, 1, "#8d949b"); R(c, x + 6, y - 7, 2, 2, "#e6e0d4"); R(c, x - 3, y - 4, 6, 1, "#5fe0d0"); R(c, x - 3, y, 2, 1, "#5b6168"); R(c, x + 1, y, 2, 1, "#5b6168"); }
-  c.restore();
-  // Hoot the Owl on top of the recipe shelf
-  c.save(); c.translate(19, 49); c.scale(2, 2); c.translate(-19, -49);
-  { const x = 19, y = 49; disc(c, x, y - 4, 4, 4, "#8a5a34"); disc(c, x, y - 3, 3, 3, "#c49a62"); disc(c, x - 2, y - 6, 1, 1, "#fffaf0"); disc(c, x + 2, y - 6, 1, 1, "#fffaf0");
-    R(c, x - 2, y - 6, 1, 1, blink(2) ? "#c49a62" : "#2b1d12"); R(c, x + 2, y - 6, 1, 1, blink(2) ? "#c49a62" : "#2b1d12"); R(c, x, y - 4, 1, 1, "#f2a24a"); R(c, x - 4, y - 9, 1, 2, "#8a5a34"); R(c, x + 4, y - 9, 1, 2, "#8a5a34");
-    R(c, x - 5, y - 1, 3, 2, "#2f5f8a"); R(c, x - 5, y - 1, 3, 1, "#f6ecd6"); }
-  c.restore();
+  const bob = k => reduce ? 0 : (Math.floor(t * 2 + k) % 2), blink = k => !reduce && Math.floor(t * 3 + k) % 9 === 0, N = 1;
+  // Tasu the Taste-Bot: a round copper kettle robot with a sprout on its lid
+  at2x(c, 22, 182, () => { const x = 22, y = 182 - bob(0), eye = blink(1) ? "#8a5530" : "#ffe9a8", puff = !reduce && Math.floor(t * 1.2) % 5 === 0;
+    critter(c, [["r", x - 3, y - 1, 2, 1, "#5a4232"], ["r", x + 2, y - 1, 2, 1, "#5a4232"], ["d", x, y - 4, 4, 3, "#c4855a"], ["r", x + 4, y - 6, 3, 1, "#c4855a"], ["d", x, y - 9, 3, 2, "#d6976a"],
+      ["r", x - 4, y - 4, 9, 1, "#9a6440", N], ["r", x - 2, y - 2, 4, 1, "#ffe9a8", N], ["r", x - 2, y - 9, 1, 1, eye, N], ["r", x + 1, y - 9, 1, 1, eye, N], ["r", x - 3, y - 8, 1, 1, "#f09a8a", N], ["r", x + 3, y - 8, 1, 1, "#f09a8a", N],
+      ["r", x - 2, y - 6, 2, 1, "#e8b088", N], ["r", x, y - 13, 1, 2, "#6fae4a"], ["r", x + 1, y - 13, 1, 1, "#8fce6a", N], ["r", x - 1, y - 12, 1, 1, "#8fce6a", N]]);
+    if (puff) { disc(c, x + 8, y - 8, 1, 1, "rgba(255,255,255,.7)"); disc(c, x + 9, y - 10, 1, 1, "rgba(255,255,255,.45)"); } });
+  // Hoot the Owl: a fluffy round owl reading on top of the recipe shelf
+  at2x(c, 19, 49, () => { const x = 19, y = 49, pu = blink(2) ? "#e8d2a8" : "#3a2a32";
+    critter(c, [["d", x, y - 4, 4, 4, "#9a6a44"], ["r", x - 4, y - 9, 1, 2, "#9a6a44"], ["r", x + 4, y - 9, 1, 2, "#9a6a44"], ["d", x, y - 3, 3, 3, "#ead6ae", N],
+      ["r", x - 1, y - 2, 1, 1, "#c9a87a", N], ["r", x + 1, y - 1, 1, 1, "#c9a87a", N], ["d", x - 2, y - 6, 1, 1, "#fffaf0", N], ["d", x + 2, y - 6, 1, 1, "#fffaf0", N],
+      ["r", x - 2, y - 6, 1, 1, pu, N], ["r", x + 2, y - 6, 1, 1, pu, N], ["r", x, y - 5, 1, 1, "#e8a04a", N], ["r", x - 4, y - 2, 1, 2, "#7a5034", N], ["r", x + 4, y - 2, 1, 2, "#7a5034", N],
+      ["r", x - 6, y - 1, 4, 2, "#4f7aa8"], ["r", x - 6, y - 1, 4, 1, "#f6ecd6", N]]); });
   // Kitsune the Shrine Fox on the kamidana shelf
-  { const x = 319, y = 18; R(c, x - 3, y - 5, 6, 5, "#e07a3a"); R(c, x - 1, y - 4, 2, 4, "#fbf6ea"); R(c, x - 3, y - 8, 6, 4, "#e07a3a"); R(c, x - 3, y - 9, 1, 2, "#e07a3a"); R(c, x + 2, y - 9, 1, 2, "#e07a3a");
-    R(c, x - 2, y - 6, 1, 1, "#2b1d12"); R(c, x + 1, y - 6, 1, 1, "#2b1d12"); R(c, x - 3, y - 4, 6, 1, "#c8382c"); R(c, x + 3, y - 3 - bob(3), 3, 2, "#e07a3a"); R(c, x + 5, y - 4 - bob(3), 1, 1, "#fbf6ea"); }
+  { const x = 319, y = 18, tw = bob(3);
+    critter(c, [["d", x + 4, y - 3 - tw, 2, 1, "#e8915a"], ["d", x, y - 3, 3, 2, "#e8915a"], ["d", x, y - 7, 3, 2, "#e8915a"], ["r", x - 3, y - 10, 1, 2, "#e8915a"], ["r", x + 3, y - 10, 1, 2, "#e8915a"],
+      ["r", x + 5, y - 4 - tw, 1, 1, "#fbf3e2", N], ["r", x - 1, y - 6, 3, 2, "#fbf3e2", N], ["r", x - 2, y - 7, 1, 1, "#3a2a32", N], ["r", x + 2, y - 7, 1, 1, "#3a2a32", N], ["r", x - 2, y - 5, 5, 1, "#c8524a", N]]); }
   // Chirp the Sparrow hopping on the window sill
   { const hop = reduce ? 0 : (Math.floor(t * 1.3) % 6 === 0 ? 2 : 0), x = 247 + (reduce ? 0 : (Math.floor(t * .4) % 2) * 4), y = 35 - hop;
-    R(c, x - 2, y - 3, 4, 3, "#8a5a34"); R(c, x - 2, y - 1, 3, 1, "#e9d6b0"); R(c, x + 1, y - 4, 2, 2, "#6e4428"); R(c, x + 2, y - 4, 1, 1, "#2b1d12"); R(c, x + 3, y - 3, 1, 1, "#f2a24a"); R(c, x - 3, y - 2, 1, 1, "#6e4428"); }
-  // Pon the Tanuki in the pantry with a map
-  c.save(); c.translate(374, 124); c.scale(2, 2); c.translate(-374, -124);
-  { const x = 374, y = 124 - bob(4); disc(c, x, y - 4, 4, 4, "#8a6a4e"); R(c, x - 3, y - 6, 6, 2, "#2b1d12"); R(c, x - 2, y - 6, 1, 1, "#fffaf0"); R(c, x + 1, y - 6, 1, 1, "#fffaf0"); R(c, x - 3, y - 9, 2, 2, "#5e3820"); R(c, x + 1, y - 9, 2, 2, "#5e3820");
-    R(c, x - 1, y - 11, 3, 2, "#5f9a42"); R(c, x - 1, y - 3, 3, 3, "#e9d6b0"); R(c, x - 7, y - 4, 4, 3, "#f3e3b8"); R(c, x - 6, y - 3, 2, 1, "#c8382c"); R(c, x + 3, y - 1, 3, 1, "#2b1d12"); }
-  c.restore();
-  // Kiko the Carpenter Mouse by the shelf, tapping a little board
-  c.save(); c.translate(22, 128); c.scale(2, 2); c.translate(-22, -128);
-  { const x = 22, y = 128, tap = reduce ? 0 : Math.floor(t * 4) % 2; R(c, x - 2, y - 3, 5, 3, "#9aa1a7"); R(c, x + 2, y - 4, 2, 2, "#9aa1a7"); R(c, x + 3, y - 4, 1, 1, "#2b1d12"); R(c, x + 1, y - 5, 2, 1, "#e88a7a"); R(c, x - 4, y - 2, 2, 1, "#e88a7a");
-    R(c, x - 8, y - 1, 6, 2, "#b5824f"); R(c, x + 4, y - 6 + tap, 1, 3, "#7a4a2a"); R(c, x + 3, y - 6 + tap, 3, 1, "#5b6168"); }
-  c.restore();
-  // Doc the Raccoon with a medical bag
-  c.save(); c.translate(16, 288); c.scale(2, 2); c.translate(-16, -288);
-  { const x = 16, y = 288 - bob(5); R(c, x - 4, y - 6, 8, 6, "#8d949b"); R(c, x - 3, y - 10, 6, 4, "#a9b0b6"); R(c, x - 3, y - 9, 6, 1, "#2b1d12"); R(c, x - 2, y - 9, 1, 1, "#fffaf0"); R(c, x + 1, y - 9, 1, 1, "#fffaf0"); R(c, x - 3, y - 11, 1, 1, "#8d949b"); R(c, x + 2, y - 11, 1, 1, "#8d949b");
-    for (let k = 0; k < 3; k++) R(c, x + 4 + k, y - 4 + k, 1, 1, k % 2 ? "#2b1d12" : "#a9b0b6"); R(c, x - 8, y - 4, 5, 4, "#fffaf0"); R(c, x - 6, y - 3, 1, 3, "#c8382c"); R(c, x - 7, y - 2, 3, 1, "#c8382c"); }
-  c.restore();
+    critter(c, [["r", x - 4, y - 3, 2, 1, "#7a5034"], ["d", x, y - 2, 2, 1, "#a87850"], ["d", x + 2, y - 4, 1, 1, "#8a5a3a"], ["r", x - 1, y - 1, 3, 1, "#f0e2c4", N], ["r", x + 2, y - 4, 1, 1, "#3a2a32", N], ["r", x + 4, y - 4, 1, 1, "#e8a04a", N]]); }
+  // Pon the Tanuki in the pantry, holding a map, a leaf on his head
+  at2x(c, 374, 124, () => { const x = 374, y = 124 - bob(4);
+    critter(c, [["d", x + 4, y - 1, 2, 1, "#8a6a4e"], ["d", x, y - 4, 4, 4, "#9c7c5c"], ["d", x - 3, y - 8, 1, 1, "#5a4232"], ["d", x + 3, y - 8, 1, 1, "#5a4232"], ["r", x - 1, y - 11, 3, 2, "#6fae4a"],
+      ["d", x, y - 2, 2, 2, "#ecdcb8", N], ["r", x - 3, y - 6, 2, 2, "#5a4232", N], ["r", x + 2, y - 6, 2, 2, "#5a4232", N], ["r", x - 3, y - 6, 1, 1, "#ffffff", N], ["r", x + 2, y - 6, 1, 1, "#ffffff", N],
+      ["r", x, y - 4, 1, 1, "#3a2a32", N], ["r", x - 4, y - 4, 1, 1, "#f09a8a", N], ["r", x + 4, y - 4, 1, 1, "#f09a8a", N], ["r", x + 5, y - 1, 1, 1, "#5a4232", N],
+      ["r", x - 8, y - 4, 4, 3, "#f3e3b8"], ["r", x - 7, y - 3, 2, 1, "#c8524a", N]]); });
+  // Kiko the Carpenter Mouse tapping a little board
+  at2x(c, 22, 128, () => { const x = 22, y = 128, tap = reduce ? 0 : Math.floor(t * 4) % 2;
+    critter(c, [["r", x - 8, y - 1, 6, 2, "#b5824f"], ["d", x, y - 2, 3, 2, "#b8b0a8"], ["d", x + 3, y - 3, 2, 2, "#c4bcb4"], ["d", x + 2, y - 6, 1, 1, "#c4bcb4"],
+      ["r", x + 2, y - 6, 1, 1, "#f0a8a0", N], ["r", x + 4, y - 4, 1, 1, "#3a2a32", N], ["r", x + 5, y - 3, 1, 1, "#f0a8a0", N], ["r", x + 3, y - 2, 1, 1, "#f09a8a", N], ["r", x - 5, y - 2, 2, 1, "#f0a8a0", N],
+      ["r", x + 5, y - 6 + tap, 1, 3, "#9a6440"], ["r", x + 4, y - 7 + tap, 3, 1, "#7d8389"]]); });
+  // Doc the Raccoon with his medical bag
+  at2x(c, 16, 288, () => { const x = 16, y = 288 - bob(5);
+    critter(c, [["r", x + 4, y - 4, 2, 1, "#8d949b"], ["r", x + 5, y - 3, 2, 1, "#4a4a52"], ["d", x, y - 3, 4, 3, "#9aa0a4"], ["d", x, y - 8, 3, 3, "#b4babd"], ["r", x - 3, y - 12, 1, 2, "#9aa0a4"], ["r", x + 3, y - 12, 1, 2, "#9aa0a4"],
+      ["r", x - 3, y - 9, 7, 2, "#4a4a52", N], ["r", x - 2, y - 9, 1, 1, "#ffffff", N], ["r", x + 2, y - 9, 1, 1, "#ffffff", N], ["r", x - 1, y - 7, 3, 2, "#f2eee6", N], ["r", x, y - 7, 1, 1, "#3a2a32", N], ["d", x, y - 2, 2, 1, "#d6dadc", N],
+      ["r", x - 9, y - 5, 5, 4, "#fbf3e2"], ["r", x - 7, y - 4, 1, 3, "#c8524a", N], ["r", x - 8, y - 3, 3, 1, "#c8524a", N]]); });
   // Maneki the Lucky Cat: little coin when the till has numbers
   if (helperDocs["earnings-cat"] && helperDocs["earnings-cat"].updatedAt && !reduce && Math.floor(t * 1.5) % 4 === 0) { disc(c, 372, 222, 2, 2, "#ffd45a"); R(c, 372, 221, 1, 2, "#d9a441"); }
 }
 function drawNeko(c, t) {
-  const x = Math.round(neko.x), y = Math.round(neko.y), flip = neko.dir === 2, b = reduce ? 0 : Math.round(Math.sin(t * 1.6));
-  const M = (dx, dy, w, h, col) => R(c, flip ? x - dx - w + 1 : x + dx, y + dy, w, h, col);
-  const s = neko.moving ? neko.frame % 2 : 0;
+  const x = Math.round(neko.x), y = Math.round(neko.y), b = reduce ? 0 : Math.round(Math.sin(t * 1.6)), s = neko.moving ? neko.frame % 2 : 0, N = 1;
   R(c, x - 6, y + 1, 13, 2, "rgba(60,30,10,.25)");
-  if (neko.moving) { M(-4, 1, 1, 2 - s, "#d9822b"); M(-1, 1, 1, 1 + s, "#d9822b"); M(2, 1, 1, 2 - s, "#d9822b"); M(4, 1, 1, 1 + s, "#d9822b"); }
-  M(-5, -3, 10, 4, "#f2a24a"); M(-5, -3, 10, 1, "#f7b866"); M(3, -5, 4, 4, "#f2a24a"); M(3, -6, 1, 1, "#f2a24a"); M(6, -6, 1, 1, "#f2a24a");
-  M(4, -4, 2, 1, "#2b1d12"); M(-7, -1 - s, 3, 1, "#f2a24a"); M(-3, -2, 2, 2, "#d9822b"); M(0, -2 - (neko.moving ? 0 : b), 1, 1, "#d9822b");
-  M(3, -2, 4, 1, "#2f6fb3"); // courier scarf
-  if (neko.carry) { M(-3, -7, 6, 4, "#fffaf0"); M(-3, -7, 6, 1, "#c8382c"); M(-1, -5, 2, 1, "#c9b48a"); }
+  const legs = neko.moving ? [["r", -4, 0, 1, 3 - s, "#e08a3a"], ["r", -1, 0, 1, 2 + s, "#e08a3a"], ["r", 2, 0, 1, 3 - s, "#e08a3a"], ["r", 4, 0, 1, 2 + s, "#e08a3a"]] : [["r", -4, 0, 9, 1, "#e08a3a"]];
+  const list = legs.concat([["r", -9, -5 - s, 1, 3, "#f2a24a"], ["r", -8, -3, 2, 1, "#f2a24a"], ["d", -1, -2, 5, 2, "#f2a24a"], ["d", 4, -5, 3, 3, "#f5ad58"], ["r", 2, -9, 1, 2, "#f2a24a"], ["r", 6, -9, 1, 2, "#f2a24a"],
+    ["r", -3, -4, 1, 2, "#d9822b", N], ["r", -1, -4, 1, 2, "#d9822b", N], ["r", 3, -7, 2, 1, "#d9822b", N], ["r", 5, -5, 1, 1, "#3a2a32", N], ["r", 6, -4, 1, 1, "#f09a8a", N], ["r", 2, -4, 1, 1, "#fbe6c8", N],
+    ["r", 2, -2, 5, 1, "#4f7aa8", N], ["r", 3, -1, 1, 2, "#4f7aa8", N], ["r", -1, -3 - (neko.moving ? 0 : b), 1, 1, "#d9822b", N]]);
+  if (neko.carry) list.push(["r", -4, -8, 6, 4, "#fffaf0"], ["r", -4, -8, 6, 1, "#c8524a", N], ["r", -2, -6, 2, 1, "#c9b48a", N]);
+  critter(c, list.map(s2 => [s2[0], x + s2[1], y + s2[2], s2[3], s2[4], s2[5], s2[6]]), neko.dir === 2 ? x : null);
 }
 
 const tagEls = people.filter(p => !p.guest && !p.clone).map(p => {

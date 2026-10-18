@@ -28,6 +28,15 @@
    "releaseAt": "2026-10-18T14:00:00-05:00"
   },
   {
+   "id": "2026-10-18-2000",
+   "title": "Honing Steel Tips: Hone Your Kitchen Knife Before Every Cook",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "Henckels Fine Edge Honing Steel",
+   "layout": "video",
+   "status": "scheduled",
+   "releaseAt": "2026-10-18T20:00:00-05:00"
+  },
+  {
    "id": "837810336976492537",
    "title": "Dull Knives? How to Sharpen Kitchen Knives at Home (Beginner Way)",
    "board": "Kitchen Knife Care & Sharpening",
@@ -359,5 +368,5 @@
    }
   }
  },
- "updatedAt": "2026-10-17T20:59:42-05:00"
+ "updatedAt": "2026-10-17T21:04:43-05:00"
 }

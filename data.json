@@ -28,6 +28,16 @@
    "releaseAt": "2026-10-18T14:00:00-05:00"
   },
   {
+   "id": "2026-10-18-1700",
+   "title": "Loose Leaf Tea Steeping Times: Green, White, Oolong, Black and Herbal",
+   "board": "Tea Lover's Kitchen",
+   "product": "HIWARE glass teapot with infuser",
+   "asin": "B01LZSA84J",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-18T17:00:00-05:00"
+  },
+  {
    "id": "2026-10-18-2000",
    "title": "Honing Steel Tips: Hone Your Kitchen Knife Before Every Cook",
    "board": "Kitchen Knife Care & Sharpening",
@@ -35,6 +45,86 @@
    "layout": "video",
    "status": "scheduled",
    "releaseAt": "2026-10-18T20:00:00-05:00"
+  },
+  {
+   "id": "2026-10-19-1000",
+   "title": "Small Business Packaging Ideas: Thank You Stickers That Make Orders Personal",
+   "board": "Small Business Packaging Ideas",
+   "product": "Round thank-you stickers (500)",
+   "asin": "B0FM7493Z9",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-19T10:00:00-05:00"
+  },
+  {
+   "id": "2026-10-19-1200",
+   "title": "Meat Temperature Chart for Home Cooks (Plus a Thermometer Gift They'll Use)",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "TP19H instant read meat thermometer",
+   "asin": "B07XXSYLL8",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-19T12:00:00-05:00"
+  },
+  {
+   "id": "2026-10-19-1400",
+   "title": "Etsy Shipping Tip: Use a Shipping Scale and Stop Guessing Postage",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Accuteck digital shipping scale",
+   "asin": "B00SMHWZ42",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-19T14:00:00-05:00"
+  },
+  {
+   "id": "2026-10-19-1700",
+   "title": "Knife Storage Tips: How to Store Kitchen Knives Without Dulling the Edge",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "Magnetic knife bar 16-inch",
+   "asin": "B016ISHAC8",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-19T17:00:00-05:00"
+  },
+  {
+   "id": "2026-10-20-1000",
+   "title": "Gooseneck Kettle for Tea Lovers: A Gentler Pour and the Right Temperature",
+   "board": "Tea Lover's Kitchen",
+   "product": "Cosori gooseneck electric kettle",
+   "asin": "B07T1CH2HH",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-20T10:00:00-05:00"
+  },
+  {
+   "id": "2026-10-20-1200",
+   "title": "Chef Knife Care Rules: 5 Habits That Keep Your Kitchen Knife Sharp",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "Victorinox Fibrox Pro 8-inch chef's knife",
+   "asin": "B008M5U1C2",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-20T12:00:00-05:00"
+  },
+  {
+   "id": "2026-10-20-1400",
+   "title": "Stocking Stuffer for Home Cooks: A Zester for Cheese, Citrus and More",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Microplane classic zester",
+   "asin": "B00151WA06",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-20T14:00:00-05:00"
+  },
+  {
+   "id": "2026-10-20-1700",
+   "title": "Small Business Packaging Ideas: Small Shipping Boxes for Little Orders",
+   "board": "Small Business Packaging Ideas",
+   "product": "6x4x2 small shipping boxes (50)",
+   "asin": "B0FF47LLL8",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-20T17:00:00-05:00"
   },
   {
    "id": "837810336976492537",
@@ -287,6 +377,65 @@
    ]
   },
   {
+   "id": "rules-guard",
+   "state": "ok",
+   "lastRunAt": "2026-10-17T22:08:00-05:00",
+   "lastSummary": "Checked 9 pins: all passed (3 fixed before scheduling).",
+   "findings": [
+    {
+     "title": "Loose Leaf Tea Steeping Times: Green, White, Oolong, Black and Herbal",
+     "detail": "All 12 checks passed.",
+     "level": "ok"
+    },
+    {
+     "title": "Small Business Packaging Ideas: Thank You Stickers That Make Orders Personal",
+     "detail": "First photo had a brand name on a wax seal; swapped to a free photo with a plain thank-you tag.",
+     "level": "warn"
+    },
+    {
+     "title": "Meat Temperature Chart for Home Cooks (Plus a Thermometer Gift They'll Use)",
+     "detail": "Passed. Temps are USDA minimums, no safety guarantee.",
+     "level": "ok"
+    },
+    {
+     "title": "Etsy Shipping Tip: Use a Shipping Scale and Stop Guessing Postage",
+     "detail": "Headline overflowed the banner; shortened.",
+     "level": "warn"
+    },
+    {
+     "title": "Knife Storage Tips: How to Store Kitchen Knives Without Dulling the Edge",
+     "detail": "First photo showed price tags and blade logos; swapped photo and cropped to the magnet bar.",
+     "level": "warn"
+    },
+    {
+     "title": "Gooseneck Kettle for Tea Lovers: A Gentler Pour and the Right Temperature",
+     "detail": "All 12 checks passed.",
+     "level": "ok"
+    },
+    {
+     "title": "Chef Knife Care Rules: 5 Habits That Keep Your Kitchen Knife Sharp",
+     "detail": "All 12 checks passed.",
+     "level": "ok"
+    },
+    {
+     "title": "Stocking Stuffer for Home Cooks: A Zester for Cheese, Citrus and More",
+     "detail": "Passed; headline shortened to fit the collage banner.",
+     "level": "ok"
+    },
+    {
+     "title": "Small Business Packaging Ideas: Small Shipping Boxes for Little Orders",
+     "detail": "All 12 checks passed.",
+     "level": "ok"
+    }
+   ],
+   "log": [
+    {
+     "at": "2026-10-17T22:08:00-05:00",
+     "note": "Checked 9 pins: all passed (3 fixed before scheduling)."
+    }
+   ]
+  },
+  {
    "id": "shop-doctor",
    "state": "ok",
    "lastRunAt": "2026-10-17T20:42:00-05:00",
@@ -329,11 +478,15 @@
  "pinbot": {
   "status": {
    "state": "ok",
-   "lastRunAt": "2026-10-17T17:48:00-05:00",
-   "lastSummary": "Simulation: dry run made 3 draft pins (overlay, cheat sheet, collage) for tomorrow and added 2 new products; nothing was posted to Pinterest.",
+   "lastRunAt": "2026-10-17T22:08:00-05:00",
+   "lastSummary": "Scheduled 9 pins on Pinterest, filling every image slot through Oct 20; no new products needed.",
    "issues": [],
    "nextRun": "Daily · 9:03 AM",
    "log": [
+    {
+     "at": "2026-10-17T22:08:00-05:00",
+     "note": "Scheduled 9 pins on Pinterest, filling every image slot through Oct 20; no new products needed."
+    },
     {
      "at": "2026-10-17T17:48:00-05:00",
      "note": "Simulation: dry run made 3 draft pins (overlay, cheat sheet, collage) for tomorrow and added 2 new products; nothing was posted to Pinterest."
@@ -378,5 +531,5 @@
    }
   }
  },
- "updatedAt": "2026-10-17T21:09:46-05:00"
+ "updatedAt": "2026-10-17T22:08:33-05:00"
 }

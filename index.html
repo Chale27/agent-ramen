@@ -708,6 +708,12 @@ const HELPERS = [
   { id: "shop-doctor", name: "Doc the Raccoon", job: "Shop Doctor", at: [16, 288], tagH: 26, schedule: "Daily · 8 PM",
     desc: "Checks every bot ran, the website updated and GitHub is still signed in. If something broke, you get one clear \"Needs you\" note.",
     idle: ["Checking the shop's pulse", "All bots healthy?", "Doc's on call"] },
+  { id: "efficiency-inspector", name: "Kame the Tortoise", job: "Efficiency Inspector", at: [84, 167], tagH: 22, schedule: "Daily · 10:30 PM",
+    desc: "Every night Kame measures how each bot really did, from the raw run history and usage meter (not the bots' own notes), learns one new technique, judges yesterday's changes, and proposes up to 2 small improvements with the numbers to prove them.",
+    idle: ["Measuring, slowly and surely", "Where did the minutes go?", "One lesson a day"] },
+  { id: "efficiency-builder", name: "Kani the Crab", job: "Builder", at: [341, 218], tagH: 20, schedule: "Daily · 6:30 AM",
+    desc: "Every morning Kani makes one improvement Kame proposed: backs up the file, makes the change, tests it, and logs it. Changes that don't beat the numbers get rolled back. Anything risky waits for your Approve.",
+    idle: ["One careful change a day", "Backup first, always", "Snip snip, tested"] },
   { id: "earnings-cat", name: "Maneki the Lucky Cat", job: "Earnings Tracker", at: [366, 234], tagH: 16, schedule: "Updated by Hoot or by you",
     desc: "Keeps the till: clicks, orders and commission for the period. Hoot the Owl fills it in weekly, or you can type the numbers from your Amazon report.",
     idle: [] },
@@ -726,6 +732,7 @@ function renderHelper(id, back) {
   hqBody.append(st);
   if (id === "earnings-cat") return renderEarnings(d, web);
   hqBody.append(noteBox(d, d.lastRunAt || d.updatedAt));
+  if (id === "efficiency-inspector") renderEfficiency(d, web);
 
   const fs = el("section"); fs.append(el("h4", null, "Latest findings"));
   const list = Array.isArray(d.findings) ? d.findings : [];
@@ -734,6 +741,30 @@ function renderHelper(id, back) {
   hqBody.append(fs);
   if (RUNNABLE[id]) hqBody.append(runBox(RUNNABLE[id]), pauseBox(RUNNABLE[id], h.name.split(" ")[0]));
   if (id === "board-builder" || id === "program-hunter") hqBody.append(el("p", "empty", id === "board-builder" ? "To create a suggested board, tell Claude which one. Nothing is created without you." : "Sign up for a program yourself, then tell Claude: \"Assign <program> to <cook>.\""));
+}
+// Kame's scorecard (before → now for the shop's key numbers) and his proposals, with Approve for risky ones
+function renderEfficiency(d, web) {
+  const sec = el("section"); sec.append(el("h4", null, "Efficiency"));
+  const m = Array.isArray(d.metrics) ? d.metrics : [];
+  if (!m.length) sec.append(el("p", "empty", "No measurements yet. Kame's first inspection: daily at 10:30 PM."));
+  else { const ul = el("ul", "finds"); m.forEach(x => { const li = el("li", x.good === true ? "ok" : x.good === false ? "warn" : ""); li.append(el("b", null, String(x.name || "")), el("small", null, `before ${x.before ?? "—"} → now ${x.now ?? "—"}` + (x.target != null ? ` · target ${x.target}` : ""))); ul.append(li); }); sec.append(ul); }
+  const props = Array.isArray(d.proposals) ? d.proposals : [];
+  if (props.length) {
+    sec.append(el("h4", null, "Proposals"));
+    const ul = el("ul", "finds");
+    props.slice(0, 10).forEach(x => {
+      const li = el("li", x.risk === "needs_you" ? "warn" : "idea"), ok = approvals[x.id] && approvals[x.id].approved;
+      li.append(el("b", null, `${x.id || ""} · ${x.title || ""}`), el("small", null, `${x.bot || ""} · ${x.risk === "needs_you" ? "needs your OK" : "safe"} · ${x.status || "proposed"}. ${x.detail || ""}`));
+      if (x.risk === "needs_you" && (x.status || "proposed") === "proposed" && db && !web && x.id) {
+        const b = el("button", "btn" + (ok ? " ghost" : ""), ok ? "Approved ✓ (Kani applies it next morning)" : "Approve"); b.type = "button"; b.disabled = !!ok;
+        b.onclick = async () => { b.disabled = true; try { await db.doc("approvals/" + x.id).set({ approved: true, at: new Date().toISOString() }); approvals[x.id] = { approved: true }; b.textContent = "Approved ✓ (Kani applies it next morning)"; } catch (e) { b.disabled = false; b.textContent = "Couldn't save, try again"; } };
+        li.append(b);
+      }
+      ul.append(li);
+    });
+    sec.append(ul);
+  }
+  hqBody.append(sec);
 }
 function renderEarnings(d, web) {
   if (web) { hqBody.append(el("p", "lead", "Earnings are private, so they only show in the Claude version of the shop.")); return; }
@@ -757,7 +788,7 @@ function renderEarnings(d, web) {
 }
 
 /* ---- run tickets: a Run now button pins a ticket; Neko starts the task within 15 minutes ---- */
-/*CONFIG-START*/const SHOP_CONFIG = [{"id": "grand-canyon", "task": "daily-pinterest-pins", "name": "Sumi", "emoji": "📌", "label": "Run the Pin Bot (posts pins)", "schedule": "Daily · 9 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "grand-canyon", "task": "pin-bot-dry-run", "name": "Sumi", "emoji": "🧪", "label": "Pin Bot test (no posting)", "schedule": "On demand", "kind": "cook", "runnable": true}, {"id": "death-valley", "task": "video-bot", "name": "Kaen", "emoji": "🎬", "label": "Make & schedule a video pin", "schedule": "Daily · 11 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "neko", "task": "website-sync", "name": "Neko", "emoji": "🐈", "label": "Sync the website", "schedule": "Every 15 min · 8 AM–11 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "link-checker", "task": "link-checker", "name": "Tasu", "emoji": "🤖", "label": "Check all affiliate links", "schedule": "Daily · 7:30 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "stats-reader", "task": "stats-reader", "name": "Hoot", "emoji": "🦉", "label": "Read my stats", "schedule": "Weekly · Monday 8 AM", "kind": "helper", "runnable": true}, {"id": "trend-scout", "task": "trend-scout", "name": "Chirp", "emoji": "🐦", "label": "Scout trends", "schedule": "Weekly · Sunday 6 PM", "kind": "helper", "runnable": true}, {"id": "board-builder", "task": "board-builder", "name": "Kiko", "emoji": "🐭", "label": "Board ideas", "schedule": "Weekly · Sunday 7 PM", "kind": "helper", "runnable": true}, {"id": "program-hunter", "task": "program-hunter", "name": "Pon", "emoji": "🦝", "label": "Find new affiliate programs", "schedule": "Daily · 10 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "shop-doctor", "task": "shop-doctor", "name": "Doc", "emoji": "🩺", "label": "Health check", "schedule": "Daily · 8 PM", "kind": "helper", "runnable": true, "daily": true}];/*CONFIG-END*/
+/*CONFIG-START*/const SHOP_CONFIG = [{"id": "grand-canyon", "task": "daily-pinterest-pins", "name": "Sumi", "emoji": "📌", "label": "Run the Pin Bot (posts pins)", "schedule": "Daily · 9 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "grand-canyon", "task": "pin-bot-dry-run", "name": "Sumi", "emoji": "🧪", "label": "Pin Bot test (no posting)", "schedule": "On demand", "kind": "cook", "runnable": true}, {"id": "death-valley", "task": "video-bot", "name": "Kaen", "emoji": "🎬", "label": "Make & schedule a video pin", "schedule": "Daily · 11 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "neko", "task": "website-sync", "name": "Neko", "emoji": "🐈", "label": "Sync the website", "schedule": "Every 15 min · 8 AM–11 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "link-checker", "task": "link-checker", "name": "Tasu", "emoji": "🤖", "label": "Check all affiliate links", "schedule": "Daily · 7:30 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "stats-reader", "task": "stats-reader", "name": "Hoot", "emoji": "🦉", "label": "Read my stats", "schedule": "Weekly · Monday 8 AM", "kind": "helper", "runnable": true}, {"id": "trend-scout", "task": "trend-scout", "name": "Chirp", "emoji": "🐦", "label": "Scout trends", "schedule": "Weekly · Sunday 6 PM", "kind": "helper", "runnable": true}, {"id": "board-builder", "task": "board-builder", "name": "Kiko", "emoji": "🐭", "label": "Board ideas", "schedule": "Weekly · Sunday 7 PM", "kind": "helper", "runnable": true}, {"id": "program-hunter", "task": "program-hunter", "name": "Pon", "emoji": "🦝", "label": "Find new affiliate programs", "schedule": "Daily · 10 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "shop-doctor", "task": "shop-doctor", "name": "Doc", "emoji": "🩺", "label": "Health check", "schedule": "Daily · 8 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "efficiency-inspector", "task": "efficiency-inspector", "name": "Kame", "emoji": "🐢", "label": "Inspect efficiency", "schedule": "Daily · 10:30 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "efficiency-builder", "task": "efficiency-builder", "name": "Kani", "emoji": "🦀", "label": "Apply one improvement", "schedule": "Daily · 6:30 AM", "kind": "helper", "runnable": true, "daily": true}];/*CONFIG-END*/
 const RUNNABLE = Object.fromEntries(SHOP_CONFIG.filter(b => b.runnable && b.kind === "helper").map(b => [b.id, b.task]));
 const RUN_LABEL = { "daily-pinterest-pins": "Pin Bot", "pin-bot-dry-run": "Pin Bot test run" };
 let runReqs = {}, runFirst = true;
@@ -883,7 +914,9 @@ setInterval(() => {
 
 /* ---- per-bot settings: a Pause switch on every bot's panel (the bot reads settings/<task> before it starts) ---- */
 let botSettings = {};
-function listenSettings() { db.collection("settings").onSnapshot(s => { botSettings = {}; s.docs.forEach(d => { if (d.exists) botSettings[d.id] = d.data(); }); rerender(); }, () => {}); }
+let approvals = {};
+function listenSettings() { db.collection("settings").onSnapshot(s => { botSettings = {}; s.docs.forEach(d => { if (d.exists) botSettings[d.id] = d.data(); }); rerender(); }, () => {});
+  db.collection("approvals").onSnapshot(s => { approvals = {}; s.docs.forEach(d => { if (d.exists) approvals[d.id] = d.data(); }); rerender(); }, () => {}); }
 function pauseBox(task, label) {
   const box = el("div", "runbox");
   if (!db || db.readOnly) return box;
@@ -1598,6 +1631,23 @@ function drawHelpers(c, t) {
   c.save(); c.translate(16, 288); c.scale(2, 2); c.translate(-16, -288);
   { const x = 16, y = 288 - bob(5); R(c, x - 4, y - 6, 8, 6, "#8d949b"); R(c, x - 3, y - 10, 6, 4, "#a9b0b6"); R(c, x - 3, y - 9, 6, 1, "#2b1d12"); R(c, x - 2, y - 9, 1, 1, "#fffaf0"); R(c, x + 1, y - 9, 1, 1, "#fffaf0"); R(c, x - 3, y - 11, 1, 1, "#8d949b"); R(c, x + 2, y - 11, 1, 1, "#8d949b");
     for (let k = 0; k < 3; k++) R(c, x + 4 + k, y - 4 + k, 1, 1, k % 2 ? "#2b1d12" : "#a9b0b6"); R(c, x - 8, y - 4, 5, 4, "#fffaf0"); R(c, x - 6, y - 3, 1, 3, "#c8382c"); R(c, x - 7, y - 2, 3, 1, "#c8382c"); }
+  c.restore();
+  // Kame the Tortoise on the kitchen floor with a magnifying glass
+  c.save(); c.translate(84, 167); c.scale(2, 2); c.translate(-84, -167);
+  { const x = 84, y = 167, look = reduce ? 0 : Math.floor(t * .8) % 2;
+    R(c, x - 5, y - 1, 2, 1, "#8fae5a"); R(c, x + 3, y - 1, 2, 1, "#8fae5a"); disc(c, x, y - 4, 5, 3, "#5f7f3a"); R(c, x - 5, y - 2, 11, 1, "#8a6a3a");
+    R(c, x - 2, y - 6, 2, 2, "#4a6a2e"); R(c, x + 1, y - 5, 2, 2, "#4a6a2e"); R(c, x - 4, y - 4, 2, 1, "#4a6a2e"); R(c, x - 1, y - 7, 3, 1, "#7fa04a");
+    disc(c, x + 6, y - 4 - look, 2, 2, "#a8c07a"); R(c, x + 7, y - 5 - look, 1, 1, blink(6) ? "#a8c07a" : "#2b1d12");
+    disc(c, x + 10, y - 7, 2, 2, "#8d949b"); R(c, x + 10, y - 7, 1, 1, "#d6eef8"); R(c, x + 9, y - 5, 1, 2, "#7a4a2a"); }
+  c.restore();
+  // Kani the Crab in a hard hat with a little wrench, by the entrance
+  c.save(); c.translate(341, 218); c.scale(2, 2); c.translate(-341, -218);
+  { const x = 341, y = 218, tap = reduce ? 0 : Math.floor(t * 3) % 2, sc = reduce ? 0 : Math.round(Math.sin(t * .7) * 1);
+    for (let k = 0; k < 3; k++) { R(c, x - 5 - k, y - 1 + (k ? 0 : -1), 2, 1, "#c8442f"); R(c, x + 4 + k, y - 1 + (k ? 0 : -1), 2, 1, "#c8442f"); }
+    disc(c, x + sc, y - 3, 4, 2, "#e0573a"); R(c, x - 3 + sc, y - 4, 2, 1, "#ec7a5c");
+    R(c, x - 2 + sc, y - 7, 1, 3, "#e0573a"); R(c, x + 1 + sc, y - 7, 1, 3, "#e0573a"); R(c, x - 2 + sc, y - 8, 1, 1, blink(7) ? "#e0573a" : "#2b1d12"); R(c, x + 1 + sc, y - 8, 1, 1, blink(7) ? "#e0573a" : "#2b1d12");
+    disc(c, x + sc, y - 9, 3, 1, "#f2c14e"); R(c, x - 3 + sc, y - 9, 7, 1, "#d9a441");
+    disc(c, x - 6 + sc, y - 5, 2, 2, "#e0573a"); disc(c, x + 6 + sc, y - 5 - tap, 2, 2, "#e0573a"); R(c, x + 8 + sc, y - 9 - tap, 1, 4, "#9aa1a7"); R(c, x + 7 + sc, y - 10 - tap, 3, 1, "#9aa1a7"); }
   c.restore();
   // Maneki the Lucky Cat: little coin when the till has numbers
   if (helperDocs["earnings-cat"] && helperDocs["earnings-cat"].updatedAt && !reduce && Math.floor(t * 1.5) % 4 === 0) { disc(c, 372, 222, 2, 2, "#ffd45a"); R(c, 372, 221, 1, 2, "#d9a441"); }

@@ -513,7 +513,7 @@ orderForm.addEventListener("submit", async e => {
 const PINBOT_COOK = "grand-canyon";
 const STATION_DEFAULTS = {
   "death-valley": { program: "Amazon Associates × Pinterest video", job: "Video Bot", status: "on", desc: "Makes one 9:16 video pin a day for the 8 PM slot, and scouts the best creator videos for your products. Creator videos only post with their written permission." },
-  "grand-canyon": { program: "Amazon Associates × Pinterest", job: "Pin Bot", status: "on", desc: "Makes Pinterest pins with Amazon links every morning and keeps 3 days queued. Pinterest releases 5 a day at 10, 12, 2, 5 and 8." },
+  "grand-canyon": { program: "Amazon Associates × Pinterest", job: "Pin Bot", status: "on", desc: "Makes Pinterest pins with Amazon links and keeps about a week queued. Pinterest releases 7 a day at 8, 10, 12, 2, 5, 7 and 8 (Kaen's video)." },
 };
 const STATION_COOKS = ["grand-canyon", "denali", "death-valley", "yosemite", "sequoia", "ruflo"];
 const BOARDS = ["Kitchen Knife Care & Sharpening", "Tea Lover's Kitchen", "Gift Ideas for Home Cooks", "Etsy Shop Shipping Setup", "Small Business Packaging Ideas"];
@@ -993,11 +993,11 @@ function renderStation(id) {
     hqBody.append(n);
   }
   if (db && !db.readOnly) {
-    const c = Object.assign({ paused: false, perDay: 5, boards: BOARDS.slice(), note: "" }, pbControl || {});
+    const c = Object.assign({ paused: false, perDay: 7, boards: BOARDS.slice(), note: "" }, pbControl || {});
     const box = el("section", "ctl"); box.append(el("h4", null, "Your controls"), el("p", "lead", "The bot reads these at the start of every 9 AM run."));
     const r1 = el("div", "row2");
     const pause = el("input"); pause.type = "checkbox"; pause.checked = !!c.paused; const pl = el("label"); pl.append(pause, document.createTextNode("Pause the Pin Bot"));
-    const per = el("select"); [1, 2, 3, 4, 5].forEach(n => { const o = el("option", null, n + " a day"); o.value = n; if (n === Number(c.perDay)) o.selected = true; per.append(o); }); const prl = el("label"); prl.append(document.createTextNode("Pins per day"), per);
+    const per = el("select"); [1, 2, 3, 4, 5, 6, 7].forEach(n => { const o = el("option", null, n + " a day"); o.value = n; if (n === Number(c.perDay)) o.selected = true; per.append(o); }); const prl = el("label"); prl.append(document.createTextNode("Pins per day"), per);
     r1.append(pl, prl); box.append(r1);
     const r2 = el("div", "row2"); const checks = BOARDS.map(bn => { const i = el("input"); i.type = "checkbox"; i.checked = (c.boards || BOARDS).includes(bn); const l = el("label"); l.append(i, document.createTextNode(bn)); r2.append(l); return [bn, i]; });
     box.append(el("small", null, "Boards to pin to"), r2);
@@ -1572,7 +1572,7 @@ function stepFx(dt) {
   for (let i = drops.length - 1; i >= 0; i--) { const q = drops[i]; q.life -= dt; q.vy += 160 * dt; q.x += q.vx * dt; q.y += q.vy * dt; if (q.life <= 0 || q.y > 44) drops.splice(i, 1); }
 }
 
-const chalkLines = ["Today's pins", "Pin Bot on", "5 a day", "10·12·2·5·8", "> open Sumi"];
+const chalkLines = ["Today's pins", "Pin Bot on", "7 a day", "8·10·12·2·5·7·8", "> open Sumi"];
 let chalkShown = 1;
 
 /* ---- overlay: signs, name tags, bubbles ---- */

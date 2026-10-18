@@ -676,8 +676,9 @@ function listenRuns() {
 }
 function runBox(task, label, warn) {
   const box = el("div", "runbox");
-  if (!db || db.readOnly) {
-    const n = el("span", "st"); n.append(document.createTextNode(db ? "▶ Run now buttons are in the " : "▶ Run now buttons show when this page has loaded on claude.ai, signed in. Open the "));
+  if (db && db.readOnly) return ghRunBox(box, task, label, warn);
+  if (!db) {
+    const n = el("span", "st"); n.append(document.createTextNode("▶ Run now buttons show when this page has loaded on claude.ai, signed in. Open the "));
     const a = el("a", null, "Claude version of the shop"); a.href = "https://claude.ai/artifact/QLXtBuNqgZgd1MhjUgQzG5"; a.target = "_blank"; a.rel = "noopener"; n.append(a, document.createTextNode("."));
     box.append(n); return box;
   }
@@ -691,6 +692,27 @@ function runBox(task, label, warn) {
     catch (e) { b.disabled = false; b.textContent = "Couldn't pin the ticket"; }
   };
   box.append(b, st); return box;
+}
+
+/* ---- website run tickets: GitHub issues titled "run: <task>"; Neko only accepts ones opened by Chale27 ---- */
+const GH_REPO = "Chale27/agent-ramen", GH_OWNER = "Chale27";
+let ghTickets = null, ghFetchedAt = 0;
+function loadGhTickets() {
+  if (Date.now() - ghFetchedAt < 60000) return; ghFetchedAt = Date.now();
+  fetch(`https://api.github.com/repos/${GH_REPO}/issues?state=all&creator=${GH_OWNER}&per_page=50&sort=created&direction=desc`, { headers: { Accept: "application/vnd.github+json" } })
+    .then(r => r.ok ? r.json() : []).then(list => { ghTickets = (Array.isArray(list) ? list : []).filter(i => !i.pull_request && /^run:\s*/i.test(i.title || "")); rerender(); }).catch(() => {});
+}
+function ghRunBox(box, task, label, warn) {
+  const title = "run: " + task, body = "Pinned from the Agent Ramen website. Neko starts it within 5 minutes (8 AM–11 PM) and closes this ticket. Only tickets opened by @" + GH_OWNER + " are run.";
+  const a = el("a", "btn", "▶ " + (label || "Run now")); a.href = `https://github.com/${GH_REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`; a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none";
+  if (warn) a.onclick = e => { if (!confirm(warn)) e.preventDefault(); };
+  const st = el("span", "st"); loadGhTickets();
+  const at = s => s ? new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "";
+  const last = ghTickets && ghTickets.find(i => i.title.trim().toLowerCase() === title);
+  st.textContent = !last ? "Opens a GitHub ticket. Tap Submit, and Neko starts it within 5 minutes. Only your GitHub account can start runs."
+    : last.state === "open" ? "Ticket open since " + at(last.created_at) + " · waiting for Neko."
+    : "Last started " + at(last.closed_at) + " (ticket #" + last.number + ").";
+  box.append(a, st); return box;
 }
 function runStatus(r) {
   if (!r) return "Neko starts it within 5 minutes (8 AM–11 PM).";
@@ -734,7 +756,7 @@ function renderStation(id) {
   }
   hqTitle.textContent = `${name} · Pin Bot`;
   hqBody.append(back, el("p", "lead", s.desc));
-  if (db && !db.readOnly) { hqBody.append(runBox("pin-bot-dry-run", "Test run (no posting)")); hqBody.append(runBox("daily-pinterest-pins", "Run the Pin Bot now", "This posts real pins to Pinterest (up to 5 per day). Pin a run ticket?")); } else hqBody.append(runBox("daily-pinterest-pins"));
+  if (db && !db.readOnly) { hqBody.append(runBox("pin-bot-dry-run", "Test run (no posting)")); hqBody.append(runBox("daily-pinterest-pins", "Run the Pin Bot now", "This posts real pins to Pinterest (up to 5 per day). Pin a run ticket?")); } else { hqBody.append(runBox("pin-bot-dry-run", "Test run (no posting)")); hqBody.append(runBox("daily-pinterest-pins", "Run the Pin Bot now", "This posts real pins to Pinterest (up to 5 per day). Open a run ticket?")); }
   const state = pbState(), st = el("div", "hq-stats"), up = upcoming(), live = released();
   st.append(stat("Status", STATE_TXT[state] || state), stat("Last run", pbStatus && pbStatus.lastRunAt ? new Date(pbStatus.lastRunAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not yet"), stat("Next run", (pbStatus && pbStatus.nextRun) || "Daily · 9 AM"), stat("Queued", String(up.length)));
   hqBody.append(st);

@@ -1,6 +1,33 @@
 {
  "pins": [
   {
+   "id": "2026-10-18-1000",
+   "title": "Holiday Gift Guide for Home Cooks: Gifts They'll Actually Use",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Shop: gift guide",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-18T10:00:00-05:00"
+  },
+  {
+   "id": "2026-10-18-1200",
+   "title": "Etsy Shipping Setup Checklist: Everything You Need to Ship From Home",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Shop: shipping setup",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-18T12:00:00-05:00"
+  },
+  {
+   "id": "2026-10-18-1400",
+   "title": "Knife Care Kit for Beginners: How to Keep Kitchen Knives Sharp",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "Shop: knife care kit",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-18T14:00:00-05:00"
+  },
+  {
    "id": "837810336976492537",
    "title": "Dull Knives? How to Sharpen Kitchen Knives at Home (Beginner Way)",
    "board": "Kitchen Knife Care & Sharpening",
@@ -266,5 +293,5 @@
    "paused": false
   }
  },
- "updatedAt": "2026-10-17T19:45:11-05:00"
+ "updatedAt": "2026-10-17T20:41:59-05:00"
 }

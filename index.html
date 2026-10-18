@@ -759,8 +759,8 @@ function renderEfficiency(d, web) {
       const li = el("li", x.risk === "needs_you" ? "warn" : "idea"), ok = approvals[x.id] && approvals[x.id].approved;
       li.append(el("b", null, `${x.id || ""} · ${x.title || ""}`), el("small", null, `${x.bot || ""} · ${x.risk === "needs_you" ? "needs your OK" : "safe"} · ${x.status || "proposed"}. ${x.detail || ""}`));
       if (x.risk === "needs_you" && (x.status || "proposed") === "proposed" && db && !web && x.id) {
-        const b = el("button", "btn" + (ok ? " ghost" : ""), ok ? "Approved ✓ (Kani applies it next morning)" : "Approve"); b.type = "button"; b.disabled = !!ok;
-        b.onclick = async () => { b.disabled = true; try { await db.doc("approvals/" + x.id).set({ approved: true, at: new Date().toISOString() }); approvals[x.id] = { approved: true }; b.textContent = "Approved ✓ (Kani applies it next morning)"; } catch (e) { b.disabled = false; b.textContent = "Couldn't save, try again"; } };
+        const b = el("button", "btn" + (ok ? " ghost" : ""), ok ? (x.type === "new_bot" ? "Approved ✓ Tell Claude: \"hatch approved bots\"" : "Approved ✓ (Kani applies it next morning)") : (x.type === "new_bot" ? "Approve this new bot" : x.type === "retire_bot" ? "Approve retiring it" : "Approve")); b.type = "button"; b.disabled = !!ok;
+        b.onclick = async () => { b.disabled = true; try { await db.doc("approvals/" + x.id).set({ approved: true, at: new Date().toISOString() }); approvals[x.id] = { approved: true }; b.textContent = x.type === "new_bot" ? "Approved ✓ Tell Claude: \"hatch approved bots\"" : "Approved ✓ (Kani applies it next morning)"; } catch (e) { b.disabled = false; b.textContent = "Couldn't save, try again"; } };
         li.append(b);
       }
       ul.append(li);
@@ -793,6 +793,13 @@ function renderEarnings(d, web) {
 /* ---- run tickets: a Run now button pins a ticket; Neko starts the task within 15 minutes ---- */
 /*CONFIG-START*/const SHOP_CONFIG = [{"id": "grand-canyon", "task": "daily-pinterest-pins", "name": "Sumi", "emoji": "📌", "label": "Run the Pin Bot (posts pins)", "schedule": "Daily · 9 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "grand-canyon", "task": "pin-bot-dry-run", "name": "Sumi", "emoji": "🧪", "label": "Pin Bot test (no posting)", "schedule": "On demand", "kind": "cook", "runnable": true}, {"id": "death-valley", "task": "video-bot", "name": "Kaen", "emoji": "🎬", "label": "Make & schedule a video pin", "schedule": "Daily · 11 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "neko", "task": "website-sync", "name": "Neko", "emoji": "🐈", "label": "Sync the website", "schedule": "Every 15 min · 8 AM–11 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "link-checker", "task": "link-checker", "name": "Tasu", "emoji": "🤖", "label": "Check all affiliate links", "schedule": "Daily · 7:30 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "stats-reader", "task": "stats-reader", "name": "Hoot", "emoji": "🦉", "label": "Read my stats", "schedule": "Weekly · Monday 8 AM", "kind": "helper", "runnable": true}, {"id": "trend-scout", "task": "trend-scout", "name": "Chirp", "emoji": "🐦", "label": "Scout trends", "schedule": "Weekly · Sunday 6 PM", "kind": "helper", "runnable": true}, {"id": "board-builder", "task": "board-builder", "name": "Kiko", "emoji": "🐭", "label": "Board ideas", "schedule": "Weekly · Sunday 7 PM", "kind": "helper", "runnable": true}, {"id": "program-hunter", "task": "program-hunter", "name": "Pon", "emoji": "🦝", "label": "Find new affiliate programs", "schedule": "Daily · 10 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "shop-doctor", "task": "shop-doctor", "name": "Doc", "emoji": "🩺", "label": "Health check", "schedule": "Daily · 8 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "efficiency-inspector", "task": "efficiency-inspector", "name": "Kame", "emoji": "🐢", "label": "Inspect efficiency", "schedule": "Daily · 10:30 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "efficiency-builder", "task": "efficiency-builder", "name": "Kani", "emoji": "🦀", "label": "Apply one improvement", "schedule": "Daily · 6:30 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "link-promoter", "task": "link-promoter", "name": "Tsuru", "emoji": "🕊️", "label": "Plan better link promotion", "schedule": "Daily · 8:15 AM", "kind": "helper", "runnable": true, "daily": true}];/*CONFIG-END*/
 const RUNNABLE = Object.fromEntries(SHOP_CONFIG.filter(b => b.runnable && b.kind === "helper").map(b => [b.id, b.task]));
+// hatched bots (designed by Kame, approved by you) appear as little chicks, straight from shop-config.json
+SHOP_CONFIG.filter(b => b.hatched && Array.isArray(b.spot)).forEach(b => {
+  if (HELPER_BY[b.id]) return;
+  const h = { id: b.id, name: b.fullName || b.name, job: b.job || b.label, at: b.spot, tagH: 21, schedule: b.schedule, hatched: true, color: /^#[0-9a-f]{6}$/i.test(b.color || "") ? b.color : "#f2c14e",
+    desc: String(b.desc || "A new helper the shop hatched for itself.").replace(/([^.!?])$/, "$1.") + (b.trial === "running" ? " On a 2-week trial: Kame keeps it only if its numbers improve." : ""), idle: [] };
+  HELPERS.push(h); HELPER_BY[b.id] = h;
+});
 const RUN_LABEL = { "daily-pinterest-pins": "Pin Bot", "pin-bot-dry-run": "Pin Bot test run" };
 let runReqs = {}, runFirst = true;
 function listenRuns() {
@@ -1659,6 +1666,14 @@ function drawHelpers(c, t) {
     R(c, x - 2, y - 7 + f, 5, 3 - f, "#e9e0cc"); R(c, x - 1, y - 9 + f * 2, 3, 2, "#e9e0cc"); R(c, x, y - 11 + f * 3, 1, 2, "#e9e0cc"); R(c, x - 1, y - 7 + f, 1, 1, "#c8382c");
     R(c, x + 4, y - 8, 1, 4, "#f6efe2"); R(c, x + 4, y - 9, 2, 1, "#f6efe2"); R(c, x + 6, y - 9, 1, 1, "#c8382c"); R(c, x + 5, y - 9, 1, 1, "#2b1d12"); }
   c.restore();
+  // hatched chicks, one per bot the shop grew for itself
+  HELPERS.filter(h => h.hatched).forEach((h, i) => { const [x0, y0] = h.at, col = h.color;
+    c.save(); c.translate(x0, y0); c.scale(2, 2); c.translate(-x0, -y0);
+    const x = x0, y = y0 - bob(8 + i);
+    R(c, x - 3, y0, 7, 1, "rgba(60,30,10,.25)"); R(c, x - 3, y0 - 1, 2, 1, "#fbf6ea"); R(c, x + 2, y0 - 1, 2, 1, "#fbf6ea");
+    disc(c, x, y - 3, 3, 2, col); disc(c, x + 1, y - 7, 2, 2, col); R(c, x - 3, y - 4, 2, 2, shade(col, .82)); R(c, x, y - 10, 1, 1, col); R(c, x + 1, y - 10, 1, 1, shade(col, .82));
+    R(c, x + 2, y - 8, 1, 1, blink(9 + i) ? col : "#2b1d12"); R(c, x + 3, y - 7, 2, 1, "#f2a24a");
+    c.restore(); });
   // Maneki the Lucky Cat: little coin when the till has numbers
   if (helperDocs["earnings-cat"] && helperDocs["earnings-cat"].updatedAt && !reduce && Math.floor(t * 1.5) % 4 === 0) { disc(c, 372, 222, 2, 2, "#ffd45a"); R(c, 372, 221, 1, 2, "#d9a441"); }
 }

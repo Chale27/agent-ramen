@@ -269,6 +269,45 @@
      "note": "4 new network programs; best: HexClad on Awin, up to 20%, 30-day cookie."
     }
    ]
+  },
+  {
+   "id": "shop-doctor",
+   "state": "ok",
+   "lastRunAt": "2026-10-17T20:42:00-05:00",
+   "lastSummary": "All bots healthy; Pin Bot and link checker make their first scheduled runs tomorrow.",
+   "findings": [
+    {
+     "title": "Scheduled runs",
+     "detail": "No failed runs. website-sync and program-hunter ran today. daily-pinterest-pins and link-checker have no runs yet, but were set up today and first run tomorrow (7:30 and 9:03 AM). Weekly bots not due yet.",
+     "level": "warn"
+    },
+    {
+     "title": "Pin Bot health",
+     "detail": "Pin Bot, website sync and Pon all 'ok'. Pin Bot last ran 5:48 PM today (dry run).",
+     "level": "ok"
+    },
+    {
+     "title": "Website",
+     "detail": "data.json returned 200, updated 7:45 PM today.",
+     "level": "ok"
+    },
+    {
+     "title": "GitHub sign-in",
+     "detail": "Signed in as Chale27.",
+     "level": "ok"
+    },
+    {
+     "title": "Link health",
+     "detail": "link-status.csv has no rows yet; the link checker hasn't had its first run. No dead or mismatched links reported.",
+     "level": "warn"
+    }
+   ],
+   "log": [
+    {
+     "at": "2026-10-17T20:42:00-05:00",
+     "note": "All bots healthy; Pin Bot and link checker make their first scheduled runs tomorrow."
+    }
+   ]
   }
  ],
  "pinbot": {
@@ -293,5 +332,5 @@
    "paused": false
   }
  },
- "updatedAt": "2026-10-17T20:41:59-05:00"
+ "updatedAt": "2026-10-17T20:49:49-05:00"
 }

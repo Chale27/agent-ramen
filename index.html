@@ -138,6 +138,7 @@ h1 span { color: var(--red); }
 .empty { margin: 0; font-size: 13px; color: var(--muted); }
 details.prods summary { cursor: pointer; font: 700 14px var(--pixel); }
 details.prods ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
+@media (max-width: 700px) { .tag.mini { display: none; } }
 .tag.mini { font-size: clamp(7px, .8vw, 10px); padding: 0 3px; background: rgba(43,29,18,.72); color: #f3ede1; }
 .finds { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .finds li { background: var(--cream); border-left: 4px solid #8d949b; padding: 4px 8px; font-size: 13.5px; }
@@ -167,7 +168,8 @@ details.prods ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
 .pin-tools { display: grid; gap: 6px; } .pin-tools input { font: 500 14px var(--body); color: var(--fg); background: #fffdf7; border: 2px solid var(--tag); padding: 5px 8px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; } .chips button { font: 600 12px var(--body); color: var(--fg); background: var(--cream); border: 2px solid var(--line); border-radius: 999px; padding: 2px 10px; cursor: pointer; } .chips button.on { border-color: var(--red); background: #ffe2da; }
 .chart-wrap { margin: 0; } .pin-chart { width: 100%; max-width: 460px; height: auto; display: block; } .chart-wrap figcaption { font-size: 12px; color: var(--muted); }
-.clock-chip { position: absolute; right: 8px; top: 40px; z-index: 6; font: 700 11px var(--pixel); color: var(--cream); background: rgba(43,29,18,.82); border: 2px solid var(--tag); padding: 1px 7px; pointer-events: none; }
+.clock-chip { position: absolute; left: 50%; transform: translateX(-50%); bottom: 6px; z-index: 6; font: 700 clamp(9px, 1.1vw, 12px) var(--pixel); color: var(--cream); background: rgba(43,29,18,.88); border: 2px solid var(--tag); border-radius: 4px; padding: 2px 9px; cursor: pointer; white-space: nowrap; max-width: calc(100% - 210px); overflow: hidden; text-overflow: ellipsis; }
+.clock-chip:hover { background: var(--tag); }
 .directory { z-index: 7; position: absolute; inset: 6% 12%; background: #fbecd0; border: 4px solid var(--tag); box-shadow: inset 0 0 0 3px #e8cfa2, 0 6px 0 rgba(43,29,18,.4); display: flex; flex-direction: column; min-height: 0; }
 .directory .top { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 3px solid #e0c391; }
 .directory h3 { margin: 0; font: 700 18px var(--pixel); white-space: nowrap; }
@@ -679,10 +681,10 @@ function renderNeko(back) {
 
 /* ================= shop helpers: animals and objects that keep the affiliate kitchen running ================= */
 const HELPERS = [
-  { id: "link-checker", name: "Tasu the Taste-Bot", job: "Link Checker", at: [22, 182], tagH: 16, schedule: "Daily · 7:30 AM",
+  { id: "link-checker", name: "Tasu the Taste-Bot", job: "Link Checker", at: [22, 182], tagH: 31, schedule: "Daily · 7:30 AM",
     desc: "Opens every affiliate link in your pins each morning: does the product still exist, is it in stock, does it still match the pin? Bad links go on a list the Pin Bot won't use.",
     idle: ["Tasting every link…", "Beep: all links fresh?", "No dead links on my watch"] },
-  { id: "stats-reader", name: "Hoot the Owl", job: "Stats Reader", at: [19, 49], tagH: 12, schedule: "Weekly · Monday 8 AM",
+  { id: "stats-reader", name: "Hoot the Owl", job: "Stats Reader", at: [19, 49], tagH: 22, schedule: "Weekly · Monday 8 AM",
     desc: "Reads your Pinterest Analytics and Amazon Associates reports each week (in your signed-in Chrome) and writes what's working: top pins, clicks, orders. The Pin Bot leans toward the winners.",
     idle: ["Reading the numbers…", "Which pins got clicks?", "Hoo earned the most?"] },
   { id: "rules-guard", name: "Kitsune the Shrine Fox", job: "Rules Guard", at: [319, 18], tagH: 10, schedule: "Every Pin Bot run",
@@ -691,13 +693,13 @@ const HELPERS = [
   { id: "trend-scout", name: "Chirp the Sparrow", job: "Trend Scout", at: [247, 35], tagH: 9, schedule: "Weekly · Sunday 6 PM",
     desc: "Checks what's rising on Pinterest Trends and Amazon Movers & Shakers for your boards, and leaves timely pin ideas for the Pin Bot.",
     idle: ["Something's trending!", "Gift season is coming", "Fresh ideas from outside"] },
-  { id: "program-hunter", name: "Pon the Tanuki", job: "Program Hunter", at: [374, 124], tagH: 14, schedule: "Daily · 10 AM",
+  { id: "program-hunter", name: "Pon the Tanuki", job: "Program Hunter", at: [374, 124], tagH: 26, schedule: "Daily · 10 AM",
     desc: "Every day brings new affiliate programs that pay more than Amazon (never repeats), each with rates, cookie length and how to apply, plus 2 fresh money ideas. You do the sign-ups; then each program can fill an open cook's station.",
     idle: ["Sniffing out better programs", "12% beats 3%…", "Got a sign-up list for you"] },
-  { id: "board-builder", name: "Kiko the Carpenter Mouse", job: "Board Builder", at: [22, 128], tagH: 9, schedule: "Weekly · Sunday 7 PM",
+  { id: "board-builder", name: "Kiko the Carpenter Mouse", job: "Board Builder", at: [22, 128], tagH: 15, schedule: "Weekly · Sunday 7 PM",
     desc: "Suggests new Pinterest boards when a topic is doing well, with names and descriptions ready. Nothing is created until you say yes.",
     idle: ["Measuring a new board", "Tap tap tap", "A board for that topic?"] },
-  { id: "shop-doctor", name: "Doc the Raccoon", job: "Shop Doctor", at: [16, 288], tagH: 14, schedule: "Daily · 8 PM",
+  { id: "shop-doctor", name: "Doc the Raccoon", job: "Shop Doctor", at: [16, 288], tagH: 26, schedule: "Daily · 8 PM",
     desc: "Checks every bot ran, the website updated and GitHub is still signed in. If something broke, you get one clear \"Needs you\" note.",
     idle: ["Checking the shop's pulse", "All bots healthy?", "Doc's on call"] },
   { id: "earnings-cat", name: "Maneki the Lucky Cat", job: "Earnings Tracker", at: [366, 234], tagH: 16, schedule: "Updated by Hoot or by you",
@@ -749,7 +751,8 @@ function renderEarnings(d, web) {
 }
 
 /* ---- run tickets: a Run now button pins a ticket; Neko starts the task within 5 minutes ---- */
-const RUNNABLE = { "link-checker": "link-checker", "stats-reader": "stats-reader", "trend-scout": "trend-scout", "board-builder": "board-builder", "program-hunter": "program-hunter", "shop-doctor": "shop-doctor", neko: "website-sync" };
+/*CONFIG-START*/const SHOP_CONFIG = [{"id": "grand-canyon", "task": "daily-pinterest-pins", "name": "Sumi", "emoji": "📌", "label": "Run the Pin Bot (posts pins)", "schedule": "Daily · 9 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "grand-canyon", "task": "pin-bot-dry-run", "name": "Sumi", "emoji": "🧪", "label": "Pin Bot test (no posting)", "schedule": "On demand", "kind": "cook", "runnable": true}, {"id": "death-valley", "task": "video-bot", "name": "Kaen", "emoji": "🎬", "label": "Make & schedule a video pin", "schedule": "Daily · 11 AM", "kind": "cook", "runnable": true, "daily": true, "posts": true}, {"id": "neko", "task": "website-sync", "name": "Neko", "emoji": "🐈", "label": "Sync the website", "schedule": "Every 5 min · 8 AM–11 PM", "kind": "helper", "runnable": true, "daily": true}, {"id": "link-checker", "task": "link-checker", "name": "Tasu", "emoji": "🤖", "label": "Check all affiliate links", "schedule": "Daily · 7:30 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "stats-reader", "task": "stats-reader", "name": "Hoot", "emoji": "🦉", "label": "Read my stats", "schedule": "Weekly · Monday 8 AM", "kind": "helper", "runnable": true}, {"id": "trend-scout", "task": "trend-scout", "name": "Chirp", "emoji": "🐦", "label": "Scout trends", "schedule": "Weekly · Sunday 6 PM", "kind": "helper", "runnable": true}, {"id": "board-builder", "task": "board-builder", "name": "Kiko", "emoji": "🐭", "label": "Board ideas", "schedule": "Weekly · Sunday 7 PM", "kind": "helper", "runnable": true}, {"id": "program-hunter", "task": "program-hunter", "name": "Pon", "emoji": "🦝", "label": "Find new affiliate programs", "schedule": "Daily · 10 AM", "kind": "helper", "runnable": true, "daily": true}, {"id": "shop-doctor", "task": "shop-doctor", "name": "Doc", "emoji": "🩺", "label": "Health check", "schedule": "Daily · 8 PM", "kind": "helper", "runnable": true, "daily": true}];/*CONFIG-END*/
+const RUNNABLE = Object.fromEntries(SHOP_CONFIG.filter(b => b.runnable && b.kind === "helper").map(b => [b.id, b.task]));
 const RUN_LABEL = { "daily-pinterest-pins": "Pin Bot", "pin-bot-dry-run": "Pin Bot test run" };
 let runReqs = {}, runFirst = true;
 function listenRuns() {
@@ -852,7 +855,7 @@ function renderVideo(back) {
 }
 
 /* ---- live status: lantern dots on every name tag, steam over cooks whose bot is running ---- */
-const TASK_OF = { "grand-canyon": "daily-pinterest-pins", "death-valley": "video-bot", neko: "website-sync", "link-checker": "link-checker", "stats-reader": "stats-reader", "trend-scout": "trend-scout", "board-builder": "board-builder", "program-hunter": "program-hunter", "shop-doctor": "shop-doctor" };
+const TASK_OF = Object.fromEntries(SHOP_CONFIG.filter(b => b.task !== "pin-bot-dry-run").map(b => [b.id, b.task]));
 function docOf(id) { return id === "grand-canyon" ? pbStatus : id === "death-valley" ? videoStatus : id === "neko" ? syncStatus : helperDocs[id]; }
 function isRunning(id) {
   const r = runReqs[TASK_OF[id]], now = Date.now();
@@ -989,9 +992,25 @@ function startAudio() {
     if (soundOn && window.agentView === "inside") { const t = actx.currentTime + .02, f = 110 + Math.random() * 90; tone(f, t, .16, .035, "sine", f * 1.6); if (Math.random() < .35) tone(f * 1.3, t + .09, .12, .02, "sine", f * 1.9); }
     setTimeout(simmer, 450 + Math.random() * 1400);
   })();
-  (function koto() { // a soft pluck now and then, like a radio in the back
-    if (soundOn) { const t = actx.currentTime + .02, n = 1 + (Math.random() * 3 | 0); for (let i = 0; i < n; i++) { const f = KOTO[Math.random() * KOTO.length | 0]; tone(f, t + i * .32, 1.6, .028, "triangle"); tone(f * 2, t + i * .32, .5, .008, "sine"); } }
-    setTimeout(koto, 7000 + Math.random() * 9000);
+  // soft lo-fi music: Dmaj7 → Bm7 → Gmaj7 → A7, warm pads plus a sparse pentatonic melody (~70 bpm)
+  const CHORDS = [[146.83, 220.0, 277.18, 369.99], [123.47, 185.0, 220.0, 293.66], [98.0, 146.83, 185.0, 246.94], [110.0, 164.81, 220.0, 261.63]];
+  let bar = 0;
+  function pad(freq, start, len, vol) {
+    const o = actx.createOscillator(), o2 = actx.createOscillator(), g = actx.createGain(), lp = actx.createBiquadFilter();
+    o.type = "triangle"; o2.type = "sine"; o.frequency.value = freq; o2.frequency.value = freq * 1.003; lp.type = "lowpass"; lp.frequency.value = 900;
+    g.gain.setValueAtTime(0, start); g.gain.linearRampToValueAtTime(vol, start + .8); g.gain.setValueAtTime(vol, start + len - 1); g.gain.linearRampToValueAtTime(0, start + len);
+    o.connect(lp); o2.connect(lp); lp.connect(g).connect(master); o.start(start); o2.start(start); o.stop(start + len + .1); o2.stop(start + len + .1);
+  }
+  (function music() {
+    const barLen = 3.43; // 4 beats at 70 bpm
+    if (soundOn) {
+      const t0 = actx.currentTime + .05, ch = CHORDS[bar % 4];
+      ch.forEach((f, i) => pad(f, t0, barLen + .3, i === 0 ? .018 : .011));
+      for (let b = 0; b < 4; b++) if (Math.random() < .35) { const f = KOTO[Math.random() * KOTO.length | 0]; tone(f, t0 + b * barLen / 4 + (Math.random() < .5 ? 0 : barLen / 8), 1.4, .02, "triangle"); }
+      if (bar % 2 === 0) tone(ch[0] / 2, t0, 1.2, .03, "sine"); // soft bass
+      bar++;
+    }
+    setTimeout(music, 3430);
   })();
   (function crickets() { // only at night in the shop's clock
     if (soundOn && isNight()) { const t = actx.currentTime + .02; for (let i = 0; i < 3; i++) tone(4200 + Math.random() * 300, t + i * .07, .05, .006, "sine"); }
@@ -1044,7 +1063,17 @@ function sceneRaining() { const d = sceneDay(), r = Math.abs(Math.sin(d * 12.989
 function nightness(h) { if (h >= 7 && h < 17) return 0; if (h >= 17 && h < 20) return (h - 17) / 3; if (h >= 5 && h < 7) return 1 - (h - 5) / 2; return 1; }
 const SEASON = (() => { const m = new Date().getMonth(); return m === 9 ? "autumn" : (m === 11 || m === 0) ? "winter" : m >= 2 && m <= 4 ? "spring" : m >= 5 && m <= 7 ? "summer" : "autumn"; })();
 function fmtSceneTime() { const h = sceneHour(), hh = Math.floor(h), mm = Math.floor((h - hh) * 60); return `${(hh % 12) || 12}:${String(mm).padStart(2, "0")} ${hh < 12 ? "AM" : "PM"}`; }
-const clockChip = document.createElement("div"); clockChip.className = "clock-chip"; document.getElementById("scene").appendChild(clockChip);
+const clockChip = document.createElement("button"); clockChip.type = "button"; clockChip.className = "clock-chip"; clockChip.title = "Open the Inbox"; document.getElementById("scene").appendChild(clockChip);
+clockChip.onclick = () => { if (typeof openHQ === "function") { hqTab = "inbox"; openHQ(); } };
+function hudText() {
+  let s = "🕰 " + fmtSceneTime() + (sceneRaining() ? " ☂" : "");
+  if (typeof db !== "undefined" && db) {
+    const today = new Date().toDateString(), n = pins.filter(p => p.status !== "draft" && p.releaseAt && new Date(p.releaseAt).toDateString() === today).length;
+    const till = helperDocs["earnings-cat"], inbox = inboxItems().length;
+    s += ` · 📌 ${n} today` + (till && !(db && db.readOnly) ? ` · 💰 ${money(till.earnings)}` : "") + (inbox && !(db && db.readOnly) ? ` · 📥 ${inbox}` : "");
+  }
+  return s;
+}
 
 /* ================= pixel kitchen ================= */
 const W = 384, H = 300, ZASHIKI = [[52, 255], [150, 255], [250, 255]], reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1479,13 +1508,17 @@ function stepNeko(dt) {
 function drawHelpers(c, t) {
   const bob = k => reduce ? 0 : (Math.floor(t * 2 + k) % 2), blink = k => !reduce && Math.floor(t * 3 + k) % 9 === 0;
   // Tasu the Taste-Bot on the end of the bar counter
+  c.save(); c.translate(22, 182); c.scale(2, 2); c.translate(-22, -182);
   { const x = 22, y = 182 - bob(0); R(c, x - 4, y - 7, 8, 7, "#a9b0b6"); R(c, x - 4, y - 7, 8, 1, "#d6dce0"); R(c, x - 3, y - 12, 6, 5, "#c4c9ce"); R(c, x - 2, y - 10, 4, 2, "#2b1d12");
     R(c, x - 2, y - 10, 1, 1, blink(1) ? "#2b1d12" : "#5fe0d0"); R(c, x + 1, y - 10, 1, 1, blink(1) ? "#2b1d12" : "#5fe0d0"); R(c, x, y - 14, 1, 2, "#5b6168"); R(c, x - 1, y - 15, 3, 1, "#c8382c");
     R(c, x + 4, y - 6, 3, 1, "#8d949b"); R(c, x + 6, y - 7, 2, 2, "#e6e0d4"); R(c, x - 3, y - 4, 6, 1, "#5fe0d0"); R(c, x - 3, y, 2, 1, "#5b6168"); R(c, x + 1, y, 2, 1, "#5b6168"); }
+  c.restore();
   // Hoot the Owl on top of the recipe shelf
+  c.save(); c.translate(19, 49); c.scale(2, 2); c.translate(-19, -49);
   { const x = 19, y = 49; disc(c, x, y - 4, 4, 4, "#8a5a34"); disc(c, x, y - 3, 3, 3, "#c49a62"); disc(c, x - 2, y - 6, 1, 1, "#fffaf0"); disc(c, x + 2, y - 6, 1, 1, "#fffaf0");
     R(c, x - 2, y - 6, 1, 1, blink(2) ? "#c49a62" : "#2b1d12"); R(c, x + 2, y - 6, 1, 1, blink(2) ? "#c49a62" : "#2b1d12"); R(c, x, y - 4, 1, 1, "#f2a24a"); R(c, x - 4, y - 9, 1, 2, "#8a5a34"); R(c, x + 4, y - 9, 1, 2, "#8a5a34");
     R(c, x - 5, y - 1, 3, 2, "#2f5f8a"); R(c, x - 5, y - 1, 3, 1, "#f6ecd6"); }
+  c.restore();
   // Kitsune the Shrine Fox on the kamidana shelf
   { const x = 319, y = 18; R(c, x - 3, y - 5, 6, 5, "#e07a3a"); R(c, x - 1, y - 4, 2, 4, "#fbf6ea"); R(c, x - 3, y - 8, 6, 4, "#e07a3a"); R(c, x - 3, y - 9, 1, 2, "#e07a3a"); R(c, x + 2, y - 9, 1, 2, "#e07a3a");
     R(c, x - 2, y - 6, 1, 1, "#2b1d12"); R(c, x + 1, y - 6, 1, 1, "#2b1d12"); R(c, x - 3, y - 4, 6, 1, "#c8382c"); R(c, x + 3, y - 3 - bob(3), 3, 2, "#e07a3a"); R(c, x + 5, y - 4 - bob(3), 1, 1, "#fbf6ea"); }
@@ -1493,14 +1526,20 @@ function drawHelpers(c, t) {
   { const hop = reduce ? 0 : (Math.floor(t * 1.3) % 6 === 0 ? 2 : 0), x = 247 + (reduce ? 0 : (Math.floor(t * .4) % 2) * 4), y = 35 - hop;
     R(c, x - 2, y - 3, 4, 3, "#8a5a34"); R(c, x - 2, y - 1, 3, 1, "#e9d6b0"); R(c, x + 1, y - 4, 2, 2, "#6e4428"); R(c, x + 2, y - 4, 1, 1, "#2b1d12"); R(c, x + 3, y - 3, 1, 1, "#f2a24a"); R(c, x - 3, y - 2, 1, 1, "#6e4428"); }
   // Pon the Tanuki in the pantry with a map
+  c.save(); c.translate(374, 124); c.scale(2, 2); c.translate(-374, -124);
   { const x = 374, y = 124 - bob(4); disc(c, x, y - 4, 4, 4, "#8a6a4e"); R(c, x - 3, y - 6, 6, 2, "#2b1d12"); R(c, x - 2, y - 6, 1, 1, "#fffaf0"); R(c, x + 1, y - 6, 1, 1, "#fffaf0"); R(c, x - 3, y - 9, 2, 2, "#5e3820"); R(c, x + 1, y - 9, 2, 2, "#5e3820");
     R(c, x - 1, y - 11, 3, 2, "#5f9a42"); R(c, x - 1, y - 3, 3, 3, "#e9d6b0"); R(c, x - 7, y - 4, 4, 3, "#f3e3b8"); R(c, x - 6, y - 3, 2, 1, "#c8382c"); R(c, x + 3, y - 1, 3, 1, "#2b1d12"); }
+  c.restore();
   // Kiko the Carpenter Mouse by the shelf, tapping a little board
+  c.save(); c.translate(22, 128); c.scale(2, 2); c.translate(-22, -128);
   { const x = 22, y = 128, tap = reduce ? 0 : Math.floor(t * 4) % 2; R(c, x - 2, y - 3, 5, 3, "#9aa1a7"); R(c, x + 2, y - 4, 2, 2, "#9aa1a7"); R(c, x + 3, y - 4, 1, 1, "#2b1d12"); R(c, x + 1, y - 5, 2, 1, "#e88a7a"); R(c, x - 4, y - 2, 2, 1, "#e88a7a");
     R(c, x - 8, y - 1, 6, 2, "#b5824f"); R(c, x + 4, y - 6 + tap, 1, 3, "#7a4a2a"); R(c, x + 3, y - 6 + tap, 3, 1, "#5b6168"); }
+  c.restore();
   // Doc the Raccoon with a medical bag
+  c.save(); c.translate(16, 288); c.scale(2, 2); c.translate(-16, -288);
   { const x = 16, y = 288 - bob(5); R(c, x - 4, y - 6, 8, 6, "#8d949b"); R(c, x - 3, y - 10, 6, 4, "#a9b0b6"); R(c, x - 3, y - 9, 6, 1, "#2b1d12"); R(c, x - 2, y - 9, 1, 1, "#fffaf0"); R(c, x + 1, y - 9, 1, 1, "#fffaf0"); R(c, x - 3, y - 11, 1, 1, "#8d949b"); R(c, x + 2, y - 11, 1, 1, "#8d949b");
     for (let k = 0; k < 3; k++) R(c, x + 4 + k, y - 4 + k, 1, 1, k % 2 ? "#2b1d12" : "#a9b0b6"); R(c, x - 8, y - 4, 5, 4, "#fffaf0"); R(c, x - 6, y - 3, 1, 3, "#c8382c"); R(c, x - 7, y - 2, 3, 1, "#c8382c"); }
+  c.restore();
   // Maneki the Lucky Cat: little coin when the till has numbers
   if (helperDocs["earnings-cat"] && helperDocs["earnings-cat"].updatedAt && !reduce && Math.floor(t * 1.5) % 4 === 0) { disc(c, 372, 222, 2, 2, "#ffd45a"); R(c, 372, 221, 1, 2, "#d9a441"); }
 }
@@ -1547,7 +1586,7 @@ cv.addEventListener("click", e => {
   const c = peopleBy.claude;
   if ((Math.abs(x - c.x) < 8 && y < c.y + 3 && y > c.y - 34) || (x >= 148 && x <= 230 && y >= 96 && y <= 130)) return openHQ();
   if (x >= 286 && x <= 326 && y >= 54 && y <= 90) return openStation(PINBOT_COOK);
-  const hh = HELPERS.find(h => Math.abs(x - h.at[0]) < 9 && y < h.at[1] + 3 && y > h.at[1] - 16); if (hh) return openStation(hh.id);
+  const hh = HELPERS.find(h => Math.abs(x - h.at[0]) < 12 && y < h.at[1] + 4 && y > h.at[1] - (h.tagH || 16) - 2); if (hh) return openStation(hh.id);
   const hit = tagEls.map(e => e.p).find(p => Math.abs(x - p.x) < 7 && y < p.y + 3 && y > p.y - 24); if (hit) openStation(hit.id);
 });
 cv.addEventListener("mousemove", e => {
@@ -1558,7 +1597,9 @@ cv.addEventListener("mousemove", e => {
 const LIGHTS = [[10, 214, 46, .26], [374, 206, 46, .26], [150, 226, 40, .2], [62, 44, 34, .22], [96, 44, 22, .14], [270, 146, 34, .2], [258, 22, 34, .12], [365, 250, 22, .14], [100, 176, 60, .08], [230, 176, 60, .08], [52, 255, 42, .1], [150, 255, 42, .1], [250, 255, 42, .1], [189, 112, 44, .1]];
 /* ---- main loop ---- */
 let last = performance.now();
+const FRAME_MS = 1000 / 30; // pixel art looks the same at 30 fps and uses far less battery
 function frame(now) {
+  if (document.hidden || window.agentView === "outside" || now - last < FRAME_MS - 2) { if (window.agentView === "outside" || document.hidden) last = now; requestAnimationFrame(frame); return; }
   const dt = Math.min(.05, (now - last) / 1000); last = now; clock += dt; const t = reduce ? 0 : clock;
   people.forEach(p => {
     if (p.guest) return;
@@ -1604,7 +1645,7 @@ function frame(now) {
     if (SEASON === "autumn") [[118, 60], [300, 176], [20, 196]].forEach(([x, y]) => { disc(ctx, x, y, 3, 2, "#e07a3a"); R(ctx, x, y - 3, 1, 2, "#4f8a3a"); if (n > .5) R(ctx, x - 1, y, 2, 1, "#ffd45a"); });
     if (SEASON === "winter") for (let i = 0; i < 24; i++) R(ctx, 8 + i * 14, 46 + (i % 2), 2, 2, ["#e04a3a", "#4f8a3a", "#ffd45a", "#2f6fb3"][(i + Math.floor(clock * 2)) % 4]);
     if (SEASON === "spring") [[110, 30], [290, 30]].forEach(([x, y]) => { disc(ctx, x, y, 2, 2, "#f2b8c6"); disc(ctx, x + 4, y + 1, 2, 2, "#f7cfd8"); });
-    clockChip.textContent = "Shop time " + fmtSceneTime() + (rain ? " · ☂" : "");
+    if (Math.floor(clock * 2) !== clockChip._t) { clockChip._t = Math.floor(clock * 2); clockChip.textContent = hudText(); }
   }
   // stockpot (Old Faithful) + small pot, flames
   const flick = reduce ? 0 : Math.floor(t * 10) % 3;
@@ -2046,8 +2087,10 @@ function frame(now) {
   function resize() { const w = outside.clientWidth || 1, h = outside.clientHeight || 1; renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = w < h ? Math.min(52, 27 / Math.pow(w / h, .75)) : 27; camera.updateProjectionMatrix(); }
   new ResizeObserver(resize).observe(outside); resize();
   const v = new THREE.Vector3(), clock = new THREE.Clock();
-  function loop() {
+  let lastLoop = 0;
+  function loop(now) {
     if (inside) return;
+    if (document.hidden || (now && now - lastLoop < 15)) { requestAnimationFrame(loop); return; } lastLoop = now || 0;
     const dt = Math.min(.05, clock.getDelta()), t = clock.elapsedTime;
     doorMat.emissiveIntensity += ((hover ? .45 : .08 + Math.sin(t * 2.4) * .06) - doorMat.emissiveIntensity) * .15;
     if (!reduce3) noren.forEach((m, i) => { m.rotation.x = Math.sin(t * 1.3 + i * .8) * .05; });

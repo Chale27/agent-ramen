@@ -11,40 +11,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#FAF7F2; --surface:#FFFFFF; --sunk:#F2EDE5; --ink:#1C1814; --ink-2:#5C5249; --ink-3:#8A7F74;
+  --bg:#FAF7F2; --surface:#FFFFFF; --sunk:#F2EDE5; --ink:#1A1612; --ink-2:#433A32; --ink-3:#6B6158;
   --line:#E6DED2; --accent:#A8382A; --accent-ink:#FFFFFF; --sage:#5E6B55; --shadow:0 1px 2px rgba(28,24,20,.04),0 8px 24px rgba(28,24,20,.06);
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) { :root {
-  --bg:#15120F; --surface:#1E1A16; --sunk:#252019; --ink:#F3EDE4; --ink-2:#C2B6A7; --ink-3:#958978;
+@media (prefers-color-scheme: dark) { .sec, .tile { --tone-raw: var(--tone); } .ico, .why, .tile-ico, .sec-text .eyebrow { color: color-mix(in srgb, var(--tone) 55%, white) !important; } .ico { background: color-mix(in srgb, var(--tone) 30%, var(--surface)) !important; } :root {
+  --bg:#15120F; --surface:#1E1A16; --sunk:#252019; --ink:#F5EFE6; --ink-2:#D6CBBD; --ink-3:#ADA191;
   --line:#352E26; --accent:#E06A55; --accent-ink:#1A0F0B; --sage:#A3B394; --shadow:none; color-scheme: dark; } }
 *{ box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
 @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } *{ transition:none!important; } }
-body{ margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 Inter, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing:antialiased; }
+body{ margin:0; background:var(--bg); color:var(--ink); font:18px/1.65 Inter, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing:antialiased; }
 a{ color:inherit; }
 .wrap{ max-width:1120px; margin:0 auto; padding:0 20px; }
 :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:6px; }
 
 /* top bar */
 .top{ border-bottom:1px solid var(--line); }
-.top .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; gap:16px; }
-.logo{ display:flex; align-items:center; gap:10px; text-decoration:none; font:600 17px/1 Fraunces, Georgia, serif; letter-spacing:-.01em; }
+.top .wrap{ display:flex; align-items:center; justify-content:space-between; height:72px; gap:16px; }
+.logo{ display:flex; align-items:center; gap:10px; text-decoration:none; font:600 19px/1 Fraunces, Georgia, serif; letter-spacing:-.01em; }
 .logo i{ width:30px; height:30px; border-radius:8px; background:var(--accent); display:grid; place-items:center; color:var(--accent-ink); font:600 15px Fraunces, serif; font-style:normal; }
-.top-links{ display:flex; gap:22px; font-size:14px; color:var(--ink-2); }
+.top-links{ display:flex; gap:24px; font-size:16px; color:var(--ink-2); }
 .top-links a{ text-decoration:none; } .top-links a:hover{ color:var(--ink); }
 
 /* hero */
-.hero{ padding:72px 0 40px; }
+.hero{ padding:64px 0 40px; display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center; }
+.collage{ display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:12px; aspect-ratio:1/1; }
+.collage span{ border-radius:18px; background-size:cover; background-position:center; background-color:var(--sunk); box-shadow:var(--shadow); }
+.collage span:first-child{ grid-row:span 2; }
 .hero .eyebrow{ color:var(--sage); }
 h1{ font:500 clamp(40px,6.4vw,72px)/1.02 Fraunces, Georgia, serif; letter-spacing:-.025em; margin:14px 0 18px; max-width:14ch; }
 h1 em{ font-style:italic; color:var(--accent); }
-.lede{ font-size:clamp(17px,2vw,19px); color:var(--ink-2); max-width:56ch; margin:0; }
+.lede{ font-size:clamp(19px,2vw,21px); color:var(--ink-2); max-width:52ch; margin:0; }
 .facts{ display:flex; flex-wrap:wrap; gap:28px; margin:32px 0 0; padding:0; list-style:none; }
 .facts li{ display:flex; flex-direction:column; }
 .facts b{ font:600 26px/1.1 Fraunces, serif; }
-.facts span{ font-size:13px; color:var(--ink-3); }
-.eyebrow{ font:600 12px/1 Inter, sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); }
+.facts span{ font-size:15px; color:var(--ink-3); }
+.eyebrow{ font:600 13px/1 Inter, sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); }
 
 /* category tiles */
 .tiles{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:8px 0 0; }
@@ -52,18 +55,19 @@ h1 em{ font-style:italic; color:var(--accent); }
 .tile:hover{ transform:translateY(-2px); border-color:var(--ink-3); }
 .tile-photo{ display:block; aspect-ratio:10/7; background-size:cover; background-position:center; background-color:var(--sunk); }
 .tile-text{ display:flex; flex-direction:column; padding:12px 14px 14px; }
-.tile-text b{ font:600 15px/1.3 Inter, sans-serif; }
-.tile-text small{ color:var(--ink-3); font-size:13px; margin-top:2px; }
+.tile-text b{ font:600 17px/1.3 Inter, sans-serif; }
+.tile-ico{ color:var(--tone); margin-bottom:6px; }
+.tile-text small{ color:var(--ink-3); font-size:15px; margin-top:2px; }
 
 /* disclosure */
-.disc{ display:flex; gap:12px; align-items:flex-start; margin:28px 0 0; padding:14px 16px; background:var(--sunk); border-radius:12px; font-size:14px; color:var(--ink-2); }
+.disc{ display:flex; gap:12px; align-items:flex-start; margin:28px 0 0; padding:16px 18px; background:var(--sunk); border-radius:12px; font-size:16px; color:var(--ink-2); }
 .disc svg{ flex:none; margin-top:2px; color:var(--sage); }
 
 /* sticky section nav */
 .secnav{ position:sticky; top:0; z-index:5; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:saturate(1.4) blur(10px); -webkit-backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--line); margin-top:48px; }
 .secnav .wrap{ display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding-top:10px; padding-bottom:10px; }
 .secnav .wrap::-webkit-scrollbar{ display:none; }
-.secnav a{ flex:none; text-decoration:none; font:500 14px Inter, sans-serif; color:var(--ink-2); padding:7px 14px; border-radius:999px; border:1px solid transparent; }
+.secnav a{ flex:none; text-decoration:none; font:500 16px Inter, sans-serif; color:var(--ink-2); padding:9px 16px; border-radius:999px; border:1px solid transparent; }
 .secnav a:hover{ color:var(--ink); border-color:var(--line); background:var(--surface); }
 
 /* sections */
@@ -71,38 +75,46 @@ h1 em{ font-style:italic; color:var(--accent); }
 .sec-head{ display:grid; grid-template-columns:1.25fr 1fr; gap:32px; align-items:center; margin-bottom:24px; }
 .sec-photo{ aspect-ratio:5/2; border-radius:16px; background-size:cover; background-position:center; background-color:var(--sunk); }
 .sec-text h2{ font:500 clamp(28px,3.6vw,40px)/1.1 Fraunces, Georgia, serif; letter-spacing:-.02em; margin:10px 0 10px; }
-.sec-text p{ margin:0 0 14px; color:var(--ink-2); }
-.count{ font-size:13px; color:var(--ink-3); }
-.grid{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%,300px),1fr)); gap:14px; }
-.card{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:20px; display:flex; flex-direction:column; box-shadow:var(--shadow); transition:border-color .2s ease; }
+.sec-text p{ margin:0 0 14px; color:var(--ink-2); font-size:19px; }
+.sec-text .eyebrow{ color:var(--tone); }
+.count{ font-size:15px; color:var(--ink-3); }
+.grid{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%,320px),1fr)); gap:16px; }
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:22px; display:flex; flex-direction:column; box-shadow:var(--shadow); transition:border-color .2s ease; }
 .card:hover{ border-color:var(--ink-3); }
-.card-top{ display:flex; align-items:center; justify-content:space-between; min-height:22px; margin-bottom:12px; }
-.num{ font:600 13px/1 Fraunces, serif; color:var(--ink-3); letter-spacing:.04em; }
-.badge{ font:600 11px/1 Inter, sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); background:color-mix(in srgb, var(--sage) 14%, transparent); padding:5px 8px; border-radius:999px; }
-.card h3{ font:600 17px/1.35 Inter, sans-serif; margin:0 0 8px; letter-spacing:-.005em; }
-.card p{ margin:0 0 18px; color:var(--ink-2); font-size:15px; flex:1; }
-.buy{ display:inline-flex; align-items:center; justify-content:center; gap:8px; align-self:stretch; text-decoration:none; font:600 14px/1 Inter, sans-serif; background:var(--ink); color:var(--bg); padding:12px 16px; border-radius:10px; transition:background .2s ease; }
+.card-top{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+.ico{ width:56px; height:56px; border-radius:14px; display:grid; place-items:center; color:var(--tone); background:color-mix(in srgb, var(--tone) 11%, var(--surface)); }
+.meta{ display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+.why{ font:600 13px/1 Inter, sans-serif; letter-spacing:.08em; text-transform:uppercase; color:var(--tone); margin:0 0 6px; }
+.num{ font:500 15px/1 Fraunces, serif; color:var(--ink-3); }
+.badge{ font:600 12px/1 Inter, sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); background:color-mix(in srgb, var(--sage) 14%, transparent); padding:5px 8px; border-radius:999px; }
+.card h3{ font:600 20px/1.35 Inter, sans-serif; margin:0 0 12px; letter-spacing:-.01em; }
+.card p{ margin:0 0 20px; color:var(--ink-2); font-size:17px; flex:1; }
+.buy{ display:inline-flex; align-items:center; justify-content:center; gap:8px; align-self:stretch; min-height:52px; text-decoration:none; font:600 17px/1 Inter, sans-serif; background:var(--ink); color:var(--bg); padding:14px 18px; border-radius:12px; transition:background .2s ease; }
 .buy:hover{ background:var(--accent); color:var(--accent-ink); }
 
 /* how we pick */
 .how{ margin-top:72px; padding:40px; background:var(--surface); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); }
 .how h2{ font:500 clamp(26px,3vw,34px)/1.15 Fraunces, Georgia, serif; letter-spacing:-.02em; margin:10px 0 24px; }
 .how ol{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(4,1fr); gap:24px; counter-reset:c; }
-.how li{ counter-increment:c; font-size:15px; color:var(--ink-2); }
+.how li{ counter-increment:c; font-size:17px; color:var(--ink-2); }
 .how li::before{ content:counter(c, decimal-leading-zero); display:block; font:600 14px Fraunces, serif; color:var(--accent); margin-bottom:8px; }
 .how li b{ display:block; color:var(--ink); font-weight:600; margin-bottom:4px; }
 
-footer{ margin-top:72px; border-top:1px solid var(--line); padding:32px 0 56px; font-size:13px; color:var(--ink-3); }
+footer{ margin-top:72px; border-top:1px solid var(--line); padding:32px 0 56px; font-size:15px; color:var(--ink-3); }
 footer p{ margin:0 0 8px; max-width:80ch; }
 footer a{ color:var(--ink-2); }
 
 @media (max-width:900px){
+  .hero{ grid-template-columns:1fr; gap:32px; }
+  .collage{ aspect-ratio:16/10; }
   .tiles{ grid-template-columns:repeat(3,1fr); }
   .sec-head{ grid-template-columns:1fr; gap:18px; }
   .how ol{ grid-template-columns:repeat(2,1fr); }
 }
 @media (max-width:560px){
   .wrap{ padding:0 16px; }
+  body{ font-size:17px; }
+  .collage{ display:none; }
   .top-links a:not(.pin){ display:none; }
   .hero{ padding:44px 0 28px; }
   .tiles{ grid-template-columns:repeat(2,1fr); }
@@ -120,31 +132,32 @@ footer a{ color:var(--ink-2); }
 
 <main>
 <div class="wrap">
-  <section class="hero" aria-labelledby="h1">
+  <section class="hero" aria-labelledby="h1"><div>
     <span class="eyebrow">The Shop · Updated October 18, 2026</span>
-    <h1 id="h1">Tools worth <em>keeping</em>.</h1>
-    <p class="lede">A short list of well-reviewed tools for home cooks and small shops: the knife care, tea gear, gifts, shipping and packaging we'd actually recommend.</p>
+    <h1 id="h1">Good tools, <em>no guesswork</em>.</h1>
+    <p class="lede">A short, carefully chosen list for your kitchen and your small business. Every pick is well reviewed, easy to use, and solves one everyday problem, from dull knives and bitter tea to packing orders at the kitchen table.</p>
     <ul class="facts">
       <li><b>32</b><span>hand-picked products</span></li>
       <li><b>5</b><span>categories</span></li>
       <li><b>3 days</b><span>max between link checks</span></li>
-    </ul>
+    </ul></div>
+    <div class="collage" aria-hidden="true"><span style="background-image:url('https://images.unsplash.com/photo-1551218808-94e220e084d2?w=700&amp;h=900&amp;fit=crop&amp;q=80&amp;fm=jpg')"></span><span style="background-image:url('https://images.unsplash.com/photo-1629440408433-a9e951bfbcd8?w=500&amp;h=420&amp;fit=crop&amp;q=80&amp;fm=jpg')"></span><span style="background-image:url('https://images.unsplash.com/photo-1639562954924-975ca13f454a?w=500&amp;h=420&amp;fit=crop&amp;q=80&amp;fm=jpg')"></span></div>
   </section>
-  <nav class="tiles" aria-label="Categories"><a class="tile" href="#knives">
+  <nav class="tiles" aria-label="Categories"><a class="tile" href="#knives" style="--tone:#3E5A74">
 <span class="tile-photo" style="background-image:url('https://images.unsplash.com/photo-1551218808-94e220e084d2?w=600&amp;h=420&amp;fit=crop&amp;q=80&amp;fm=jpg')"></span>
-<span class="tile-text"><b>Sharp Knives, Safe Hands</b><small>9 picks</small></span>
-</a><a class="tile" href="#tea">
+<span class="tile-text"><span class="tile-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 15.5 8.5l2-2a2.1 2.1 0 0 1 3 3l-2 2L7 23"/><path d="M4 20l2.5-.5"/><path d="m13 11 3 3"/></svg></span><b>Sharp Knives, Safe Hands</b><small>9 picks</small></span>
+</a><a class="tile" href="#tea" style="--tone:#55704A">
 <span class="tile-photo" style="background-image:url('https://images.unsplash.com/photo-1629440408433-a9e951bfbcd8?w=600&amp;h=420&amp;fit=crop&amp;q=80&amp;fm=jpg')"></span>
-<span class="tile-text"><b>Better Tea at Home</b><small>7 picks</small></span>
-</a><a class="tile" href="#gifts">
+<span class="tile-text"><span class="tile-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h12a6 6 0 0 1-6 7 6 6 0 0 1-6-7z"/><path d="M17 13.5c2 0 3-1.5 4-3.5"/><path d="M5 14c-1.5 0-2.5-1-2.5-2.5"/><path d="M9 12V9h4v3"/><path d="M11 9V7.5"/></svg></span><b>Better Tea at Home</b><small>7 picks</small></span>
+</a><a class="tile" href="#gifts" style="--tone:#A8382A">
 <span class="tile-photo" style="background-image:url('https://images.unsplash.com/photo-1639562954924-975ca13f454a?w=600&amp;h=420&amp;fit=crop&amp;q=80&amp;fm=jpg')"></span>
-<span class="tile-text"><b>Gifts Home Cooks Actually Use</b><small>6 picks</small></span>
-</a><a class="tile" href="#shipping">
+<span class="tile-text"><span class="tile-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M3 9h18M12 9v11"/><path d="M12 9c-3 0-4.5-1.5-4.5-3S10 4 12 9zm0 0c3 0 4.5-1.5 4.5-3S14 4 12 9z"/></svg></span><b>Gifts Home Cooks Actually Use</b><small>6 picks</small></span>
+</a><a class="tile" href="#shipping" style="--tone:#94661B">
 <span class="tile-photo" style="background-image:url('https://images.unsplash.com/photo-1631010231888-777b6285ef84?w=600&amp;h=420&amp;fit=crop&amp;q=80&amp;fm=jpg')"></span>
-<span class="tile-text"><b>Etsy Shipping Setup</b><small>4 picks</small></span>
-</a><a class="tile" href="#packaging">
+<span class="tile-text"><span class="tile-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="9" width="16" height="8" rx="2"/><path d="M7 9V4h10v5"/><path d="M8 17v3h8v-3"/><path d="M16.5 12.5h.5"/></svg></span><b>Etsy Shipping Setup</b><small>4 picks</small></span>
+</a><a class="tile" href="#packaging" style="--tone:#7A5A3F">
 <span class="tile-photo" style="background-image:url('https://images.unsplash.com/photo-1749841731930-be3b6c8d36f4?w=600&amp;h=420&amp;fit=crop&amp;q=80&amp;fm=jpg')"></span>
-<span class="tile-text"><b>Packaging for Small Shops</b><small>6 picks</small></span>
+<span class="tile-text"><span class="tile-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8 12 4l9 4v8l-9 4-9-4z"/><path d="M3 8l9 4 9-4M12 12v8"/><path d="m7.5 6 9 4"/></svg></span><b>Packaging for Small Shops</b><small>6 picks</small></span>
 </a></nav>
   <p class="disc"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v4M8 4.6v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   <span>As an Amazon Associate I earn from qualifying purchases. The links below are affiliate links, at no extra cost to you. Prices and availability are shown on Amazon.</span></p>
@@ -153,7 +166,7 @@ footer a{ color:var(--ink-2); }
 <nav class="secnav" aria-label="Jump to a category"><div class="wrap"><a href="#knives">Sharp Knives, Safe Hands</a><a href="#tea">Better Tea at Home</a><a href="#gifts">Gifts Home Cooks Actually Use</a><a href="#shipping">Etsy Shipping Setup</a><a href="#packaging">Packaging for Small Shops</a></div></nav>
 
 <div class="wrap">
-  <section id="knives" class="sec" aria-labelledby="h-knives">
+  <section id="knives" class="sec" style="--tone:#3E5A74" aria-labelledby="h-knives">
 <div class="sec-head">
   <div class="sec-photo" style="background-image:url('https://images.unsplash.com/photo-1551218808-94e220e084d2?w=1400&amp;h=560&amp;fit=crop&amp;q=80&amp;fm=jpg')" role="img" aria-label="Sharp Knives, Safe Hands"></div>
   <div class="sec-text">
@@ -164,52 +177,61 @@ footer a{ color:var(--ink-2); }
   </div>
 </div>
 <ul class="grid"><li class="card">
-<div class="card-top"><span class="num">01</span><span class="badge">Start here</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 15.5 8.5l2-2a2.1 2.1 0 0 1 3 3l-2 2L7 23"/><path d="M4 20l2.5-.5"/><path d="m13 11 3 3"/></svg></span><span class="meta"><span class="badge">Start here</span><span class="num">No. 1</span></span></div>
 <h3>Victorinox Fibrox Pro 8-inch Chef&#x27;s Knife</h3>
+<span class="why">Why it's here</span>
 <p>The chef&#x27;s knife cooks get recommended again and again: light, grippy, and easy to keep sharp.</p>
-<a class="buy" href="https://www.amazon.com/dp/B008M5U1C2?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Victorinox Fibrox Pro 8-inch Chef&#x27;s Knife on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B008M5U1C2?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Victorinox Fibrox Pro 8-inch Chef&#x27;s Knife on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">02</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19h18"/><path d="M6 19 10 7h4l4 12"/><path d="M9 13h6"/></svg></span><span class="meta"><span class="num">No. 2</span></span></div>
 <h3>Work Sharp Precision Adjust Knife Sharpener</h3>
+<span class="why">Why it's here</span>
 <p>Holds the angle for you (15 to 30°), so beginners get a consistent edge.</p>
-<a class="buy" href="https://www.amazon.com/dp/B08L72P245?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Work Sharp Precision Adjust Knife Sharpener on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B08L72P245?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Work Sharp Precision Adjust Knife Sharpener on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">03</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 17 7"/><path d="m17 7 2.5-2.5"/><rect x="2.5" y="17.5" width="4" height="4" rx="1" transform="rotate(-45 4.5 19.5)"/></svg></span><span class="meta"><span class="num">No. 3</span></span></div>
 <h3>Henckels Fine Edge Honing Steel</h3>
+<span class="why">Why it's here</span>
 <p>A few strokes before cooking keep the edge lined up between sharpenings.</p>
-<a class="buy" href="https://www.amazon.com/dp/B00004RFNK?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Henckels Fine Edge Honing Steel on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B00004RFNK?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Henckels Fine Edge Honing Steel on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">04</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="18" height="7" rx="1.5"/><path d="M3 13.5h18"/><path d="M7 7h10"/></svg></span><span class="meta"><span class="num">No. 4</span></span></div>
 <h3>Sharp Pebble Whetstone Kit 1000/6000</h3>
+<span class="why">Why it's here</span>
 <p>A two-sided stone kit with an angle guide, for learning to sharpen by hand.</p>
-<a class="buy" href="https://www.amazon.com/dp/B0B181PBP8?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Sharp Pebble Whetstone Kit 1000/6000 on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B0B181PBP8?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Sharp Pebble Whetstone Kit 1000/6000 on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">05</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="3" rx="1"/><path d="M7 7v11l1.5 2L10 18V7"/><path d="M14 7v8l1.5 2L17 15V7"/></svg></span><span class="meta"><span class="num">No. 5</span></span></div>
 <h3>Modern Innovations 16-inch Magnetic Knife Bar</h3>
+<span class="why">Why it's here</span>
 <p>Gets knives out of the drawer, where edges get knocked dull.</p>
-<a class="buy" href="https://www.amazon.com/dp/B016ISHAC8?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Modern Innovations 16-inch Magnetic Knife Bar on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B016ISHAC8?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Modern Innovations 16-inch Magnetic Knife Bar on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">06</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 21v-6L5 11.5a1.5 1.5 0 0 1 2.6-1.5L9 12V5a1.5 1.5 0 0 1 3 0v5-6a1.5 1.5 0 0 1 3 0v6-4a1.5 1.5 0 0 1 3 0v8c0 3-2 5-4 6"/><path d="M7 21h7"/></svg></span><span class="meta"><span class="num">No. 6</span></span></div>
 <h3>NoCry Cut Resistant Kitchen Gloves</h3>
+<span class="why">Why it's here</span>
 <p>Extra protection for mandolines, graters and sharpening practice.</p>
-<a class="buy" href="https://www.amazon.com/dp/B00MXUHHGK?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View NoCry Cut Resistant Kitchen Gloves on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B00MXUHHGK?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See NoCry Cut Resistant Kitchen Gloves on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">07</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19h18"/><path d="M6 19 10 7h4l4 12"/><path d="M9 13h6"/></svg></span><span class="meta"><span class="num">No. 7</span></span></div>
 <h3>Tumbler Rolling Knife Sharpener (Wood)</h3>
+<span class="why">Why it's here</span>
 <p>Magnetic angle block plus a rolling disc, so there&#x27;s no freehand angle to hold.</p>
-<a class="buy" href="https://www.amazon.com/dp/B0CGGVHBQG?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Tumbler Rolling Knife Sharpener (Wood) on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B0CGGVHBQG?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Tumbler Rolling Knife Sharpener (Wood) on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">08</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 9v6M10.5 9v6M14 9v6M17.5 9v6"/></svg></span><span class="meta"><span class="num">No. 8</span></span></div>
 <h3>Joseph Joseph DrawerStore Knife Organizer</h3>
+<span class="why">Why it's here</span>
 <p>Gives each knife its own slot in the drawer so edges don&#x27;t bang into other tools.</p>
-<a class="buy" href="https://www.amazon.com/dp/B0721TPPZY?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Joseph Joseph DrawerStore Knife Organizer on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B0721TPPZY?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Joseph Joseph DrawerStore Knife Organizer on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">09</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h16L4 7z"/><path d="M8 19a4 4 0 0 0-1.5-3.2"/></svg></span><span class="meta"><span class="num">No. 9</span></span></div>
 <h3>SHARPAL 196N Angle Pyramid Guide (14/17/20/25)</h3>
+<span class="why">Why it's here</span>
 <p>Rests on the stone and shows how high to hold the blade at four common angles.</p>
-<a class="buy" href="https://www.amazon.com/dp/B07R76TJ61?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View SHARPAL 196N Angle Pyramid Guide (14/17/20/25) on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B07R76TJ61?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See SHARPAL 196N Angle Pyramid Guide (14/17/20/25) on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li></ul>
-</section><section id="tea" class="sec" aria-labelledby="h-tea">
+</section><section id="tea" class="sec" style="--tone:#55704A" aria-labelledby="h-tea">
 <div class="sec-head">
   <div class="sec-photo" style="background-image:url('https://images.unsplash.com/photo-1629440408433-a9e951bfbcd8?w=1400&amp;h=560&amp;fit=crop&amp;q=80&amp;fm=jpg')" role="img" aria-label="Better Tea at Home"></div>
   <div class="sec-text">
@@ -220,42 +242,49 @@ footer a{ color:var(--ink-2); }
   </div>
 </div>
 <ul class="grid"><li class="card">
-<div class="card-top"><span class="num">01</span><span class="badge">Start here</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10h11v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M8 10 9 6h5l1 4"/><path d="M17 12h1.5a2 2 0 0 1 0 4H17"/><path d="M11 3.5h1"/></svg></span><span class="meta"><span class="badge">Start here</span><span class="num">No. 1</span></span></div>
 <h3>Cuisinart PerfecTemp 1.7L Electric Kettle</h3>
+<span class="why">Why it's here</span>
 <p>Six temperature presets, including one for green tea.</p>
-<a class="buy" href="https://www.amazon.com/dp/B003KYSLNQ?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Cuisinart PerfecTemp 1.7L Electric Kettle on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B003KYSLNQ?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Cuisinart PerfecTemp 1.7L Electric Kettle on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">02</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h10v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M15 13c3 0 3-6 6-6"/><path d="M7 11V9h6v2"/><path d="M5 14H3.5"/></svg></span><span class="meta"><span class="num">No. 2</span></span></div>
 <h3>Cosori Gooseneck Electric Kettle</h3>
+<span class="why">Why it's here</span>
 <p>Set the exact temperature, and pour slowly and precisely for tea or pour-over coffee.</p>
-<a class="buy" href="https://www.amazon.com/dp/B07T1CH2HH?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Cosori Gooseneck Electric Kettle on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B07T1CH2HH?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Cosori Gooseneck Electric Kettle on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">03</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h12a6 6 0 0 1-6 7 6 6 0 0 1-6-7z"/><path d="M17 13.5c2 0 3-1.5 4-3.5"/><path d="M5 14c-1.5 0-2.5-1-2.5-2.5"/><path d="M9 12V9h4v3"/><path d="M11 9V7.5"/></svg></span><span class="meta"><span class="num">No. 3</span></span></div>
 <h3>HIWARE 1000ml Glass Teapot with Infuser</h3>
+<span class="why">Why it's here</span>
 <p>Watch loose-leaf tea steep, then lift the infuser out so it doesn&#x27;t over-brew.</p>
-<a class="buy" href="https://www.amazon.com/dp/B01LZSA84J?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View HIWARE 1000ml Glass Teapot with Infuser on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B01LZSA84J?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See HIWARE 1000ml Glass Teapot with Infuser on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">04</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="14" r="5"/><path d="M9 14h6M12 11v6"/><path d="M12 9V3h5"/></svg></span><span class="meta"><span class="num">No. 4</span></span></div>
 <h3>Reinmoson Extra Fine Mesh Tea Infuser</h3>
+<span class="why">Why it's here</span>
 <p>Fine mesh keeps small leaves out of your cup.</p>
-<a class="buy" href="https://www.amazon.com/dp/B0B5ZTZL6G?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Reinmoson Extra Fine Mesh Tea Infuser on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B0B5ZTZL6G?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Reinmoson Extra Fine Mesh Tea Infuser on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">05</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v9"/><circle cx="12" cy="16" r="4"/><path d="M10 16h4"/><rect x="10" y="2" width="4" height="4" rx="1"/></svg></span><span class="meta"><span class="num">No. 5</span></span></div>
 <h3>Bonsenkitchen Handheld Milk Frother</h3>
+<span class="why">Why it's here</span>
 <p>Froths milk for chai and matcha lattes in about twenty seconds.</p>
-<a class="buy" href="https://www.amazon.com/dp/B076F3C4XP?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Bonsenkitchen Handheld Milk Frother on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B076F3C4XP?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Bonsenkitchen Handheld Milk Frother on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">06</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="7" width="12" height="13" rx="1.5"/><path d="M5 7h14"/><path d="M12 11c-2 0-3 1.5-3 3.5 2 0 3-1.5 3-3.5zm0 0c2 0 3 1.5 3 3.5-2 0-3-1.5-3-3.5z"/></svg></span><span class="meta"><span class="num">No. 6</span></span></div>
 <h3>Harney &amp; Sons Hot Cinnamon Spice Loose Leaf Tea Tin</h3>
+<span class="why">Why it's here</span>
 <p>A spiced loose leaf black tea in a gift-ready tin.</p>
-<a class="buy" href="https://www.amazon.com/dp/B000WJRBXS?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Harney &amp; Sons Hot Cinnamon Spice Loose Leaf Tea Tin on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B000WJRBXS?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Harney &amp; Sons Hot Cinnamon Spice Loose Leaf Tea Tin on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">07</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M3 9h18M12 9v11"/><path d="M12 9c-3 0-4.5-1.5-4.5-3S10 4 12 9zm0 0c3 0 4.5-1.5 4.5-3S14 4 12 9z"/></svg></span><span class="meta"><span class="num">No. 7</span></span></div>
 <h3>VAHDAM Black Tea Loose Leaf Sampler Gift Box</h3>
+<span class="why">Why it's here</span>
 <p>Ten loose leaf black teas in one box, an easy start for a tea gift basket.</p>
-<a class="buy" href="https://www.amazon.com/dp/B016KQXYZA?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View VAHDAM Black Tea Loose Leaf Sampler Gift Box on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B016KQXYZA?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See VAHDAM Black Tea Loose Leaf Sampler Gift Box on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li></ul>
-</section><section id="gifts" class="sec" aria-labelledby="h-gifts">
+</section><section id="gifts" class="sec" style="--tone:#A8382A" aria-labelledby="h-gifts">
 <div class="sec-head">
   <div class="sec-photo" style="background-image:url('https://images.unsplash.com/photo-1639562954924-975ca13f454a?w=1400&amp;h=560&amp;fit=crop&amp;q=80&amp;fm=jpg')" role="img" aria-label="Gifts Home Cooks Actually Use"></div>
   <div class="sec-text">
@@ -266,37 +295,43 @@ footer a{ color:var(--ink-2); }
   </div>
 </div>
 <ul class="grid"><li class="card">
-<div class="card-top"><span class="num">01</span><span class="badge">Start here</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="13" r="6.5"/><circle cx="9.5" cy="13" r="3.5"/><path d="m15 9.5 6-4"/></svg></span><span class="meta"><span class="badge">Start here</span><span class="num">No. 1</span></span></div>
 <h3>Lodge 10.25-inch Cast Iron Skillet</h3>
+<span class="why">Why it's here</span>
 <p>Pre-seasoned and goes from stovetop to oven, the pan that lasts for decades.</p>
-<a class="buy" href="https://www.amazon.com/dp/B00006JSUA?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Lodge 10.25-inch Cast Iron Skillet on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B00006JSUA?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Lodge 10.25-inch Cast Iron Skillet on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">02</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 10h14v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M3 10h2M19 10h2"/><path d="M8 10V8.5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1V10"/><path d="M11 5.5h2"/></svg></span><span class="meta"><span class="num">No. 2</span></span></div>
 <h3>Lodge 6-Quart Enameled Cast Iron Dutch Oven</h3>
+<span class="why">Why it's here</span>
 <p>For soups, braises and bread. A classic gift for anyone who cooks.</p>
-<a class="buy" href="https://www.amazon.com/dp/B00U1OCPWQ?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Lodge 6-Quart Enameled Cast Iron Dutch Oven on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B00U1OCPWQ?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Lodge 6-Quart Enameled Cast Iron Dutch Oven on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">03</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11"/><circle cx="12" cy="17" r="3.5"/><path d="M9 6h1.5M9 9h1.5"/><rect x="10.5" y="2" width="3" height="11" rx="1.5"/></svg></span><span class="meta"><span class="num">No. 3</span></span></div>
 <h3>ThermoPro TP19H Instant Read Meat Thermometer</h3>
+<span class="why">Why it's here</span>
 <p>Ends the guessing on meat and baking. A small gift they&#x27;ll use every week.</p>
-<a class="buy" href="https://www.amazon.com/dp/B07XXSYLL8?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View ThermoPro TP19H Instant Read Meat Thermometer on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B07XXSYLL8?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See ThermoPro TP19H Instant Read Meat Thermometer on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">04</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M11 6h2M11 8.5h2M11 11h2"/><path d="M12 14.5V21"/></svg></span><span class="meta"><span class="num">No. 4</span></span></div>
 <h3>Microplane Premium Classic Zester</h3>
+<span class="why">Why it's here</span>
 <p>Zests citrus and grates hard cheese, garlic and ginger.</p>
-<a class="buy" href="https://www.amazon.com/dp/B00151WA06?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Microplane Premium Classic Zester on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B00151WA06?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Microplane Premium Classic Zester on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">05</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19h18"/><path d="M6 19 10 7h4l4 12"/><path d="M9 13h6"/></svg></span><span class="meta"><span class="num">No. 5</span></span></div>
 <h3>Work Sharp Precision Adjust Knife Sharpener</h3>
+<span class="why">Why it's here</span>
 <p>The gift most cooks never buy for themselves.</p>
-<a class="buy" href="https://www.amazon.com/dp/B08L72P245?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Work Sharp Precision Adjust Knife Sharpener on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B08L72P245?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Work Sharp Precision Adjust Knife Sharpener on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">06</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="12" width="18" height="8" rx="2"/><path d="M5 12a7 7 0 0 1 14 0"/><rect x="9" y="15" width="6" height="2.5" rx=".5"/></svg></span><span class="meta"><span class="num">No. 6</span></span></div>
 <h3>Etekcity Digital Kitchen Scale</h3>
+<span class="why">Why it's here</span>
 <p>Weighing flour and sugar gives the same bake every time; tare means fewer dishes.</p>
-<a class="buy" href="https://www.amazon.com/dp/B0113UZJE2?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Etekcity Digital Kitchen Scale on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B0113UZJE2?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Etekcity Digital Kitchen Scale on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li></ul>
-</section><section id="shipping" class="sec" aria-labelledby="h-shipping">
+</section><section id="shipping" class="sec" style="--tone:#94661B" aria-labelledby="h-shipping">
 <div class="sec-head">
   <div class="sec-photo" style="background-image:url('https://images.unsplash.com/photo-1631010231888-777b6285ef84?w=1400&amp;h=560&amp;fit=crop&amp;q=80&amp;fm=jpg')" role="img" aria-label="Etsy Shipping Setup"></div>
   <div class="sec-text">
@@ -307,27 +342,31 @@ footer a{ color:var(--ink-2); }
   </div>
 </div>
 <ul class="grid"><li class="card">
-<div class="card-top"><span class="num">01</span><span class="badge">Start here</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="9" width="16" height="8" rx="2"/><path d="M7 9V4h10v5"/><path d="M8 17v3h8v-3"/><path d="M16.5 12.5h.5"/></svg></span><span class="meta"><span class="badge">Start here</span><span class="num">No. 1</span></span></div>
 <h3>Rollo Wireless Thermal Shipping Label Printer</h3>
+<span class="why">Why it's here</span>
 <p>Prints 4x6 peel-and-stick labels with no ink or toner.</p>
-<a class="buy" href="https://www.amazon.com/dp/B0D3CQKTMR?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Rollo Wireless Thermal Shipping Label Printer on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B0D3CQKTMR?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Rollo Wireless Thermal Shipping Label Printer on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">02</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="6"/><circle cx="9" cy="12" r="2"/><path d="M9 6h11v12H9"/><path d="M13 10h4M13 13h3"/></svg></span><span class="meta"><span class="num">No. 2</span></span></div>
 <h3>Rollo 4x6 Thermal Shipping Labels (500)</h3>
+<span class="why">Why it's here</span>
 <p>The label roll to go with a thermal printer.</p>
-<a class="buy" href="https://www.amazon.com/dp/B01M63UE67?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Rollo 4x6 Thermal Shipping Labels (500) on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B01M63UE67?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Rollo 4x6 Thermal Shipping Labels (500) on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">03</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="12" width="18" height="8" rx="2"/><path d="M5 12a7 7 0 0 1 14 0"/><rect x="9" y="15" width="6" height="2.5" rx=".5"/></svg></span><span class="meta"><span class="num">No. 3</span></span></div>
 <h3>Accuteck 8250 Digital Shipping Scale</h3>
+<span class="why">Why it's here</span>
 <p>Weigh each package so you buy the right postage, not guess.</p>
-<a class="buy" href="https://www.amazon.com/dp/B00SMHWZ42?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Accuteck 8250 Digital Shipping Scale on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B00SMHWZ42?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Accuteck 8250 Digital Shipping Scale on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">04</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="12" r="6.5"/><circle cx="10" cy="12" r="3"/><path d="M16.5 12H22"/></svg></span><span class="meta"><span class="num">No. 4</span></span></div>
 <h3>Scotch Heavy Duty Packing Tape</h3>
+<span class="why">Why it's here</span>
 <p>Strong, clear tape for sealing boxes.</p>
-<a class="buy" href="https://www.amazon.com/dp/B000MVV6AA?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Scotch Heavy Duty Packing Tape on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B000MVV6AA?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Scotch Heavy Duty Packing Tape on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li></ul>
-</section><section id="packaging" class="sec" aria-labelledby="h-packaging">
+</section><section id="packaging" class="sec" style="--tone:#7A5A3F" aria-labelledby="h-packaging">
 <div class="sec-head">
   <div class="sec-photo" style="background-image:url('https://images.unsplash.com/photo-1749841731930-be3b6c8d36f4?w=1400&amp;h=560&amp;fit=crop&amp;q=80&amp;fm=jpg')" role="img" aria-label="Packaging for Small Shops"></div>
   <div class="sec-text">
@@ -338,35 +377,41 @@ footer a{ color:var(--ink-2); }
   </div>
 </div>
 <ul class="grid"><li class="card">
-<div class="card-top"><span class="num">01</span><span class="badge">Start here</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="1.5"/><path d="m3 7 9 6 9-6"/></svg></span><span class="meta"><span class="badge">Start here</span><span class="num">No. 1</span></span></div>
 <h3>Metronic 10x13 Poly Mailers (100 pack)</h3>
+<span class="why">Why it's here</span>
 <p>Light, self-sealing mailers for soft, non-fragile orders.</p>
-<a class="buy" href="https://www.amazon.com/dp/B00OLLFG0I?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Metronic 10x13 Poly Mailers (100 pack) on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B00OLLFG0I?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Metronic 10x13 Poly Mailers (100 pack) on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">02</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8 12 4l9 4v8l-9 4-9-4z"/><path d="M3 8l9 4 9-4M12 12v8"/><path d="m7.5 6 9 4"/></svg></span><span class="meta"><span class="num">No. 2</span></span></div>
 <h3>RLAVBL 6x4x2 Small Shipping Boxes (50)</h3>
+<span class="why">Why it's here</span>
 <p>Small corrugated boxes for jewelry, candles and other small items.</p>
-<a class="buy" href="https://www.amazon.com/dp/B0FF47LLL8?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View RLAVBL 6x4x2 Small Shipping Boxes (50) on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B0FF47LLL8?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See RLAVBL 6x4x2 Small Shipping Boxes (50) on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">03</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 16s-3.5-2.2-3.5-4.6A2 2 0 0 1 12 10a2 2 0 0 1 3.5 1.4C15.5 13.8 12 16 12 16z"/></svg></span><span class="meta"><span class="num">No. 3</span></span></div>
 <h3>500 Round Thank You Stickers</h3>
+<span class="why">Why it's here</span>
 <p>A quick, cheap finishing touch that makes an order feel personal.</p>
-<a class="buy" href="https://www.amazon.com/dp/B0FM7493Z9?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View 500 Round Thank You Stickers on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B0FM7493Z9?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See 500 Round Thank You Stickers on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">04</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h12l4 3H8z"/><path d="M4 8v8l4 3h12v-8"/><path d="M8 11v8"/></svg></span><span class="meta"><span class="num">No. 4</span></span></div>
 <h3>Artdly Kraft Tissue Paper (100 sheets)</h3>
+<span class="why">Why it's here</span>
 <p>Kraft tissue to wrap each item so orders arrive scuff-free and gift-like.</p>
-<a class="buy" href="https://www.amazon.com/dp/B09JSWBD3J?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Artdly Kraft Tissue Paper (100 sheets) on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B09JSWBD3J?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Artdly Kraft Tissue Paper (100 sheets) on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">05</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1 12H7z"/><path d="M6 8l1.5-4h9L18 8"/><path d="M10 8V6.5M14 8V6.5"/></svg></span><span class="meta"><span class="num">No. 5</span></span></div>
 <h3>BagDream Small Kraft Cookie Bags with Tin Ties</h3>
+<span class="why">Why it's here</span>
 <p>Tin-tie kraft bags that keep cookies fresh and look bakery-made.</p>
-<a class="buy" href="https://www.amazon.com/dp/B01MU3L8N1?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View BagDream Small Kraft Cookie Bags with Tin Ties on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B01MU3L8N1?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See BagDream Small Kraft Cookie Bags with Tin Ties on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li><li class="card">
-<div class="card-top"><span class="num">06</span></div>
+<div class="card-top"><span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9c2-2 3 2 5 0s3 2 5 0 3 2 5 0 2 1 3 0"/><path d="M3 14c2-2 3 2 5 0s3 2 5 0 3 2 5 0 2 1 3 0"/><path d="M5 19c2-2 3 2 5 0s3 2 5 0 3 2 4 0"/></svg></span><span class="meta"><span class="num">No. 6</span></span></div>
 <h3>Sukh Brown Crinkle Paper Filler</h3>
+<span class="why">Why it's here</span>
 <p>Kraft crinkle paper that fills space and makes the unboxing feel like a gift.</p>
-<a class="buy" href="https://www.amazon.com/dp/B0C65GSDQN?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="View Sukh Brown Crinkle Paper Filler on Amazon (opens in a new tab)">View on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="buy" href="https://www.amazon.com/dp/B0C65GSDQN?tag=homeandshop07-20" target="_blank" rel="nofollow sponsored noopener" aria-label="See Sukh Brown Crinkle Paper Filler on Amazon (opens in a new tab)">See it on Amazon <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="M5 3h8v8M13 3 3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 </li></ul>
 </section>
 

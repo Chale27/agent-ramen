@@ -357,6 +357,15 @@
    "releaseAt": "2026-10-23T19:00:00-05:00"
   },
   {
+   "id": "2026-10-23-2000",
+   "title": "Knife Sharpening Tips: How to Use a Rolling Knife Sharpener",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "Tumbler Rolling Knife Sharpener (Wood)",
+   "layout": "video",
+   "status": "scheduled",
+   "releaseAt": "2026-10-23T20:00:00-05:00"
+  },
+  {
    "id": "2026-10-24-0800",
    "title": "Cookie Packaging Ideas for Holiday Cookie Swaps and Small Bakeries",
    "board": "Small Business Packaging Ideas",
@@ -717,6 +726,426 @@
    "releaseAt": "2026-10-29T19:00:00-05:00"
   },
   {
+   "id": "2026-10-30-0800",
+   "title": "Best Label Printer for an Etsy Shipping Station: No Ink, No Cartridges",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Rollo USB Thermal Shipping Label Printer",
+   "asin": "B01MA3EYC5",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-30T08:00:00-05:00"
+  },
+  {
+   "id": "2026-10-30-1000",
+   "title": "Etsy Holiday Shipping Checklist: What to Set Up Before December",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Roundup → shipping guide",
+   "asin": "SHOP",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-30T10:00:00-05:00"
+  },
+  {
+   "id": "2026-10-30-1200",
+   "title": "Kitchen Gifts for Mom: A Roasting Pan With Rack for Turkey and Sunday Roasts",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Cuisinart Chef's Classic 16-inch Roasting Pan with Rack",
+   "asin": "B003YLJZ6M",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-30T12:00:00-05:00"
+  },
+  {
+   "id": "2026-10-30-1400",
+   "title": "Why Is My Tea Bitter? The Fix, Plus the Kettle That Makes It Easy",
+   "board": "Tea Lover's Kitchen",
+   "product": "Cuisinart PerfecTemp 1.7L Kettle CPK-17P1",
+   "asin": "B003KYSLNQ",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-30T14:00:00-05:00"
+  },
+  {
+   "id": "2026-10-30-1700",
+   "title": "Gifts for Home Cooks Who Have Everything: Kitchen Tools They'll Use Every Day",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Roundup → gifts guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-30T17:00:00-05:00"
+  },
+  {
+   "id": "2026-10-30-1900",
+   "title": "How to Check Turkey Temp Without Cutting It Open: Thanksgiving Cheat Sheet",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "ThermoPro TP19H Instant Read Meat Thermometer",
+   "asin": "B07XXSYLL8",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-30T19:00:00-05:00"
+  },
+  {
+   "id": "2026-10-31-0800",
+   "title": "Pour-Over Coffee or Green Tea Tasting Burnt? Check Your Water Temperature",
+   "board": "Tea Lover's Kitchen",
+   "product": "Cosori Gooseneck Electric Kettle",
+   "asin": "B07T1CH2HH",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-31T08:00:00-05:00"
+  },
+  {
+   "id": "2026-10-31-1000",
+   "title": "Stocking Stuffers for Home Cooks: Small Gifts They'll Use All Year",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Roundup → gifts guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-31T10:00:00-05:00"
+  },
+  {
+   "id": "2026-10-31-1200",
+   "title": "Small Business Packaging Ideas Boxes: Pick the Smallest Box That Fits",
+   "board": "Small Business Packaging Ideas",
+   "product": "RLAVBL 6x4x2 Small Shipping Boxes (50)",
+   "asin": "B0FF47LLL8",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-31T12:00:00-05:00"
+  },
+  {
+   "id": "2026-10-31-1400",
+   "title": "Kitchen Gifts for Dad: All-Purpose Kitchen Shears He'll Use Every Day",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "KitchenAid All Purpose Kitchen Shears with Sheath",
+   "asin": "B07PZF3QS3",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-31T14:00:00-05:00"
+  },
+  {
+   "id": "2026-10-31-1700",
+   "title": "Tea Lover Gift Guide: Everything for Better Tea at Home",
+   "board": "Tea Lover's Kitchen",
+   "product": "Roundup → tea guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-31T17:00:00-05:00"
+  },
+  {
+   "id": "2026-10-31-1900",
+   "title": "Christmas Gifts for Home Cooks: A Cast Iron Skillet They'll Keep for Decades",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Lodge 10.25 inch Cast Iron Skillet",
+   "asin": "B00006JSUA",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-31T19:00:00-05:00"
+  },
+  {
+   "id": "2026-11-01-0800",
+   "title": "Ship From Home Checklist: Label Printer, Labels, Scale and Tape",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Roundup → shipping guide",
+   "asin": "SHOP",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-11-01T08:00:00-06:00"
+  },
+  {
+   "id": "2026-11-01-1000",
+   "title": "Tea Lover Gifts Ideas: An Assorted Tea Sampler for Every Taste",
+   "board": "Tea Lover's Kitchen",
+   "product": "Taylors of Harrogate Assorted Tea Sampler Gift Box (48)",
+   "asin": "B0062JSYEW",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-01T10:00:00-06:00"
+  },
+  {
+   "id": "2026-11-01-1200",
+   "title": "Dutch Oven Bread for Beginners: Crusty No-Knead Bread in 4 Steps",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Lodge 6-Quart Enameled Cast Iron Dutch Oven",
+   "asin": "B00U1OCPWQ",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-11-01T12:00:00-06:00"
+  },
+  {
+   "id": "2026-11-01-1400",
+   "title": "Gift Guide for New Cooks: The Starter Kitchen Kit",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Roundup → gifts guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-11-01T14:00:00-06:00"
+  },
+  {
+   "id": "2026-11-01-1700",
+   "title": "Kitchen Knife Gift for Him: One Good 8-Inch Chef's Knife for Everyday Chopping",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "Victorinox Fibrox Pro 8-inch Chef's Knife",
+   "asin": "B008M5U1C2",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-01T17:00:00-06:00"
+  },
+  {
+   "id": "2026-11-01-1900",
+   "title": "Shipping Etsy Orders Faster: 4x6 Peel-and-Stick Thermal Labels, No Tape",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Rollo 4x6 Thermal Labels 500 roll",
+   "asin": "B01M63UE67",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-11-01T19:00:00-06:00"
+  },
+  {
+   "id": "2026-11-02-0800",
+   "title": "Kitchen Gifts for Mom: Silicone Oven Mitts That Grip Hot Pans",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Gorilla Grip Silicone Oven Mitts",
+   "asin": "B07SVFKNVV",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-02T08:00:00-06:00"
+  },
+  {
+   "id": "2026-11-02-1000",
+   "title": "Small Shop Packaging Checklist: Everything for a Gift-Ready Order",
+   "board": "Small Business Packaging Ideas",
+   "product": "Roundup → packaging guide",
+   "asin": "SHOP",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-11-02T10:00:00-06:00"
+  },
+  {
+   "id": "2026-11-02-1200",
+   "title": "Etsy Shipping Tips: When a Poly Mailer Beats a Box",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Metronic 10x13 Poly Mailers 100 pack",
+   "asin": "B00OLLFG0I",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-02T12:00:00-06:00"
+  },
+  {
+   "id": "2026-11-02-1400",
+   "title": "Matcha Latte at Home: A Smooth Cup Without a Bamboo Whisk",
+   "board": "Tea Lover's Kitchen",
+   "product": "Bonsenkitchen Handheld Milk Frother",
+   "asin": "B076F3C4XP",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-11-02T14:00:00-06:00"
+  },
+  {
+   "id": "2026-11-02-1700",
+   "title": "Gift Guide for Bakers: Tools That Make Baking Easier",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Roundup → gifts guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-11-02T17:00:00-06:00"
+  },
+  {
+   "id": "2026-11-02-1900",
+   "title": "Cookie Packaging Ideas for Selling: Kraft Bags With Tin Ties",
+   "board": "Small Business Packaging Ideas",
+   "product": "BagDream Small Kraft Cookie Bags with Tin Ties",
+   "asin": "B01MU3L8N1",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-02T19:00:00-06:00"
+  },
+  {
+   "id": "2026-11-03-0800",
+   "title": "Loose Leaf Tea for Beginners: Brew a Whole Pot in a Glass Teapot",
+   "board": "Tea Lover's Kitchen",
+   "product": "HIWARE 1000ml Glass Teapot with Infuser",
+   "asin": "B01LZSA84J",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-03T08:00:00-06:00"
+  },
+  {
+   "id": "2026-11-03-1000",
+   "title": "Etsy Seller Starter Kit: The Shipping Setup We'd Buy First",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Roundup → shipping guide",
+   "asin": "SHOP",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-11-03T10:00:00-06:00"
+  },
+  {
+   "id": "2026-11-03-1200",
+   "title": "Stocking Stuffers for Bakers: A Bench Scraper for Dough and Chopping",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "OXO Good Grips Multi-Purpose Scraper & Chopper",
+   "asin": "B00004OCNJ",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-03T12:00:00-06:00"
+  },
+  {
+   "id": "2026-11-03-1400",
+   "title": "Kitchen Scale Uses: 4 Things to Weigh Besides Flour",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Etekcity Digital Kitchen Scale",
+   "asin": "B0113UZJE2",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-11-03T14:00:00-06:00"
+  },
+  {
+   "id": "2026-11-03-1700",
+   "title": "Unboxing Checklist: Tissue, Stickers and Crinkle Paper for Small Shops",
+   "board": "Small Business Packaging Ideas",
+   "product": "Roundup → packaging guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-11-03T17:00:00-06:00"
+  },
+  {
+   "id": "2026-11-03-1900",
+   "title": "Tea Lover Gift Set: A Loose Leaf Black Tea Sampler Box for the Holidays",
+   "board": "Tea Lover's Kitchen",
+   "product": "VAHDAM Black Tea Loose Leaf Sampler Gift Box",
+   "asin": "B016KQXYZA",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-03T19:00:00-06:00"
+  },
+  {
+   "id": "2026-11-04-0800",
+   "title": "Small Business Packaging Ideas: Fill the Gap So Orders Arrive Snug",
+   "board": "Small Business Packaging Ideas",
+   "product": "Sukh Brown Crinkle Paper Filler",
+   "asin": "B0C65GSDQN",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-04T08:00:00-06:00"
+  },
+  {
+   "id": "2026-11-04-1000",
+   "title": "Knife Lover Gift Guide: Sharp Gifts for the Cook in Your Life",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "Roundup → knives guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-11-04T10:00:00-06:00"
+  },
+  {
+   "id": "2026-11-04-1200",
+   "title": "Kitchen Gifts for Christmas: Cut-Resistant Gloves for Mandoline Slicing",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "NoCry Cut Resistant Kitchen Gloves",
+   "asin": "B00MXUHHGK",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-04T12:00:00-06:00"
+  },
+  {
+   "id": "2026-11-04-1400",
+   "title": "Etsy Shipping Label Setup: Print Your First Thermal Label in 4 Steps",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Rollo USB Thermal Shipping Label Printer",
+   "asin": "B01MA3EYC5",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-11-04T14:00:00-06:00"
+  },
+  {
+   "id": "2026-11-04-1700",
+   "title": "Thanksgiving Kitchen Checklist: Tools to Have Before the Big Day",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Roundup → gifts guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-11-04T17:00:00-06:00"
+  },
+  {
+   "id": "2026-11-04-1900",
+   "title": "Office Tea Setup: Brew Loose Leaf at Your Desk With One Infuser",
+   "board": "Tea Lover's Kitchen",
+   "product": "Reinmoson Extra Fine Mesh Tea Infuser",
+   "asin": "B0B5ZTZL6G",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-04T19:00:00-06:00"
+  },
+  {
+   "id": "2026-11-05-0800",
+   "title": "Dutch Oven Recipes: One-Pot Winter Dinners That Start in the Same Pot",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Lodge 6-Quart Enameled Cast Iron Dutch Oven",
+   "asin": "B00U1OCPWQ",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-05T08:00:00-06:00"
+  },
+  {
+   "id": "2026-11-05-1000",
+   "title": "Tea Lover Gifts Basket: What to Put Inside a Gift They'll Use",
+   "board": "Tea Lover's Kitchen",
+   "product": "Roundup → tea guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-11-05T10:00:00-06:00"
+  },
+  {
+   "id": "2026-11-05-1200",
+   "title": "Etsy Shipping Station Must-Have: A Scale That Ends Postage Guesswork",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "Accuteck 8250 Digital Shipping Scale",
+   "asin": "B00SMHWZ42",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-05T12:00:00-06:00"
+  },
+  {
+   "id": "2026-11-05-1400",
+   "title": "Cute Packaging Ideas: 5 Places to Put a Thank You Sticker",
+   "board": "Small Business Packaging Ideas",
+   "product": "500 Round Thank You Stickers",
+   "asin": "B0FM7493Z9",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-11-05T14:00:00-06:00"
+  },
+  {
+   "id": "2026-11-05-1700",
+   "title": "Kitchen Gifts for Dad: Gifts for the Grill and the Stove",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Roundup → gifts guide",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-11-05T17:00:00-06:00"
+  },
+  {
+   "id": "2026-11-05-1900",
+   "title": "Thanksgiving Turkey Tip: Why Roasting on a Rack Matters",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "Cuisinart Chef's Classic 16-inch Roasting Pan with Rack",
+   "asin": "B003YLJZ6M",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-11-05T19:00:00-06:00"
+  },
+  {
    "id": "837810336976492537",
    "title": "Dull Knives? How to Sharpen Kitchen Knives at Home (Beginner Way)",
    "board": "Kitchen Knife Care & Sharpening",
@@ -774,6 +1203,12 @@
  ],
  "products": [
   {
+   "id": "B00004OCNJ",
+   "name": "OXO Good Grips Multi-Purpose Scraper & Chopper",
+   "asin": "B00004OCNJ",
+   "board": "Gift Ideas for Home Cooks"
+  },
+  {
    "id": "B00004RFNK",
    "name": "Henckels Fine Edge Honing Steel",
    "asin": "B00004RFNK",
@@ -807,6 +1242,18 @@
    "id": "B003KYSLNQ",
    "name": "Cuisinart PerfecTemp 1.7L Kettle",
    "asin": "B003KYSLNQ",
+   "board": "Tea Lover's Kitchen"
+  },
+  {
+   "id": "B003YLJZ6M",
+   "name": "Cuisinart Chef's Classic 16-inch Roasting Pan with Rack",
+   "asin": "B003YLJZ6M",
+   "board": "Gift Ideas for Home Cooks"
+  },
+  {
+   "id": "B0062JSYEW",
+   "name": "Taylors of Harrogate Assorted Tea Sampler Gift Box (48)",
+   "asin": "B0062JSYEW",
    "board": "Tea Lover's Kitchen"
   },
   {
@@ -894,10 +1341,22 @@
    "board": "Tea Lover's Kitchen"
   },
   {
+   "id": "B07PZF3QS3",
+   "name": "KitchenAid All Purpose Kitchen Shears with Sheath",
+   "asin": "B07PZF3QS3",
+   "board": "Gift Ideas for Home Cooks"
+  },
+  {
    "id": "B07R76TJ61",
    "name": "SHARPAL 196N Angle Pyramid Guide (14/17/20/25)",
    "asin": "B07R76TJ61",
    "board": "Kitchen Knife Care & Sharpening"
+  },
+  {
+   "id": "B07SVFKNVV",
+   "name": "Gorilla Grip Silicone Oven Mitts",
+   "asin": "B07SVFKNVV",
+   "board": "Gift Ideas for Home Cooks"
   },
   {
    "id": "B07T1CH2HH",
@@ -1024,12 +1483,12 @@
   {
    "id": "efficiency-builder",
    "state": "ok",
-   "lastRunAt": "2026-10-18T12:00:00Z"
+   "lastRunAt": "2026-10-22T23:30:00Z"
   },
   {
    "id": "efficiency-inspector",
    "state": "needs_you",
-   "lastRunAt": "2026-10-17T23:58:00-05:00"
+   "lastRunAt": "2026-10-22T18:20:00-05:00"
   },
   {
    "id": "link-checker",
@@ -1066,66 +1525,75 @@
   {
    "id": "link-promoter",
    "state": "ok",
-   "lastRunAt": "2026-10-18T10:45:00-05:00",
-   "lastSummary": "Plan refreshed: Rollo printer out of stock, swapped for shipping scale.",
+   "lastRunAt": "2026-10-22T19:30:00-05:00",
+   "lastSummary": "Thermometer tops push list for Thanksgiving; E-2026-10-18 scores Oct 31.",
    "findings": [
     {
-     "title": "Push: Work Sharp Precision Adjust (B08L72P245)",
-     "detail": "Gift-priced; 'knife sharpening angles chart' cheat sheet angle",
-     "level": "idea"
-    },
-    {
      "title": "Push: ThermoPro TP19H (B07XXSYLL8)",
-     "detail": "Stocking stuffer; 'meat thermometer chart', turkey first",
-     "level": "idea"
-    },
-    {
-     "title": "Push: Lodge 6-Qt Dutch Oven (B00U1OCPWQ)",
-     "detail": "Biggest-ticket gift; new keyword 'dutch oven gift basket ideas'",
-     "level": "idea"
-    },
-    {
-     "title": "Push: Cosori Gooseneck Kettle (B07T1CH2HH)",
-     "detail": "'tea lover gift basket ideas' angle",
+     "detail": "Thanksgiving Nov 26: turkey temp chart now, 'stocking stuffers for dad' in Nov",
      "level": "idea"
     },
     {
      "title": "Push: Accuteck Shipping Scale (B00SMHWZ42)",
-     "detail": "Replaces Rollo printer; lead with 'etsy shipping tips', not 'shipping scale'",
+     "detail": "Etsy board leads (40 clicks/1,000); 'everything you need' checklist",
      "level": "idea"
     },
     {
-     "title": "Rollo printer out of stock",
-     "detail": "B0D3CQKTMR unavailable since 10-18 10:32; no new pins until link-status is ok",
+     "title": "Push: Rollo USB Label Printer (B01MA3EYC5)",
+     "detail": "In stock; 'etsy shipping station' checklist, print labels at home",
+     "level": "idea"
+    },
+    {
+     "title": "Push: Lodge 6-Qt Dutch Oven (B00U1OCPWQ)",
+     "detail": "Big-ticket gift; put in gift-guide roundups (roundup pin = 100 clicks/1,000)",
+     "level": "idea"
+    },
+    {
+     "title": "Push: Cosori Gooseneck Kettle (B07T1CH2HH)",
+     "detail": "'tea temperature chart' + bitter-tea fix; tea gift basket centerpiece",
+     "level": "idea"
+    },
+    {
+     "title": "Early winner: checklist layout",
+     "detail": "Etsy Shipping Setup Checklist 1 click/9 impr. Hint only, tiny sample",
+     "level": "ok"
+    },
+    {
+     "title": "Early winner: gift-guide roundup",
+     "detail": "Holiday Gift Guide for Home Cooks 1 click/10 impr. Hint only",
+     "level": "ok"
+    },
+    {
+     "title": "Knife single-tip pins: 0 clicks",
+     "detail": "0 from 27 impr over 6 pins; no new ones this week, not a loser yet",
      "level": "warn"
     },
     {
-     "title": "Experiment E-2026-10-18",
-     "detail": "Headline A how-to vs B gift; 1 pin logged. Log queued A: meat temps, tea cheat sheet; B: zester, cast iron. Need 1 more A.",
+     "title": "Experiment E-2026-10-18 (how-to vs gift)",
+     "detail": "A 6 pins, B 9 logged; score 2026-10-31. Next: roundup vs single product",
      "level": "idea"
     },
     {
      "title": "Suggestion: Gift board description",
-     "detail": "Keyword-rich text in promo-plan.md section 7",
+     "detail": "Keyword-rich text in promo-plan.md section 7 (unchanged)",
      "level": "idea"
     },
     {
      "title": "Suggestion: shop link on profile",
-     "detail": "Website field set to the shop page",
+     "detail": "Website field set to the shop page (unchanged)",
      "level": "idea"
     },
     {
      "title": "Suggestion: Stocking Stuffers section",
-     "detail": "New section on Gift Ideas for Home Cooks",
+     "detail": "New section on Gift Ideas for Home Cooks (unchanged)",
      "level": "idea"
-    },
-    {
-     "title": "No stats yet",
-     "detail": "Hoot's first report is due 2026-10-19; no experiment can be scored before ~10-28",
-     "level": "warn"
     }
    ],
    "log": [
+    {
+     "at": "2026-10-22T19:30:00-05:00",
+     "note": "Used Hoot's first data: leaned into checklists and gift roundups, paused new knife tips, refreshed autocomplete keywords. Experiment scores 10-31."
+    },
     {
      "at": "2026-10-18T10:45:00-05:00",
      "note": "Recheck: swapped out-of-stock Rollo printer for Accuteck scale, added dutch oven / stocking-stuffer / honing keywords, tallied E-2026-10-18 pins."
@@ -1199,32 +1667,36 @@
   },
   {
    "id": "rules-guard",
-   "state": "needs_you",
-   "lastRunAt": "2026-10-22T18:45:00-05:00",
-   "lastSummary": "Checked 42 pins for Oct 23–29: 42 passed; 2 Rollo printer pins held (out of stock).",
+   "state": "ok",
+   "lastRunAt": "2026-10-22T18:50:00-05:00",
+   "lastSummary": "Checked 42 pins for Oct 30 – Nov 5: all passed, none held back.",
    "findings": [
     {
-     "title": "42 pins (Oct 23 – Oct 29)",
-     "detail": "All 12 checks passed: #affiliate, no prices or banned words, exact tagged links, every ASIN rechecked in stock today, free Unsplash photos, 3-5 keywords, 6 image pins/day, 1+ hour apart, no reused titles or photos.",
+     "title": "42 pins (Oct 30 – Nov 5)",
+     "detail": "All 12 checks passed: #affiliate, no prices or banned words, exact tagged links, every ASIN ok in link-status (5 new ones checked today), free Unsplash photos, 3–5 keywords, 6 image pins a day 1+ hour apart, no reused titles or photos, and every roundup links to the guide section it promises.",
      "level": "ok"
     },
     {
-     "title": "Rollo printer pins held",
-     "detail": "B0D3CQKTMR is still 'Currently unavailable' on Amazon (10-22). Its 2 pins stay in queue/backlog/held.",
-     "level": "warn"
-    },
-    {
      "title": "Photos swapped",
-     "detail": "Thermometer photo with a visible brand name, a knife box with a logo and 3 photos already used in earlier pins were replaced before rendering.",
+     "detail": "14 picks were already used on earlier pins, and 6 had brand marks (a pot lid, a box with printed labels, a 'Mason' jar, a tea tag, a tea brand and etched knife blades). All were replaced before upload.",
      "level": "warn"
     },
     {
-     "title": "Banner overflow",
-     "detail": "Two collage headlines ran into the photos; shortened and re-rendered.",
+     "title": "Roundup promise fixed",
+     "detail": "'Ship From Home Checklist' listed mailers, which live in the #packaging section, not #shipping. Mailers were swapped for the label printer so the pin matches the page.",
+     "level": "warn"
+    },
+    {
+     "title": "Photo didn't match product",
+     "detail": "The kitchen shears pin's photo showed knives and a kettle, so it was swapped for a photo of shears.",
      "level": "warn"
     }
    ],
    "log": [
+    {
+     "at": "2026-10-22T18:50:00-05:00",
+     "note": "Checked 42 pins for Oct 30 – Nov 5: all passed after photo and roundup fixes."
+    },
     {
      "at": "2026-10-22T18:45:00-05:00",
      "note": "Checked 42 pins: all passed; 2 Rollo printer pins held (out of stock)."
@@ -1377,14 +1849,18 @@
  "pinbot": {
   "status": {
    "state": "ok",
-   "lastRunAt": "2026-10-22T18:45:00-05:00",
-   "lastSummary": "Bulk-uploaded 42 pins covering Oct 23–29 (29 from the backlog, 13 new); the Oct 21 pins are live.",
+   "lastRunAt": "2026-10-22T18:50:00-05:00",
+   "lastSummary": "Bulk-uploaded 42 pins for Oct 30 – Nov 5 (13 winners-queue pins, 14 roundups, 5 new products); 32 of the earlier upload's 42 image pins are live in the schedule.",
    "issues": [
-    "Rollo Wireless Label Printer (B0D3CQKTMR) still out of stock: 2 backlog pins held; swapped to the Rollo USB printer (B01MA3EYC5) on the shop page.",
-    "13 backlog pins for Oct 19–22 missed their slots while Chrome was offline; they were moved to Oct 23 and Oct 26–27."
+    "10 pins from the earlier Oct 22 upload (Oct 26 8/10 AM & 5 PM, Oct 28 8 AM, 2 PM & 7 PM, Oct 29 12, 2, 5 & 7 PM) weren't on the schedule yet, likely still processing; tomorrow's run rechecks them and schedules any still missing.",
+    "Rollo Wireless Label Printer (B0D3CQKTMR) still out of stock: 2 backlog pins held."
    ],
    "nextRun": "Daily · 9:03 AM",
    "log": [
+    {
+     "at": "2026-10-22T18:50:00-05:00",
+     "note": "Bulk-uploaded 42 pins for Oct 30 – Nov 5; 32 of 42 earlier pins confirmed, 10 still processing; 5 new products added."
+    },
     {
      "at": "2026-10-22T18:45:00-05:00",
      "note": "Bulk-uploaded 42 pins for Oct 23–29 (29 backlog, 13 new); confirmed Oct 21 bulk pins live; shop printer swapped."
@@ -1413,17 +1889,20 @@
  },
  "videobot": {
   "status": {
-   "state": "needs_you",
-   "lastRunAt": "2026-10-18T11:40:00-05:00",
-   "lastSummary": "Scheduled knife-angle video for Oct 20 8 PM; 3 skillet creators logged.",
+   "state": "ok",
+   "lastRunAt": "2026-10-22T18:25:00-05:00",
+   "lastSummary": "Scheduled rolling sharpener video for Oct 23 8 PM; 3 creator finds logged.",
    "issues": [
-    "Image backlog not uploaded: permission check blocked the bulk upload, 29 pins wait (first 10-19 7 PM)",
-    "2 backlog pins use out-of-stock Rollo printer (10-23 5 PM, 10-24 10 AM); left out of pins.csv",
-    "Bulk time test: UTC is right; local-time pin landed 10/21 7:00 AM instead of 12 PM",
+    "Scheduled Pins page lists only this video; Sumi's image pins from 10-23 on are not shown there",
     "Video tracking IDs not created yet; used homeandshop07-20",
-    "Work Sharp and Rollo labels: no unpaid creator videos from the last 6 months"
+    "Magnetic knife bar: no unpaid creator videos from the last 6 months",
+    "First knife photo failed: IKEA logo on the blade"
    ],
    "log": [
+    {
+     "at": "2026-10-22T18:25:00-05:00",
+     "note": "Scheduled rolling sharpener video for Oct 23 8 PM; 3 creator finds logged."
+    },
     {
      "at": "2026-10-18T11:40:00-05:00",
      "note": "Scheduled knife-angle video for Oct 20 8 PM; 3 skillet creators logged."
@@ -1443,12 +1922,12 @@
    ],
    "tracker": {
     "asked": 0,
-    "found": 10,
+    "found": 13,
     "posted": 0,
     "removed": 0,
     "yes": 0
    }
   }
  },
- "updatedAt": "2026-10-22T18:14:29-05:00"
+ "updatedAt": "2026-10-22T18:46:14-05:00"
 }

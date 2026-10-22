@@ -1,0 +1,47 @@
+# Watchdog for the Agent Ramen bots. Runs in GitHub's cloud, so it works even when the Mac is asleep.
+# If the shop's data hasn't updated in 30 hours, the bots have stopped (usually the Mac slept or the
+# Claude app was closed). It opens one "Bots stopped" issue, which notifies @Chale27 in the GitHub app,
+# and closes it again once the bots are back.
+name: Bot watchdog
+on:
+  schedule:
+    - cron: "17 */3 * * *"   # every 3 hours
+  workflow_dispatch: {}
+permissions:
+  contents: read
+  issues: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check how fresh the shop data is
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, datetime as dt
+          TITLE = "⚠️ Bots stopped: the shop hasn't updated"
+          d = json.load(open("data.json"))
+          last = dt.datetime.fromisoformat(d["updatedAt"])
+          hours = (dt.datetime.now(dt.timezone.utc) - last).total_seconds() / 3600
+          print(f"data.json updated {hours:.1f} hours ago ({d['updatedAt']})")
+          gh = lambda *a: subprocess.run(["gh", *a, "--repo", os.environ["REPO"]], capture_output=True, text=True, check=True).stdout
+          open_issues = json.loads(gh("issue", "list", "--state", "open", "--json", "number,title", "--limit", "50"))
+          mine = [i for i in open_issues if i["title"] == TITLE]
+          if hours > 30 and not mine:
+              body = (f"@Chale27 the Agent Ramen bots haven't updated the shop in **{hours:.0f} hours** "
+                      f"(last update {d['updatedAt']}).\n\n"
+                      "Usually this means the Mac went to sleep or the Claude app was closed, so scheduled runs never started.\n\n"
+                      "**To fix:** wake the Mac, open the Claude app, keep Chrome open with the Claude extension, "
+                      "and leave it plugged in with the lid open. This issue closes itself once the bots are back.")
+              gh("issue", "create", "--title", TITLE, "--body", body)
+              print("opened alert")
+          elif hours <= 30 and mine:
+              for i in mine:
+                  gh("issue", "close", str(i["number"]), "--comment", f"Bots are back ✓ (shop updated {hours:.1f} hours ago).")
+              print("closed alert")
+          else:
+              print("no change")
+          PY

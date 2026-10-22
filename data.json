@@ -738,26 +738,35 @@
   {
    "id": "board-builder",
    "state": "ok",
-   "lastRunAt": "2026-10-18T00:53:56-05:00",
-   "lastSummary": "No new boards: max sub-topic is 5 pins, and there's no trend or insight data yet.",
+   "lastRunAt": "2026-10-18T21:56:37-05:00",
+   "lastSummary": "1 idea: Christmas Gifts for Home Cooks board, backed by Chirp's holiday gift trends.",
    "findings": [
     {
-     "title": "Watch: stocking stuffers for home cooks",
-     "detail": "5 pins use gift/holiday/stocking wording. Suggest a board at 8+ pins or if Chirp sees it rising.",
+     "title": "Board idea: Christmas Gifts for Home Cooks",
+     "detail": "Chirp's top 3 ideas are Christmas gift terms peaking in Dec; 6 gift pins and 11 gift-angle products could be saved there. Set it up before mid-Nov. See helpers/board-ideas.md.",
+     "level": "idea"
+    },
+    {
+     "title": "Watch: loose leaf tea how-to",
+     "detail": "5 tea pins on temps, steeping and amounts; fits Tea Lover's Kitchen for now.",
      "level": "info"
     },
     {
      "title": "Watch: cast iron",
-     "detail": "2 products (skillet, Dutch oven), 1 pin so far.",
+     "detail": "2 products, 2 pins (both gift pins).",
      "level": "info"
     },
     {
      "title": "Watch: pour-over coffee",
-     "detail": "Both kettles list it as an angle; no pins yet.",
+     "detail": "2 kettles list it as an angle; no pins yet.",
      "level": "info"
     }
    ],
    "log": [
+    {
+     "at": "2026-10-18T21:56:37-05:00",
+     "note": "1 idea: Christmas Gifts for Home Cooks board, backed by Chirp's holiday gift trends."
+    },
     {
      "at": "2026-10-18T00:53:56-05:00",
      "note": "No new boards: max sub-topic is 5 pins, and there's no trend or insight data yet."
@@ -777,21 +786,25 @@
   {
    "id": "link-checker",
    "state": "ok",
-   "lastRunAt": "2026-10-18T10:32:36-05:00",
-   "lastSummary": "Checked 7 of 21 links today: 6 good, 1 out of stock (Rollo printer).",
+   "lastRunAt": "2026-10-22T18:05:00-05:00",
+   "lastSummary": "Checked all 31 links (all overdue): 30 good, 1 out of stock (Rollo printer).",
    "findings": [
     {
-     "title": "Rollo label printer out of stock",
-     "detail": "B0D3CQKTMR shows 'Currently unavailable', no restock date. Used by the live 10/17 pin 'Etsy Shipping Setup: How to Print Shipping Labels at Home'. Consider a substitute printer.",
+     "title": "Rollo label printer still out of stock",
+     "detail": "B0D3CQKTMR: 'Currently unavailable', no restock date, no add-to-cart. Out since at least 10/18. Live 10/17 pin 'Etsy Shipping Setup: How to Print Shipping Labels at Home' links it. Consider a substitute printer.",
      "level": "warn"
     },
     {
-     "title": "6 links good",
-     "detail": "Lodge Dutch oven, Victorinox chef knife, Microplane zester, RLAVBL boxes, Work Sharp sharpener, Rollo 4x6 labels: all in stock (labels no longer low). Covered pins releasing Oct 19–20.",
+     "title": "30 links good",
+     "detail": "All other 30 ASINs in stock with add-to-cart, titles match products.csv. All were overdue (last checks 10/17–10/18), so the full list was checked today.",
      "level": "ok"
     }
    ],
    "log": [
+    {
+     "at": "2026-10-22T18:05:00-05:00",
+     "note": "Checked all 31 links (all overdue): 30 good, 1 out of stock (Rollo printer)."
+    },
     {
      "at": "2026-10-18T10:32:36-05:00",
      "note": "Checked 7 of 21 links today: 6 good, 1 out of stock (Rollo printer)."
@@ -878,46 +891,50 @@
   {
    "id": "program-hunter",
    "state": "ok",
-   "lastRunAt": "2026-10-18T10:45:00-05:00",
-   "lastSummary": "4 more seller tools; best: Shippo, $60 per Pro user, ~$0.75/click.",
+   "lastRunAt": "2026-10-22T18:20:00-05:00",
+   "lastSummary": "4 new shipping tools; best: ShippingEasy, $100+ per user, ~$1.00/click.",
    "findings": [
     {
-     "title": "Shippo on PartnerStack",
-     "detail": "$60 one-time per new paying Pro user; cookie not stated. Est. ~$0.75/click vs Amazon $0.16.",
+     "title": "ShippingEasy (shipping software)",
+     "detail": "Min $100 one-time per non-Starter user; 60-day cookie (unverified). Est. ~$1.00/click vs Amazon $0.16.",
      "level": "idea"
     },
     {
-     "title": "EverBee (Etsy research) - unverified",
-     "detail": "30% recurring 12 months (one profile only); cookie unknown. Est. ~$0.36/click vs Amazon $0.16.",
+     "title": "Easyship on Impact",
+     "detail": "$29 per paid sub + 2.5% of shipping for 1 yr; cookie not stated. Est. ~$0.79/click vs $0.16. Wants 250k+ visits.",
      "level": "idea"
     },
     {
-     "title": "Canva Pro on Impact - unverified",
-     "detail": "Up to $36 one-time per Pro sign-up, 30-day cookie. Est. ~$0.36/click vs Amazon $0.16.",
+     "title": "MUNBYN label printers - unverified",
+     "detail": "5.6-12% (conflicting), 30-day cookie, Webgains/FlexOffers. Est. ~$0.24/click vs Amazon $0.135.",
      "level": "idea"
     },
     {
-     "title": "Printify on PartnerStack",
-     "detail": "5% of referrals' sales for 12 months, 90-day cookie, PayPal monthly. Est. ~$0.15/click vs Amazon $0.16.",
+     "title": "Phomemo label printers",
+     "detail": "Up to 10%, 30-day cookie, direct; limited spots. Est. ~$0.20/click vs Amazon $0.09.",
      "level": "idea"
     },
     {
-     "title": "One PartnerStack account, many seller tools",
-     "detail": "Shippo + Printify (and other SaaS) under one sign-up and dashboard.",
+     "title": "Move printer pins from Amazon to the brands",
+     "detail": "Swap the 3-5 best label-printer pins to MUNBYN/Phomemo links (8-10%, 30-day cookie) once approved.",
      "level": "idea"
     },
     {
-     "title": "Black Friday deals for Etsy sellers roundup pin",
-     "detail": "Post Nov 20-Dec 1 around BF (11-27) and Small Business Saturday; one pin per tool deal.",
+     "title": "Gifts for the small-shop owner guide",
+     "detail": "Buyer-facing gift pin, Nov 15-Dec 10: label printer, scale, sticker printer, ShippingEasy trial.",
      "level": "idea"
     },
     {
-     "title": "Sign up next: Shippo via PartnerStack",
-     "detail": "~$0.75/click, highest on the list. Printify comes with the same account. Assign to Taka (denali). Rollo/CJ stays with Kaze.",
+     "title": "Sign up next: ShippingEasy",
+     "detail": "~$1.00/click, highest on the list, no stated traffic minimum. Apply via the official page or CJ; assign to Kaze (yosemite) with Rollo/ShipStation.",
      "level": "ok"
     }
    ],
    "log": [
+    {
+     "at": "2026-10-22T18:20:00-05:00",
+     "note": "4 new shipping tools; best: ShippingEasy, $100+ per user, ~$1.00/click."
+    },
     {
      "at": "2026-10-18T10:45:00-05:00",
      "note": "4 more seller tools; best: Shippo, $60 per Pro user, ~$0.75/click."
@@ -983,22 +1000,22 @@
   {
    "id": "shop-doctor",
    "state": "needs_you",
-   "lastRunAt": "2026-10-18T00:10:00-05:00",
-   "lastSummary": "1 problem: shop run tickets can't start bots without your approval.",
+   "lastRunAt": "2026-10-18T22:05:00-05:00",
+   "lastSummary": "3 problems: Chrome not connected, Amazon sign-in, run tickets need approval.",
    "findings": [
     {
      "title": "Scheduled runs",
-     "detail": "No failed runs. Pin Bot, Kaen, Neko, Pon and Kame ran in the last 26 h. link-checker, efficiency-builder and link-promoter were set up Oct 17 and make their first runs this morning. Weekly bots not due yet.",
+     "detail": "No failed runs. All 10 daily bots ran in the last 26 h (Kame 22 h ago, next run 10:37 PM). Weekly Chirp and Kiko ran tonight; Hoot ran early Sunday.",
      "level": "ok"
     },
     {
      "title": "Pin Bot health",
-     "detail": "Pin Bot ok (last ran 10:08 PM Oct 17), sync ok, Kaen ok. Kame is needs_you: run tickets can't start bots (approval prompt). Neko logged the same.",
+     "detail": "Pin Bot needs_you: Chrome not connected, 31 pins unuploaded (Kaen hit the same block). Hoot needs_you: Amazon sign-in. Kame needs_you: run tickets need approval. Sync ok. No Pinterest warnings.",
      "level": "bad"
     },
     {
      "title": "Website",
-     "detail": "data.json returned 200, updated 12:02 AM Oct 18.",
+     "detail": "data.json returned 200, updated 11:39 AM Oct 18 (~10 h old).",
      "level": "ok"
     },
     {
@@ -1008,16 +1025,20 @@
     },
     {
      "title": "Link health",
-     "detail": "21 products checked 10:19 PM Oct 17, all ok. None dead or mismatched.",
-     "level": "ok"
+     "detail": "31 products, newest check 10:32 AM Oct 18. None dead or mismatched; Rollo printer out of stock (already swapped out of the push list).",
+     "level": "warn"
     },
     {
      "title": "Weekly digest",
-     "detail": "Pins: 20 made (5 live, 15 scheduled through Oct 21), plus 3 test drafts. Videos: 1 (honing steel, posts Oct 18 8 PM). New: 4 affiliate programs (best HexClad on Awin), 2 new products, board ideas due tonight. Problems: 1 open (run tickets need approval), none fixed yet. Next: let shop run tickets start bots without an approval prompt.",
+     "detail": "Pins: 56 made (5 live, 17 scheduled, 31 waiting on Chrome, 3 test drafts). Videos: 3 (honing steel, Dutch oven, knife angle). New: 10 products, 8 affiliate programs (best Shippo), board idea 'Christmas Gifts for Home Cooks'. Problems: Rollo out-of-stock handled; 3 open (Chrome, Amazon sign-in, run tickets). Next: connect Claude in Chrome before 9:03 AM so the 31 pins upload.",
      "level": "idea"
     }
    ],
    "log": [
+    {
+     "at": "2026-10-18T22:05:00-05:00",
+     "note": "3 problems: Chrome not connected, Amazon sign-in, run tickets need approval."
+    },
     {
      "at": "2026-10-18T00:10:00-05:00",
      "note": "1 problem: shop run tickets can't start bots without your approval."
@@ -1030,14 +1051,14 @@
   },
   {
    "id": "stats-reader",
-   "state": "needs_you",
-   "lastRunAt": "2026-10-18T08:00:00-07:00"
+   "state": "ok",
+   "lastRunAt": "2026-10-22T09:00:00-07:00"
   },
   {
    "id": "trend-scout",
    "state": "ok",
-   "lastRunAt": "2026-10-18T18:00:00-05:00",
-   "lastSummary": "10 holiday-led pin ideas saved; Amazon Movers & Shakers empty, no ASINs",
+   "lastRunAt": "2026-10-18T19:55:55-05:00",
+   "lastSummary": "Reused today's research; 10 holiday pin ideas still current, no new lookups",
    "findings": [
     {
      "title": "christmas gifts for home cooks",
@@ -1101,6 +1122,10 @@
     }
    ],
    "log": [
+    {
+     "at": "2026-10-18T19:55:55-05:00",
+     "note": "Reused today's research; 10 holiday pin ideas still current, no new lookups"
+    },
     {
      "at": "2026-10-18T18:00:00-05:00",
      "note": "10 holiday-led pin ideas saved; Amazon Movers & Shakers empty, no ASINs"
@@ -1181,5 +1206,5 @@
    }
   }
  },
- "updatedAt": "2026-10-18T11:39:00-05:00"
+ "updatedAt": "2026-10-22T18:09:06-05:00"
 }

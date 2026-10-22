@@ -93,7 +93,7 @@
    "product": "Sharp Pebble Whetstone Kit 1000/6000",
    "asin": "B0B181PBP8",
    "layout": "cheatsheet",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-19T19:00:00-05:00"
   },
   {
@@ -112,7 +112,7 @@
    "product": "Reinmoson Extra Fine Mesh Tea Infuser",
    "asin": "B0B5ZTZL6G",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-20T08:00:00-05:00"
   },
   {
@@ -162,7 +162,7 @@
    "product": "NoCry Cut Resistant Kitchen Gloves",
    "asin": "B00MXUHHGK",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-20T19:00:00-05:00"
   },
   {
@@ -181,7 +181,7 @@
    "product": "Scotch Heavy Duty Packing Tape",
    "asin": "B000MVV6AA",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-21T08:00:00-05:00"
   },
   {
@@ -191,8 +191,9 @@
    "product": "Lodge cast iron skillet",
    "asin": "B00006JSUA",
    "layout": "overlay",
-   "status": "scheduled",
-   "releaseAt": "2026-10-21T10:00:00-05:00"
+   "status": "live",
+   "releaseAt": "2026-10-21T10:00:00-05:00",
+   "pinUrl": "https://www.pinterest.com/pin/837810336976556307/"
   },
   {
    "id": "2026-10-21-1200",
@@ -201,8 +202,9 @@
    "product": "HIWARE glass teapot",
    "asin": "B01LZSA84J",
    "layout": "cheatsheet",
-   "status": "scheduled",
-   "releaseAt": "2026-10-21T12:00:00-05:00"
+   "status": "live",
+   "releaseAt": "2026-10-21T12:00:00-05:00",
+   "pinUrl": "https://www.pinterest.com/pin/837810336976553866/"
   },
   {
    "id": "2026-10-21-1400",
@@ -211,7 +213,7 @@
    "product": "Sukh Brown Crinkle Paper Filler",
    "asin": "B0C65GSDQN",
    "layout": "collage",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-21T14:00:00-05:00"
   },
   {
@@ -221,7 +223,7 @@
    "product": "Tumbler Rolling Knife Sharpener (Wood)",
    "asin": "B0CGGVHBQG",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-21T17:00:00-05:00"
   },
   {
@@ -231,7 +233,7 @@
    "product": "Bonsenkitchen Handheld Milk Frother",
    "asin": "B076F3C4XP",
    "layout": "cheatsheet",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-21T19:00:00-05:00"
   },
   {
@@ -241,7 +243,7 @@
    "product": "Etekcity Digital Kitchen Scale",
    "asin": "B0113UZJE2",
    "layout": "cheatsheet",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-22T08:00:00-05:00"
   },
   {
@@ -251,7 +253,7 @@
    "product": "Work Sharp Precision Adjust Knife Sharpener",
    "asin": "B08L72P245",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-22T10:00:00-05:00"
   },
   {
@@ -261,7 +263,7 @@
    "product": "Shop roundup",
    "asin": "SHOP",
    "layout": "collage",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-22T12:00:00-05:00"
   },
   {
@@ -271,7 +273,7 @@
    "product": "Joseph Joseph DrawerStore Knife Organizer",
    "asin": "B0721TPPZY",
    "layout": "cheatsheet",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-22T14:00:00-05:00"
   },
   {
@@ -281,7 +283,7 @@
    "product": "ThermoPro TP19H Instant Read Meat Thermometer",
    "asin": "B07XXSYLL8",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-22T17:00:00-05:00"
   },
   {
@@ -291,188 +293,428 @@
    "product": "HIWARE 1000ml Glass Teapot with Infuser",
    "asin": "B01LZSA84J",
    "layout": "collage",
-   "status": "backlog",
+   "status": "moved",
    "releaseAt": "2026-10-22T19:00:00-05:00"
   },
   {
    "id": "2026-10-23-0800",
    "title": "Tea Lover Gift Basket Ideas: Start With a Loose Leaf Tea Sampler",
    "board": "Tea Lover's Kitchen",
-   "product": "VAHDAM Black Tea Loose Leaf Sampler Gift Box",
+   "product": "B016KQXYZA",
    "asin": "B016KQXYZA",
    "layout": "collage",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-23T08:00:00-05:00"
   },
   {
    "id": "2026-10-23-1000",
    "title": "Meat Thermometer Chart: USDA Temps for Turkey, Chicken and Steak",
    "board": "Gift Ideas for Home Cooks",
-   "product": "ThermoPro TP19H Instant Read Meat Thermometer",
+   "product": "B07XXSYLL8",
    "asin": "B07XXSYLL8",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-23T10:00:00-05:00"
   },
   {
    "id": "2026-10-23-1200",
    "title": "Knife Sharpening Angles Chart: Which Angle for Which Knife",
    "board": "Kitchen Knife Care & Sharpening",
-   "product": "SHARPAL 196N Angle Pyramid Guide (14/17/20/25)",
+   "product": "B07R76TJ61",
    "asin": "B07R76TJ61",
    "layout": "cheatsheet",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-23T12:00:00-05:00"
   },
   {
    "id": "2026-10-23-1400",
    "title": "Packaging Ideas for Small Businesses: Wrap Orders in Kraft Tissue Paper",
    "board": "Small Business Packaging Ideas",
-   "product": "Artdly Kraft Tissue Paper (100 sheets)",
+   "product": "B09JSWBD3J",
    "asin": "B09JSWBD3J",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-23T14:00:00-05:00"
   },
   {
    "id": "2026-10-23-1700",
-   "title": "Etsy Shipping Station Checklist: What You Need to Ship Orders From Home",
-   "board": "Etsy Shop Shipping Setup",
-   "product": "Rollo Wireless Thermal Label Printer",
-   "asin": "B0D3CQKTMR",
+   "title": "Whetstone Sharpening for Beginners: Which Grit Does What",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "B0B181PBP8",
+   "asin": "B0B181PBP8",
    "layout": "cheatsheet",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-23T17:00:00-05:00"
   },
   {
    "id": "2026-10-23-1900",
    "title": "Tea Lover Gift Basket Ideas: Start With the Kettle",
    "board": "Tea Lover's Kitchen",
-   "product": "Cosori Gooseneck Electric Kettle",
+   "product": "B07T1CH2HH",
    "asin": "B07T1CH2HH",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-23T19:00:00-05:00"
   },
   {
    "id": "2026-10-24-0800",
    "title": "Cookie Packaging Ideas for Holiday Cookie Swaps and Small Bakeries",
    "board": "Small Business Packaging Ideas",
-   "product": "BagDream Small Kraft Cookie Bags with Tin Ties",
+   "product": "B01MU3L8N1",
    "asin": "B01MU3L8N1",
    "layout": "collage",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-24T08:00:00-05:00"
   },
   {
    "id": "2026-10-24-1000",
-   "title": "Shipping Etsy Orders: How a Thermal Label Printer Speeds Up Every Order",
+   "title": "Etsy Shipping Labels: Stock Up on 4x6 Thermal Labels Before the Holiday Rush",
    "board": "Etsy Shop Shipping Setup",
-   "product": "Rollo Wireless Thermal Label Printer",
-   "asin": "B0D3CQKTMR",
+   "product": "B01M63UE67",
+   "asin": "B01M63UE67",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-24T10:00:00-05:00"
   },
   {
    "id": "2026-10-24-1200",
    "title": "Loose Leaf Black Tea: How to Brew a Cozy Cup (Cheat Sheet)",
    "board": "Tea Lover's Kitchen",
-   "product": "Harney & Sons Hot Cinnamon Spice Loose Leaf Tea Tin",
+   "product": "B000WJRBXS",
    "asin": "B000WJRBXS",
    "layout": "cheatsheet",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-24T12:00:00-05:00"
   },
   {
    "id": "2026-10-24-1400",
    "title": "Kitchen Knife Gift: An Adjustable Sharpener for the Cook With Dull Knives",
    "board": "Gift Ideas for Home Cooks",
-   "product": "Work Sharp Precision Adjust Knife Sharpener",
+   "product": "B08L72P245",
    "asin": "B08L72P245",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-24T14:00:00-05:00"
   },
   {
    "id": "2026-10-24-1700",
    "title": "Christmas Gifts for Home Cooks: Kitchen Gifts They'll Actually Use",
    "board": "Gift Ideas for Home Cooks",
-   "product": "Shop roundup",
+   "product": "SHOP",
    "asin": "SHOP",
    "layout": "collage",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-24T17:00:00-05:00"
   },
   {
    "id": "2026-10-24-1900",
    "title": "Kitchen Knife Gift: The Chef Knife to Start With for New Cooks",
    "board": "Kitchen Knife Care & Sharpening",
-   "product": "Victorinox Fibrox Pro 8-inch Chef's Knife",
+   "product": "B008M5U1C2",
    "asin": "B008M5U1C2",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-24T19:00:00-05:00"
   },
   {
    "id": "2026-10-25-0800",
    "title": "Tea Temperature Chart: The Right Water Temp for Every Tea",
    "board": "Tea Lover's Kitchen",
-   "product": "Cuisinart PerfecTemp 1.7L Kettle CPK-17P1",
+   "product": "B003KYSLNQ",
    "asin": "B003KYSLNQ",
    "layout": "cheatsheet",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-25T08:00:00-05:00"
   },
   {
    "id": "2026-10-25-1000",
    "title": "Etsy Shipping Packaging Ideas: Poly Mailers for Clothing and Soft Goods",
    "board": "Small Business Packaging Ideas",
-   "product": "Metronic 10x13 Poly Mailers 100 pack",
+   "product": "B00OLLFG0I",
    "asin": "B00OLLFG0I",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-25T10:00:00-05:00"
   },
   {
    "id": "2026-10-25-1200",
    "title": "Christmas Gifts for Home Cooks: An Enameled Dutch Oven for Soups and Bread",
    "board": "Gift Ideas for Home Cooks",
-   "product": "Lodge 6-Quart Enameled Cast Iron Dutch Oven",
+   "product": "B00U1OCPWQ",
    "asin": "B00U1OCPWQ",
    "layout": "collage",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-25T12:00:00-05:00"
   },
   {
    "id": "2026-10-25-1400",
    "title": "Honing vs Sharpening: What's the Difference for Kitchen Knives?",
    "board": "Kitchen Knife Care & Sharpening",
-   "product": "Henckels Fine Edge Honing Steel",
+   "product": "B00004RFNK",
    "asin": "B00004RFNK",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-25T14:00:00-05:00"
   },
   {
    "id": "2026-10-25-1700",
    "title": "Etsy Shipping Tips: Weigh, Print, Pack for Exact Postage Every Time",
    "board": "Etsy Shop Shipping Setup",
-   "product": "Accuteck 8250 Digital Shipping Scale",
+   "product": "B00SMHWZ42",
    "asin": "B00SMHWZ42",
    "layout": "cheatsheet",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-25T17:00:00-05:00"
   },
   {
    "id": "2026-10-25-1900",
    "title": "Gifts for Bakers: A Digital Kitchen Scale for Better Cookies and Bread",
    "board": "Gift Ideas for Home Cooks",
-   "product": "Etekcity Digital Kitchen Scale",
+   "product": "B0113UZJE2",
    "asin": "B0113UZJE2",
    "layout": "overlay",
-   "status": "backlog",
+   "status": "scheduled",
    "releaseAt": "2026-10-25T19:00:00-05:00"
+  },
+  {
+   "id": "2026-10-26-0800",
+   "title": "Baking by Weight Cheat Sheet: Cups to Grams for Flour, Sugar and Butter",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "B0113UZJE2",
+   "asin": "B0113UZJE2",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-26T08:00:00-05:00"
+  },
+  {
+   "id": "2026-10-26-1000",
+   "title": "Knife Sharpening Tips: How Often Should You Sharpen Kitchen Knives?",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "B08L72P245",
+   "asin": "B08L72P245",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-26T10:00:00-05:00"
+  },
+  {
+   "id": "2026-10-26-1200",
+   "title": "Small Business Packaging Ideas: Your Holiday Order Packaging Kit",
+   "board": "Small Business Packaging Ideas",
+   "product": "SHOP",
+   "asin": "SHOP",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-26T12:00:00-05:00"
+  },
+  {
+   "id": "2026-10-26-1400",
+   "title": "Kitchen Knife Organizer: Where to Store Knives So They Stay Sharp",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "B0721TPPZY",
+   "asin": "B0721TPPZY",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-26T14:00:00-05:00"
+  },
+  {
+   "id": "2026-10-26-1700",
+   "title": "Meat Thermometer Gift: A Stocking Stuffer Home Cooks Use All Year",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "B07XXSYLL8",
+   "asin": "B07XXSYLL8",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-26T17:00:00-05:00"
+  },
+  {
+   "id": "2026-10-26-1900",
+   "title": "Tea Lover Gift Guide: A Glass Teapot Set for Loose Leaf Tea",
+   "board": "Tea Lover's Kitchen",
+   "product": "B01LZSA84J",
+   "asin": "B01LZSA84J",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-26T19:00:00-05:00"
+  },
+  {
+   "id": "2026-10-27-0800",
+   "title": "Etsy Shipping Tips: Packing Tape That Holds Through the Holiday Rush",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "B000MVV6AA",
+   "asin": "B000MVV6AA",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-27T08:00:00-05:00"
+  },
+  {
+   "id": "2026-10-27-1000",
+   "title": "Small Business Christmas Packaging Ideas: Crinkle Paper for a Gift-Ready Unboxing",
+   "board": "Small Business Packaging Ideas",
+   "product": "B0C65GSDQN",
+   "asin": "B0C65GSDQN",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-27T10:00:00-05:00"
+  },
+  {
+   "id": "2026-10-27-1200",
+   "title": "Stocking Stuffers for Tea Lovers: A Fine Mesh Infuser for Loose Leaf",
+   "board": "Tea Lover's Kitchen",
+   "product": "B0B5ZTZL6G",
+   "asin": "B0B5ZTZL6G",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-27T12:00:00-05:00"
+  },
+  {
+   "id": "2026-10-27-1400",
+   "title": "Chai Latte Recipe at Home: A Cozy Cafe-Style Cup in Minutes",
+   "board": "Tea Lover's Kitchen",
+   "product": "B076F3C4XP",
+   "asin": "B076F3C4XP",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-27T14:00:00-05:00"
+  },
+  {
+   "id": "2026-10-27-1700",
+   "title": "Stocking Stuffer for Home Cooks: Cut-Resistant Gloves for Mandolines and Graters",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "B00MXUHHGK",
+   "asin": "B00MXUHHGK",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-27T17:00:00-05:00"
+  },
+  {
+   "id": "2026-10-27-1900",
+   "title": "Christmas Gifts for Home Cooks: A Rolling Knife Sharpener for Dull Knives",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "B0CGGVHBQG",
+   "asin": "B0CGGVHBQG",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-27T19:00:00-05:00"
+  },
+  {
+   "id": "2026-10-28-0800",
+   "title": "Etsy Shipping Tips: A Holiday Rush Checklist for Small Shop Owners",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "B00SMHWZ42",
+   "asin": "B00SMHWZ42",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-28T08:00:00-05:00"
+  },
+  {
+   "id": "2026-10-28-1000",
+   "title": "Kitchen Knife Organizer: A Magnetic Wall Strip That Frees Up a Drawer",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "B016ISHAC8",
+   "asin": "B016ISHAC8",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-28T10:00:00-05:00"
+  },
+  {
+   "id": "2026-10-28-1200",
+   "title": "Stocking Stuffers for Adults Who Cook: The Classic Zester They'll Use Weekly",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "B00151WA06",
+   "asin": "B00151WA06",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-28T12:00:00-05:00"
+  },
+  {
+   "id": "2026-10-28-1400",
+   "title": "Dutch Oven Gift Basket Ideas: Pot, Bread Flour and a Recipe Card",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "B00U1OCPWQ",
+   "asin": "B00U1OCPWQ",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-28T14:00:00-05:00"
+  },
+  {
+   "id": "2026-10-28-1700",
+   "title": "Thank You Stickers Ideas for Holiday Orders: Small Touches Buyers Remember",
+   "board": "Small Business Packaging Ideas",
+   "product": "B0FM7493Z9",
+   "asin": "B0FM7493Z9",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-28T17:00:00-05:00"
+  },
+  {
+   "id": "2026-10-28-1900",
+   "title": "Tea Lover Gift Guide: An Electric Kettle With a Setting for Every Tea",
+   "board": "Tea Lover's Kitchen",
+   "product": "B003KYSLNQ",
+   "asin": "B003KYSLNQ",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-28T19:00:00-05:00"
+  },
+  {
+   "id": "2026-10-29-0800",
+   "title": "Small Business Christmas Packaging Ideas: Little Boxes That Feel Like Gifts",
+   "board": "Small Business Packaging Ideas",
+   "product": "B0FF47LLL8",
+   "asin": "B0FF47LLL8",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-29T08:00:00-05:00"
+  },
+  {
+   "id": "2026-10-29-1000",
+   "title": "Cast Iron Skillet Care: 5 Simple Rules That Keep Your Pan Slick for Years",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "B00006JSUA",
+   "asin": "B00006JSUA",
+   "layout": "cheatsheet",
+   "status": "scheduled",
+   "releaseAt": "2026-10-29T10:00:00-05:00"
+  },
+  {
+   "id": "2026-10-29-1200",
+   "title": "Shipping and Packaging Tips for Etsy Sellers: Seal Every Box the H-Tape Way",
+   "board": "Etsy Shop Shipping Setup",
+   "product": "B000MVV6AA",
+   "asin": "B000MVV6AA",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-29T12:00:00-05:00"
+  },
+  {
+   "id": "2026-10-29-1400",
+   "title": "Knife Sharpening Hacks: The Tomato Test That Tells You When to Sharpen",
+   "board": "Kitchen Knife Care & Sharpening",
+   "product": "B08L72P245",
+   "asin": "B08L72P245",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-29T14:00:00-05:00"
+  },
+  {
+   "id": "2026-10-29-1700",
+   "title": "Tea Lover Gift Ideas: A Cinnamon Spice Loose Leaf Tea for Cozy Winter Nights",
+   "board": "Tea Lover's Kitchen",
+   "product": "B000WJRBXS",
+   "asin": "B000WJRBXS",
+   "layout": "collage",
+   "status": "scheduled",
+   "releaseAt": "2026-10-29T17:00:00-05:00"
+  },
+  {
+   "id": "2026-10-29-1900",
+   "title": "Stocking Stuffers for Dad Who Cooks: An Instant Read Meat Thermometer",
+   "board": "Gift Ideas for Home Cooks",
+   "product": "B07XXSYLL8",
+   "asin": "B07XXSYLL8",
+   "layout": "overlay",
+   "status": "scheduled",
+   "releaseAt": "2026-10-29T19:00:00-05:00"
   },
   {
    "id": "837810336976492537",
@@ -625,6 +867,12 @@
    "id": "B01M63UE67",
    "name": "Rollo 4x6 Thermal Labels (500)",
    "asin": "B01M63UE67",
+   "board": "Etsy Shop Shipping Setup"
+  },
+  {
+   "id": "B01MA3EYC5",
+   "name": "Rollo USB Thermal Shipping Label Printer",
+   "asin": "B01MA3EYC5",
    "board": "Etsy Shop Shipping Setup"
   },
   {
@@ -951,42 +1199,36 @@
   },
   {
    "id": "rules-guard",
-   "state": "ok",
-   "lastRunAt": "2026-10-18T10:55:00-05:00",
-   "lastSummary": "Checked 31 backlog pins: all passed (5 fixed before rendering).",
+   "state": "needs_you",
+   "lastRunAt": "2026-10-22T18:45:00-05:00",
+   "lastSummary": "Checked 42 pins for Oct 23–29: 42 passed; 2 Rollo printer pins held (out of stock).",
    "findings": [
     {
-     "title": "31 backlog pins (Oct 19 – Oct 25)",
-     "detail": "All 12 checks passed: #affiliate, no prices, exact tagged links, all ASINs ok in link-status, free Unsplash photos, 3-5 matching keywords, max 6 image pins/day, 1 hour apart.",
+     "title": "42 pins (Oct 23 – Oct 29)",
+     "detail": "All 12 checks passed: #affiliate, no prices or banned words, exact tagged links, every ASIN rechecked in stock today, free Unsplash photos, 3-5 keywords, 6 image pins/day, 1+ hour apart, no reused titles or photos.",
      "level": "ok"
     },
     {
-     "title": "Le Creuset pot photo",
-     "detail": "Photo showed a brand logo; replaced with a bread loaf photo in the Dutch oven collage.",
+     "title": "Rollo printer pins held",
+     "detail": "B0D3CQKTMR is still 'Currently unavailable' on Amazon (10-22). Its 2 pins stay in queue/backlog/held.",
      "level": "warn"
     },
     {
-     "title": "Knife gift pin (Oct 24 2 PM)",
-     "detail": "Two knife photos showed brand marks on the box/blade; swapped to a plain knife photo.",
+     "title": "Photos swapped",
+     "detail": "Thermometer photo with a visible brand name, a knife box with a logo and 3 photos already used in earlier pins were replaced before rendering.",
      "level": "warn"
     },
     {
-     "title": "Poly mailer pin (Oct 25 10 AM)",
-     "detail": "Mailer photo had a brand logo; swapped to folded clothing.",
-     "level": "warn"
-    },
-    {
-     "title": "Kraft tissue pin (Oct 23 2 PM)",
-     "detail": "First photo was a facial-tissue box, which didn't match the product; swapped to kraft gift boxes.",
-     "level": "warn"
-    },
-    {
-     "title": "Cookie packaging pin (Oct 24 8 AM)",
-     "detail": "Title said 'Bake Sales' (trips the 'sale' word rule); changed to 'Cookie Swaps'.",
+     "title": "Banner overflow",
+     "detail": "Two collage headlines ran into the photos; shortened and re-rendered.",
      "level": "warn"
     }
    ],
    "log": [
+    {
+     "at": "2026-10-22T18:45:00-05:00",
+     "note": "Checked 42 pins: all passed; 2 Rollo printer pins held (out of stock)."
+    },
     {
      "at": "2026-10-18T10:55:00-05:00",
      "note": "Checked 31 backlog pins: all passed (5 fixed before rendering)."
@@ -1000,23 +1242,23 @@
   {
    "id": "shop-doctor",
    "state": "needs_you",
-   "lastRunAt": "2026-10-18T22:05:00-05:00",
-   "lastSummary": "3 problems: Chrome not connected, Amazon sign-in, run tickets need approval.",
+   "lastRunAt": "2026-10-22T18:12:00-05:00",
+   "lastSummary": "5 problems: 4 bots missed runs, Chrome off, Kaen/Kame need you, site stale.",
    "findings": [
     {
      "title": "Scheduled runs",
-     "detail": "No failed runs. All 10 daily bots ran in the last 26 h (Kame 22 h ago, next run 10:37 PM). Weekly Chirp and Kiko ran tonight; Hoot ran early Sunday.",
-     "level": "ok"
+     "detail": "No failed runs. Catch-up runs today for Neko, Tasu, Pon, Hoot; Pin Bot running now. No run since Oct 18 for Kaen (video-bot), Kame, Kani, Tsuru.",
+     "level": "bad"
     },
     {
      "title": "Pin Bot health",
-     "detail": "Pin Bot needs_you: Chrome not connected, 31 pins unuploaded (Kaen hit the same block). Hoot needs_you: Amazon sign-in. Kame needs_you: run tickets need approval. Sync ok. No Pinterest warnings.",
+     "detail": "pinbot/status needs_you (Chrome not connected), lastRunAt Oct 18 10:55 AM (>26 h). Videobot needs_you (upload blocked, 8 creator videos waiting). Kame needs_you (run tickets). Sync ok. Hoot now reads Amazon, so the sign-in issue is fixed. No Pinterest warnings.",
      "level": "bad"
     },
     {
      "title": "Website",
-     "detail": "data.json returned 200, updated 11:39 AM Oct 18 (~10 h old).",
-     "level": "ok"
+     "detail": "HTTP 200, but updatedAt is 2026-10-18 11:39 AM (~103 h old), even after Neko's 6:09 PM publish.",
+     "level": "bad"
     },
     {
      "title": "GitHub sign-in",
@@ -1025,16 +1267,15 @@
     },
     {
      "title": "Link health",
-     "detail": "31 products, newest check 10:32 AM Oct 18. None dead or mismatched; Rollo printer out of stock (already swapped out of the push list).",
+     "detail": "31 products checked 6:05 PM today: 30 ok, 1 out of stock (Rollo printer). None dead or mismatched.",
      "level": "warn"
-    },
-    {
-     "title": "Weekly digest",
-     "detail": "Pins: 56 made (5 live, 17 scheduled, 31 waiting on Chrome, 3 test drafts). Videos: 3 (honing steel, Dutch oven, knife angle). New: 10 products, 8 affiliate programs (best Shippo), board idea 'Christmas Gifts for Home Cooks'. Problems: Rollo out-of-stock handled; 3 open (Chrome, Amazon sign-in, run tickets). Next: connect Claude in Chrome before 9:03 AM so the 31 pins upload.",
-     "level": "idea"
     }
    ],
    "log": [
+    {
+     "at": "2026-10-22T18:12:00-05:00",
+     "note": "5 problems: 4 bots missed runs, Chrome off, Kaen/Kame need you, site stale."
+    },
     {
      "at": "2026-10-18T22:05:00-05:00",
      "note": "3 problems: Chrome not connected, Amazon sign-in, run tickets need approval."
@@ -1135,16 +1376,19 @@
  ],
  "pinbot": {
   "status": {
-   "state": "needs_you",
-   "lastRunAt": "2026-10-18T10:55:00-05:00",
-   "lastSummary": "Chrome not connected: 31 pins (Oct 19 7 PM – Oct 25) rendered and waiting in queue/backlog; the Oct 21 bulk upload could not be checked.",
+   "state": "ok",
+   "lastRunAt": "2026-10-22T18:45:00-05:00",
+   "lastSummary": "Bulk-uploaded 42 pins covering Oct 23–29 (29 from the backlog, 13 new); the Oct 21 pins are live.",
    "issues": [
-    "Chrome not connected: 31 pins waiting in queue/backlog (connect Claude in Chrome before tomorrow 9:03 AM)",
-    "Bulk-pending check for Oct 21 10 AM and 12 PM pins skipped (needs Chrome)",
-    "Bulk upload time format (UTC vs local) still unconfirmed"
+    "Rollo Wireless Label Printer (B0D3CQKTMR) still out of stock: 2 backlog pins held; swapped to the Rollo USB printer (B01MA3EYC5) on the shop page.",
+    "13 backlog pins for Oct 19–22 missed their slots while Chrome was offline; they were moved to Oct 23 and Oct 26–27."
    ],
    "nextRun": "Daily · 9:03 AM",
    "log": [
+    {
+     "at": "2026-10-22T18:45:00-05:00",
+     "note": "Bulk-uploaded 42 pins for Oct 23–29 (29 backlog, 13 new); confirmed Oct 21 bulk pins live; shop printer swapped."
+    },
     {
      "at": "2026-10-18T10:55:00-05:00",
      "note": "Chrome not connected: rendered 31 pins for Oct 19–25 into queue/backlog with 10 new verified products; nothing uploaded."
@@ -1206,5 +1450,5 @@
    }
   }
  },
- "updatedAt": "2026-10-22T18:09:06-05:00"
+ "updatedAt": "2026-10-22T18:14:29-05:00"
 }
